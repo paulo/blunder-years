@@ -7,7 +7,6 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-
 static double dim = 1;
 static char growing = 1;
 static double time = 0;
