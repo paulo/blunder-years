@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CC_MiniMotor", "CC_MiniMotor\CC_MiniMotor.vcxproj", "{E567A87E-98D2-4D4C-9595-32F9E7BED8BB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CG_MiniMotor", "CG_MiniMotor\CG_MiniMotor.vcxproj", "{E567A87E-98D2-4D4C-9595-32F9E7BED8BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

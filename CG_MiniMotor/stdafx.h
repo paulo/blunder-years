@@ -4,12 +4,13 @@
 //
 
 #pragma once
-
+#include "tinyxml2.h"
 #include "targetver.h"
-
+#include "Cameras.h"
 #include <stdio.h>
 #include <tchar.h>
+#define _USE_MATH_DEFINES 
+#include <math.h>
 
-
-
-// TODO: reference additional headers your program requires here
+using namespace tinyxml2;
+using namespace std;
