@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "GL/glut.h"
 #include <stdlib.h>
-#include <glut.h>
+#include <GL/glut.h>
 #define _USE_MATH_DEFINES
 #include "model.h"
 #include <fstream>
@@ -49,20 +49,18 @@ void init(int argc, char **argv){
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-void _start(){
+void _start(const char* filename){
 	XMLDocument doc;
-	XMLNode* fstchild;
 
-	int loadOk = doc.LoadFile("exemplos/circulo.xml");
+	int loadOk = doc.LoadFile(filename);
 	if (loadOk != 0){
 		printf("Erro!! Falha ao ler o ficheiro!\n");
 	}
 	else {
 		root = doc.RootElement();
 		actualScene.parseXML(root->FirstChild());
+		glutMainLoop();
 	}
-
-	glutMainLoop();
 }
 
 /*
@@ -138,7 +136,7 @@ void viewOptions(int x){
 	case 2: glPolygonMode(GL_FRONT, GL_LINE);
 		break;
 	case 3: glPolygonMode(GL_FRONT, GL_POINT);
-		glPointSize(10);
+		glPointSize(12);
 		break;
 	default: glPolygonMode(GL_FRONT, GL_LINE);
 	}
@@ -241,7 +239,16 @@ void changeSize(int w, int h){
 */
 int main(int argc, char **argv) {
 	init(argc, argv);
-	_start();
+
+	string filename;
+	if (argc == 2) {
+		_start(argv[1]);
+	}
+	else {
+		cin >> filename;
+		_start(filename.c_str());
+	}
+
 
 	return 1;
 }
