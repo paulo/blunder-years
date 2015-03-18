@@ -118,3 +118,30 @@ void Scene::parseXML(XMLNode* root){
 		}
 	}
 }
+
+
+/** NAO APAGAR!!! **/
+/*Figure genericDraw(Point3D points[], int camadas, int fatias){
+	int i, j;
+	float angulo_circ = 2 * M_PI / fatias; //angulo para calcular o tamanho de cada camada
+	float circ_aux1, circ_aux2 = 0; // angulos auxiliares de fatias
+	Figure f;
+
+	for (i = 0; i<fatias; i++){
+		circ_aux1 = circ_aux2;
+		circ_aux2 += angulo_circ;
+
+		for (j = 0; j < camadas - 1; j++) {
+
+			f.triangles.push_back({ points[j].x * sin(circ_aux1), points[j].y, points[j].x * cos(circ_aux1) });
+			f.triangles.push_back({ points[j + 1].x * sin(circ_aux1), points[j + 1].y, points[j + 1].x * cos(circ_aux1) });
+			f.triangles.push_back({ points[j].x * sin(circ_aux2), points[j].y, points[j].x  * cos(circ_aux2) });
+
+			f.triangles.push_back({ points[j + 1].x * sin(circ_aux1), points[j + 1].y, points[j + 1].x * cos(circ_aux1) });
+			f.triangles.push_back({ points[j + 1].x * sin(circ_aux2), points[j + 1].y, points[j + 1].x * cos(circ_aux2) });
+			f.triangles.push_back({ points[j].x * sin(circ_aux2), points[j].y, points[j].x * cos(circ_aux2) });
+		}
+	}
+	return f;
+}
+*/
