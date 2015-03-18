@@ -1,15 +1,12 @@
 // CC_MiniMotor.cpp : Defines the entry point for the console application.
 //
 #include "stdafx.h"
-
+#include "GL/glut.h"
 #include <stdlib.h>
 #include <glut.h>
 #define _USE_MATH_DEFINES
 #include "model.h"
 #include <fstream>
-
-
-
 
 void normalKeys(unsigned char key, int x, int y);
 void specialKeys(int key, int x, int y);
@@ -34,7 +31,7 @@ void init(int argc, char **argv){
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(800, 800);
-	glutCreateWindow("Rui OLiveirasss");
+	glutCreateWindow("Motor");
 
 	glPolygonMode(GL_FRONT, GL_LINE); // GL_FILL, GL_LINE, GL_POINT
 
@@ -148,6 +145,31 @@ void viewOptions(int x){
 	glutPostRedisplay();
 }
 
+Figure genericDraw(Point3D points[], int camadas, int fatias){
+	int p, i, j;
+	float angulo_circ = 2 * M_PI / fatias; //angulo para calcular o tamanho de cada camada
+	float circ_aux1, circ_aux2 = 0; // angulos auxiliares de fatias
+	Figure f;
+
+	for (i = 0; i<fatias; i++){
+		circ_aux1 = circ_aux2;
+		circ_aux2 += angulo_circ;
+		
+		for (j = 0; j < camadas -1; j++) {
+
+			f.triangles.push_back({ points[j].x * sin(circ_aux1), points[j].y, points[j].x * cos(circ_aux1) });
+			f.triangles.push_back({ points[j + 1].x * sin(circ_aux1), points[j +1].y, points[j+1].x * cos(circ_aux1) });
+			f.triangles.push_back({ points[j].x * sin(circ_aux2), points[j].y, points[j].x  * cos(circ_aux2) });
+
+			f.triangles.push_back({ points[j + 1].x * sin(circ_aux1), points[j+1].y, points[j+1].x * cos(circ_aux1) });
+			f.triangles.push_back({ points[j + 1].x * sin(circ_aux2), points[j+1].y, points[j+1].x * cos(circ_aux2) });
+			f.triangles.push_back({ points[j].x * sin(circ_aux2), points[j].y, points[j].x * cos(circ_aux2) });
+		}
+	}
+	return f;
+}
+
+
 /*
 *Função de renderização
 */
@@ -165,7 +187,12 @@ void renderScene(void){
 	else if (cameraActual == 2){
 		cameraFP.refresh();
 	}
-	actualScene.draw();
+	point3D p[] = { { 0, 1, 0 }, { 1, 1, 0 }, { 1, -1, 0 }, { 0, -1, 0 } };
+
+	genericDraw(p,4,20).draw();
+//	actualScene.draw();
+
+
 	//create MENU
 	glutCreateMenu(viewOptions); 
 	glutAddMenuEntry("GL FILL", 1);

@@ -15,8 +15,9 @@ typedef struct point3D {
 
 
 class Figure {
-	vector<Point3D> triangles;
+	
 public:
+	vector<Point3D> triangles;
 	void draw();
 	void fromFile(string  file);
 };

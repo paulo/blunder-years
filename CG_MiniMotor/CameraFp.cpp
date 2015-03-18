@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include <glut.h>
+#include "GL/glut.h"
 
 /*
 *Construtor da classe CameraFP
