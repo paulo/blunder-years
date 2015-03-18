@@ -139,7 +139,7 @@ void viewOptions(int x){
 	case 2: glPolygonMode(GL_FRONT, GL_LINE);
 		break;
 	case 3: glPolygonMode(GL_FRONT, GL_POINT);
-		glPointSize(10);
+		glPointSize(12);
 		break;
 	default: glPolygonMode(GL_FRONT, GL_LINE);
 	}
