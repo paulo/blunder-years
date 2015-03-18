@@ -11,7 +11,7 @@
 */
 Figure FigureFactory::createCylinder(float raiob, float altura, int fatias, int camadas){
 	Figure f;
-	float angulo_circ = 2 * M_PI / fatias; // auxiliar para calcular o tamanho das fatias
+	float angulo_circ = 2 * ((float)M_PI) / fatias; // auxiliar para calcular o tamanho das fatias
 	float meio = altura / 2;
 	float altura_aux1, altura_aux2 = -meio; // auxiliares de pontos altura
 

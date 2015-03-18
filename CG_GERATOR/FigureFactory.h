@@ -7,7 +7,7 @@ public:
 	Figure createSphere(float radius, int slices, int laers);
 	Figure createCube(float height);
 	Figure createCone(float raiob, float altura, int fatias, int camadas);
-	Figure createTunnel(float insideRadius, float outsideRadius, float nsides, float rings);
+	Figure createTunnel(float insideRadius, float outsideRadius, int nsides, int rings);
 	Figure createParallelepiped(float x, float y, float z);
 	Figure createPlane(float x,float z);
 	Figure createCircle(float raio, int fatias);

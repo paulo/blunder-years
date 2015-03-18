@@ -19,7 +19,7 @@ static FigureFactory figureFactory;
 *
 * @return
 */
-int main(){
+int main(int argc, char* argv[]){
 
 	string inputLine;
 	getline(cin, inputLine);
@@ -28,8 +28,15 @@ int main(){
 	int i;
 
 	//gerador esfera 2.5 5 5 esfera.3d
-	for (i = 0; getline(ss, token, ' ') && i < 7; i++) {
-		args[i] = token;
+	if (argc == 0){
+		for (i = 0; getline(ss, token, ' ') && i < 7; i++) {
+			args[i] = token;
+		}
+	}
+	else {
+		for (i = 0; i < argc; i++) {
+			args[i] = argv[i];
+		}
 	}
 
 	/*if (args[0] == "a"){

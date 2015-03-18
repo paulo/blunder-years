@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "model.h"
 #include <iostream>
 #include <fstream>

@@ -12,7 +12,7 @@
 */
 Figure FigureFactory::createCone(float raiob, float altura, int fatias, int camadas){
 	Figure f;
-	float angulo_circ = 2 * M_PI / fatias; // auxiliar para calcular o tamanho das fatias
+	float angulo_circ = 2 * ((float)M_PI) / fatias; // auxiliar para calcular o tamanho das fatias
 	float raiob_aux1, raiob_aux2 = raiob; // auxiliares de pontos da base
 	float altura_aux1, altura_aux2 = 0; // auxiliares de pontos altura
 

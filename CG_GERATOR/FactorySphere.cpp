@@ -11,15 +11,15 @@
 */
 Figure FigureFactory::createSphere(float raio, int camadas, int fatias){
 	Figure f;
-	float angulo_circ = 2 * M_PI / fatias; //angulo para calcular o tamanho de cada camada
-	float angulo_alt = M_PI / camadas; // angulo para calcular a altura de cada camada
+	float angulo_circ = 2 * ((float)M_PI) / fatias; //angulo para calcular o tamanho de cada camada
+	float angulo_alt = ((float)M_PI) / camadas; // angulo para calcular a altura de cada camada
 
-	float altura_aux1, altura_aux2 = M_PI_2; // angulos auxiliares de camadas
+	float altura_aux1, altura_aux2 = (float)M_PI_2; // angulos auxiliares de camadas
 	float circ_aux1, circ_aux2 = 0; // angulos auxiliares de fatias
 	int i, j;
 
-	float meio = M_PI / 2;
-	float angulo = M_PI / camadas;
+	float meio = ((float)M_PI) / 2;
+	float angulo = ((float) M_PI) / camadas;
 	point3D *points = new point3D[camadas];
 
 	for (i = 0; i < camadas; i++){
@@ -52,8 +52,8 @@ Figure FigureFactory::createSphere(float raio, int camadas, int fatias){
 }
 
 void FigureFactory::createRotate(Figure* f, Point3D points[], int camadas, int fatias){
-	int p, i, j;
-	float angulo_circ = 2 * M_PI / fatias; //angulo para calcular o tamanho de cada camada
+	int i, j;
+	float angulo_circ = 2 * ((float)M_PI) / fatias; //angulo para calcular o tamanho de cada camada
 	float circ_aux1, circ_aux2 = 0; // angulos auxiliares de fatias
 	
 	for (i = 0; i<fatias; i++){

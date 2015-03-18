@@ -25,7 +25,7 @@ Figure FigureFactory::createCircle(float raio, int fatias){
 */
 void FigureFactory::createCircleAux(Figure* f,float raio, int fatias, float altura, int orient){
 	int i;
-	float angulo_cir = 2 * M_PI / fatias;
+	float angulo_cir = 2 * ((float) M_PI) / fatias;
 
 	if (orient){
 		for (i = 0; i < fatias; i++) {
