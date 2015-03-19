@@ -43,9 +43,6 @@ public:
 	void parseXML(XMLNode* root, Group* current);
 };
 
-
-
-
 class Translation : public Action {
 	point3D transVector;
 public:

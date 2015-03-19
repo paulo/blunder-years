@@ -11,6 +11,8 @@
 #include <tchar.h>
 #define _USE_MATH_DEFINES 
 #include <math.h>
+#include <glew.h>
+#include <glut.h>
 
 using namespace tinyxml2;
 using namespace std;
