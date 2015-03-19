@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+    <cena>
+		<modelo ficheiro='exemplos/esf.3d'/>		
+    	<grupo>
+    		<translacao  Y='15'/>
+			<escala X='0.5' Y='0.5' Z='0.5'/>
+			<modelo ficheiro='exemplos/esf.3d'/>
+    	</grupo>
+		<grupo>
+    		<translacao  Y='17.5' Z='5'/>
+    		<rotacao  angulo='45' eixoX='-1' eixoY='1' eixoZ='0'/>
+			<escala X='0.5' Y='0.5' Z='0.5'/>
+			<modelo ficheiro='exemplos/cone.3d'/>
+    	</grupo>
+    </cena>
+</xml>

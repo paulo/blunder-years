@@ -52,13 +52,13 @@ void init(int argc, char **argv){
 void _start(const char* filename){
 	XMLDocument doc;
 
-	int loadOk = doc.LoadFile(filename);
+	int loadOk = doc.LoadFile("exemplos/cool.xml");
 	if (loadOk != 0){
 		printf("Erro!! Falha ao ler o ficheiro!\n");
 	}
 	else {
 		root = doc.RootElement();
-		actualScene.parseXML(root->FirstChild());
+		actualScene.parseXML(root->FirstChild(), &actualScene);
 		glutMainLoop();
 	}
 }

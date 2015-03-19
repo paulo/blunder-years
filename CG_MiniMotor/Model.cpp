@@ -19,10 +19,9 @@ void Figure::fromFile(string filename){
 	Point3D point;
 	string line;
 	//float p1, p2, p3;
-	while (!ifs.eof()) {
-		if (ifs >> point.x >> point.y >> point.z){
+	while (!ifs.eof() 
+		&& ifs >> point.x >> point.y >> point.z) {		
 			triangles.push_back(point);
-		}
 	}
 }
 
@@ -45,18 +44,27 @@ void Figure::draw(){
 	glEnd();
 }
 
-
-void Scene::append(Figure figure) {
-	figures.push_back(figure);
+void Group::appendAction(Action* element){
+	actions.push_back(element);
 }
 
-void Scene::draw(){
-	std::vector<Figure>::iterator d = figures.begin();
-	glColor3f(0, 0, 255);
-	while (d != figures.end()){
-		d->draw();
+void Group::append(Drawable* figure) {
+	elements.push_back(figure);
+}
+
+void Group::draw(){
+	glPushMatrix();
+	std::vector<Action*>::iterator itActions = actions.begin();
+	while (itActions != actions.end()){
+		(*itActions)->doAction();
+		itActions++;
+	}
+	std::vector<Drawable*>::iterator d = elements.begin();
+	while (d != elements.end()){
+		(*d)->draw();
 		d++;
 	}
+	glPopMatrix();
 }
 
 /*
@@ -64,30 +72,45 @@ void Scene::draw(){
 *
 *@param root	raiz do documento
 */
-void Scene::parseXML(XMLNode* root){
-
+void Scene::parseXML(XMLNode* root, Group* current){
 	XMLNode* child;
-	const XMLAttribute* atr;
-	string tag;
-	XMLElement *elem;
 	Figure f;
 	float x, y, z;
 	float angulo, eixoX, eixoY, eixoZ;
-	for (child = root->FirstChild(); child; child = child->NextSibling()) {
-		elem = child->ToElement();
-		tag = child->Value();
 
+	for (child = root->FirstChild(); child; child = child->NextSibling()) {
+		XMLElement *elem = child->ToElement();
+		string tag = child->Value();
+
+		// more than one model
+		if (tag.compare("modelos") == 0){
+			XMLNode* modelo;
+			for (modelo = child->FirstChild(); modelo; modelo = modelo->NextSibling()) {
+				if (tag.compare("modelo") == 0) {
+					if (elem->Attribute("ficheiro")){
+						Figure* ff = new Figure();
+						ff->fromFile(elem->Attribute("ficheiro"));
+						append(ff);
+						// be carefull f need to destroyed and recreated, they are doing pushback
+					}
+				}
+			}
+		}
+		// only one model 
 		if (tag.compare("modelo") == 0) {
 			if (elem->Attribute("ficheiro")){
-				f.fromFile(elem->Attribute("ficheiro"));
-				append(f);
+				Figure* ff = new Figure();
+				ff->fromFile(elem->Attribute("ficheiro"));
+				current->append(ff);
 				//f.draw();
 			}
 		}
 		else if (tag.compare("grupo") == 0) {
 			// glPushMatrix();
 			// guardar, nao desenhar..
-			parseXML(child);
+			Group *g = new Group;
+			parseXML(child, g);
+			current->append(g);
 			// glPopMatrix();
 		}
 		else if (tag.compare("rotacao") == 0) {
@@ -98,15 +121,14 @@ void Scene::parseXML(XMLNode* root){
 			if (elem->Attribute("eixoY")) eixoY = elem->FloatAttribute("angulo");
 			if (elem->Attribute("eixoZ")) eixoZ = elem->FloatAttribute("eixoZ");
 
-			glRotatef(angulo, eixoX, eixoY, eixoZ);
+			current->appendAction(new Rotation(angulo, eixoX, eixoY, eixoZ ));
 	 	}
-		else if (tag.compare("translação") == 0){
+		else if (tag.compare("translacao") == 0){
 			x = y = z = 0.0;
 			if (elem->Attribute("X")) x = elem->FloatAttribute("X");
 			if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
 			if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
-			
-			glTranslatef(x, y, z);
+			current->appendAction(new Translation(x,y,z));
 		}
 		else if (tag.compare("escala") == 0){
 			x = y = z = 1.0;
@@ -114,10 +136,40 @@ void Scene::parseXML(XMLNode* root){
 			if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
 			if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
 
-			glScalef(x, y, z);
+			current->appendAction(new Scale(x,y,z));
 		}
 	}
 }
+
+Translation::Translation(float x, float y, float z){
+	this->transVector.x = x;
+	this->transVector.y = y;
+	this->transVector.z = z;
+}
+
+void Translation::doAction(){
+	glTranslatef(transVector.x, transVector.y, transVector.z);
+}
+
+Rotation::Rotation(float angle, float x, float y, float z){
+	this->angle = angle;
+	this->p.x = x;
+	this->p.y = y;
+	this->p.z = z;
+}
+void Rotation::doAction(){
+	glRotatef(angle, p.x, p.y, p.z);
+}
+Scale::Scale(float x, float y, float z){
+	this->scale.x = x;
+	this->scale.y = y;
+	this->scale.z = z;
+
+}
+void Scale::doAction(){
+	glScalef(scale.x, scale.y, scale.z);
+}
+
 
 
 /** NAO APAGAR!!! **/

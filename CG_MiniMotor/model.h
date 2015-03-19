@@ -13,21 +13,60 @@ typedef struct point3D {
 	float z;
 } Point3D;
 
-
-class Figure {
-	
+class Drawable {
 public:
+	virtual void draw()=0;
+};
+class Action {
+public:
+	virtual void doAction()=0;
+};
+
+class Figure: public Drawable {
 	vector<Point3D> triangles;
+public:
 	void draw();
 	void fromFile(string  file);
 };
 
-class Scene {
-	vector<Figure> figures;
+class Group: public Drawable {
+	vector<Drawable*> elements;
+	vector<Action*> actions;
 public:
-	void parseXML(XMLNode* root);
-	void append(Figure figure);
+	void append(Drawable* element);
+	void appendAction(Action* element);
 	void draw();
 };
+
+class Scene: public Group {
+public:
+	void parseXML(XMLNode* root, Group* current);
+};
+
+
+
+
+class Translation : public Action {
+	point3D transVector;
+public:
+	Translation(float x, float y, float z);
+	void doAction();
+};
+
+class Rotation : public Action {
+	point3D p;
+	float angle;
+public:
+	Rotation(float alfa, float x, float y, float z);
+	void doAction();
+};
+
+class Scale : public Action {
+	point3D scale;
+public:
+	Scale(float x, float y, float z);
+	void doAction();
+};
+
 
 #endif
