@@ -21,14 +21,15 @@ static FigureFactory figureFactory;
 */
 int main(int argc, char* argv[]){
 
-	string inputLine;
-	getline(cin, inputLine);
-	istringstream ss(inputLine);
-	string token, filename, args[7], form;
+	string filename, args[7], form;
 	int i;
 
 	//gerador esfera 2.5 5 5 esfera.3d
-	if (argc == 0){
+	if (argc <= 1){
+		string inputLine,token;
+		getline(cin, inputLine);
+		istringstream ss(inputLine);
+
 		for (i = 0; getline(ss, token, ' ') && i < 7; i++) {
 			args[i] = token;
 		}
@@ -55,7 +56,7 @@ int main(int argc, char* argv[]){
 	Figure f;
 	try{
 
-		if (args[0] != "gerador" || i < 2) {
+		if (i < 2) {
 			cout << "O comando \"" << args[0] << "\" nao e reconhecido!" << endl
 				<< "O comando deve ser do tipo \"gerador esfera 5 10 10 ficheiro.3d\"." << endl;
 		}
@@ -172,7 +173,7 @@ int main(int argc, char* argv[]){
 			}
 			else {
 				cout << "O número de argumentos do comando introduzido está incorreto!" << endl
-					<< "O comando deve ser do tipo \"gerador plano 10 15 ficheiro.3d\"." << endl;
+					<< "O comando deve ser do tipo \"gerador cilindro <raio> <lenght> <fatias> <camadas> ficheiro.3d\"." << endl;
 			}
 		}
 		else if (args[1] == "circulo") {
