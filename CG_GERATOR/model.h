@@ -15,8 +15,10 @@ typedef struct point3D {
 
 class Figure{
 	vector<Point3D> triangles;
+	vector<unsigned int> indices;
 public:
 	void toFile(string  file);
+	void toFileVBO(string  file);
 	void append(Point3D p);
 };
 

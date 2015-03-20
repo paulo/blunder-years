@@ -28,8 +28,9 @@ Figure FigureFactory::createSphere(float raio, int camadas, int fatias){
 
 		meio -= angulo;
 	}
+	createRotate(&f, points, camadas, fatias);
 
-	for (i = 0; i<camadas; i++){
+	/*for (i = 0; i<camadas; i++){
 		altura_aux1 = altura_aux2;
 		altura_aux2 += angulo_alt;
 		circ_aux2 = 0;
@@ -47,7 +48,7 @@ Figure FigureFactory::createSphere(float raio, int camadas, int fatias){
 			f.append({ raio * sin(circ_aux2) * cos(altura_aux1), raio * sin(altura_aux1), raio * cos(circ_aux2) * cos(altura_aux1) });
 		}
 	}
-
+	*/
 	return f;
 }
 

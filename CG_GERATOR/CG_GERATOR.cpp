@@ -25,7 +25,7 @@ int main(int argc, char* argv[]){
 	int i;
 
 	//gerador esfera 2.5 5 5 esfera.3d
-	if (argc <= 1){
+	if (argc <= 10){
 		string inputLine,token;
 		getline(cin, inputLine);
 		istringstream ss(inputLine);
@@ -196,5 +196,5 @@ int main(int argc, char* argv[]){
 		cout << "Formato invalido dos argumentos inseridos!" << endl;
 	}
 
-	f.toFile(filename);
+	f.toFileVBO(filename);
 }
