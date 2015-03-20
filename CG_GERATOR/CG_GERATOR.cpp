@@ -188,8 +188,11 @@ int main(int argc, char* argv[]){
 			}
 			else {
 				cout << "O número de argumentos do comando introduzido está incorreto!" << endl
-					<< "O comando deve ser do tipo \"gerador plano 10 15 ficheiro.3d\"." << endl;
+					<< "O comando deve ser do tipo \"gerador circulo <raio> <fatias> ficheiro.3d\"." << endl;
 			}
+		}
+		else {
+			cout << "A figura " << args[1] << " nao existe!" << endl;
 		}
 	}
 	catch (invalid_argument) {
