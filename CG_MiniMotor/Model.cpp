@@ -1,6 +1,7 @@
+#pragma comment(lib,"glew32.lib")
+
 #include "stdafx.h"
 #include "model.h"
-#include <glut.h>
 #include <iostream>
 #include <fstream>
 #include "stdio.h"
@@ -42,6 +43,49 @@ void Figure::draw(){
 		d++;
 	}
 	glEnd();
+}
+
+
+void FigureVBO::fromFile(string filename) {
+	ifstream ifs; ifs.open(filename);
+	int nPoints, nIndice, i; Point3D point;
+	
+	ifs >> nPoints >> nIndice;
+	this->nIndices = nIndice;
+	this->indices = new GLuint[nIndice];
+	float *triangles = new float[nPoints * 3];
+
+	i = 0;
+	while (!ifs.eof()		
+		&& i < nPoints
+		&& ifs >> point.x >> point.y >> point.z
+	) {
+		triangles[i * 3 + 0] = point.x;
+		triangles[i * 3 + 1] = point.y;
+		triangles[i * 3 + 2] = point.z;
+		i++;
+	}
+	
+	i = 0;
+	while (!ifs.eof()
+		&& i < nIndice
+		&& ifs >> this->indices[i]
+		) {
+		i++;
+	}
+		
+	glGenBuffers(1, &this->index);
+
+	glBindBuffer(GL_ARRAY_BUFFER, this->index);
+	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * sizeof(float), triangles, GL_STATIC_DRAW);
+	
+	delete(triangles);
+}
+
+void FigureVBO::draw() {
+	glBindBuffer(GL_ARRAY_BUFFER, this->index);
+	glVertexPointer(3, GL_FLOAT, 0, 0);
+	glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, this->indices);
 }
 
 void Group::appendAction(Action* element){
@@ -88,7 +132,7 @@ void Scene::parseXML(XMLNode* root, Group* current){
 			for (modelo = child->FirstChild(); modelo; modelo = modelo->NextSibling()) {
 				if (tag.compare("modelo") == 0) {
 					if (elem->Attribute("ficheiro")){
-						Figure* ff = new Figure();
+						FigureVBO* ff = new FigureVBO();
 						ff->fromFile(elem->Attribute("ficheiro"));
 						append(ff);
 						// be carefull f need to destroyed and recreated, they are doing pushback
@@ -99,7 +143,7 @@ void Scene::parseXML(XMLNode* root, Group* current){
 		// only one model 
 		if (tag.compare("modelo") == 0) {
 			if (elem->Attribute("ficheiro")){
-				Figure* ff = new Figure();
+				FigureVBO* ff = new FigureVBO();
 				ff->fromFile(elem->Attribute("ficheiro"));
 				current->append(ff);
 				//f.draw();

@@ -1,3 +1,7 @@
+typedef struct sCameraPosition{
+	float x;
+	float y;
+}* CameraPosition;
 
 class CameraSphere
 {

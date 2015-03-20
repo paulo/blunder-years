@@ -1,9 +1,8 @@
 // CC_MiniMotor.cpp : Defines the entry point for the console application.
 //
+
 #include "stdafx.h"
-#include "GL/glut.h"
 #include <stdlib.h>
-#include <GL/glut.h>
 #define _USE_MATH_DEFINES
 #include "model.h"
 #include <fstream>
@@ -33,7 +32,10 @@ void init(int argc, char **argv){
 	glutInitWindowSize(800, 800);
 	glutCreateWindow("Motor");
 
+	glewInit();
+
 	glPolygonMode(GL_FRONT, GL_LINE); // GL_FILL, GL_LINE, GL_POINT
+	glEnableClientState(GL_VERTEX_ARRAY);
 
 	//function listening
 	glutDisplayFunc(renderScene);
@@ -52,7 +54,7 @@ void init(int argc, char **argv){
 void _start(const char* filename){
 	XMLDocument doc;
 
-	int loadOk = doc.LoadFile("exemplos/cool.xml");
+	int loadOk = doc.LoadFile("exemplos/esfera.xml");
 	if (loadOk != 0){
 		printf("Erro!! Falha ao ler o ficheiro!\n");
 	}
@@ -77,7 +79,7 @@ void normalKeys(unsigned char key, int x, int y){
 		cameraActual = 1;
 		cameraSph.refresh();
 		break;
-	case '2':
+	case '2':	
 		cameraActual = 2;
 		cameraFP.start();
 		break;

@@ -17,6 +17,7 @@ class Drawable {
 public:
 	virtual void draw()=0;
 };
+
 class Action {
 public:
 	virtual void doAction()=0;
@@ -28,6 +29,16 @@ public:
 	void draw();
 	void fromFile(string  file);
 };
+
+class FigureVBO : public Drawable {
+	GLuint index;
+	GLuint *indices;
+	GLuint nIndices;
+public:
+	void draw();
+	void fromFile(string  file);
+};
+
 
 class Group: public Drawable {
 	vector<Drawable*> elements;

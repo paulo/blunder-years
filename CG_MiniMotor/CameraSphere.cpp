@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <glut.h>
 
 /*
 *Construtor da CameraSphere
