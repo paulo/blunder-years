@@ -32,7 +32,7 @@ Figure FigureFactory::createCylinder(float raiob, float altura, int fatias, int 
 
 	points[i].x = 0;
 	points[i].y = -meio;
-
+	
 	createRotate(&f, points, camadas + 2, fatias);
 
 

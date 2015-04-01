@@ -21,16 +21,16 @@ static FigureFactory figureFactory;
 */
 int main(int argc, char* argv[]){
 
-	string filename, args[7], form;
+	string filename, args[12], form;
 	int i;
 
 	//gerador esfera 2.5 5 5 esfera.3d
-	if (argc <= 1){
+	if (argc <= 100){
 		string inputLine,token;
 		getline(cin, inputLine);
 		istringstream ss(inputLine);
 
-		for (i = 0; getline(ss, token, ' ') && i < 7; i++) {
+		for (i = 0; getline(ss, token, ' ') && i < 12; i++) {
 			args[i] = token;
 		}
 	}
@@ -191,6 +191,11 @@ int main(int argc, char* argv[]){
 					<< "O comando deve ser do tipo \"gerador circulo <raio> <fatias> ficheiro.3d\"." << endl;
 			}
 		}
+		else if (args[1] == "arvore") {
+
+				f = figureFactory.createTree(stof(args[2]), stof(args[3]), stof(args[4]), stof(args[5]), stoi(args[6]), 1);
+				filename = args[7];
+		}
 		else {
 			cout << "A figura " << args[1] << " nao existe!" << endl;
 		}
@@ -201,3 +206,5 @@ int main(int argc, char* argv[]){
 
 	f.toFile(filename);
 }
+
+
