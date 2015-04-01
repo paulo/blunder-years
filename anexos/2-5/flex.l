@@ -38,16 +38,16 @@ abcclose      \<\/[ ]*(?i:abc)[ ]*\>
 ^music:.+       appendMusic(yytext + 6);
 ^singer:.+      appendSinger(yytext + 7);
 
-^[a-zA-Z]+:.+   ;                                                  // Ignore other headers:
+^[a-zA-Z]+:.+   ;// Ignore other headers:
 
-{abc}(.|\n)*{abcclose}                                             ;
+{abc}(.|\n)*{abcclose}  ;
 
 
-##-+    {commitCheckNext(); start();}                              // Music End
+##-+    {commitCheckNext(); start();}// Music End
 
-^\n     appendWhiteLine();                                         // white music line.
-[ ].*   ;                                                          //ignore lines that start with space (they are music anotations);
-.*      appendLine(takeOffAnotations(takeOffUnderSccore(yytext))); //poem line, taking of underscore and music annotations
-
+^\n     appendWhiteLine(); // white music line.
+[ ].*   ; //ignore lines that start with space (they are music anotations);
+.*      {appendLine(takeOffAnotations(takeOffUnderSccore(yytext))); 
+        //poem line, taking of underscore and music annotations}
 .|\n    ;
 %%

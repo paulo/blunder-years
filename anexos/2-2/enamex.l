@@ -27,45 +27,45 @@ subcity     (?i:subtype)=\"[ \t]*(?i:city)[ \t]*\"[ \t]*\>
 
     BEGIN 0;
 
-{enamex}{loc}{subcountry}{pal}{eclose}                              {
-                                                                        aux=strdup(strchr(yytext,'>')+1);
-                                                                        *strchr(aux,'<')='\0';
-                                                                        insert(trimspace(aux), &countrys);
-                                                                        BEGIN country;
-                                                                    }
+{enamex}{loc}{subcountry}{pal}{eclose}    {
+        aux=strdup(strchr(yytext,'>')+1);
+        *strchr(aux,'<')='\0';
+        insert(trimspace(aux), &countrys);
+        BEGIN country;
+    }
 
-<country>\.                                                         BEGIN 0;
+<country>\.                      BEGIN 0;
 
-<country>{enamex}{loc}{subcity}{pal}{eclose}                        {
-                                                                        tree_ptr aux_tree = search_tree(aux, countrys);
-                                                                        aux_subcity=strdup(strchr(yytext,'>')+1);
-                                                                        *strchr(aux_subcity,'<')='\0';
-                                                                        insert_subtree(trimspace(aux_subcity), &countrys);
-                                                                        insert(trimspace(aux_subcity), &citys);
-                                                                        BEGIN 0;
-                                                                    }
-{enamex}{person}{pal}{eclose}                                       {
-                                                                        aux=strdup(strchr(yytext,'>')+1);
-                                                                        *strchr(aux,'<')='\0';
-                                                                        insert(trimspace(aux), &persons);
-                                                                    }
-{enamex}{org}{pal}{eclose}                                          {
-                                                                        aux=strdup(strchr(yytext,'>')+1);
-                                                                        *strchr(aux,'<')='\0';
-                                                                        insert(trimspace(aux), &organizations);
-                                                                    }
-{enamex}{loc}{subcity}{pal}{eclose}                                 {
-                                                                        aux=strdup(strchr(yytext,'>')+1);
-                                                                        *strchr(aux,'<')='\0';
-                                                                        insert(trimspace(aux), &citys);
-                                                                    }
-{enamex}{loc}{pal}{eclose}                                          {
-                                                                        aux=strdup(strchr(yytext,'>')+1);
-                                                                        *strchr(aux,'<')='\0';
-                                                                        insert(trimspace(aux), &otherlocations);
-                                                                    }
+<country>{enamex}{loc}{subcity}{pal}{eclose}   {
+        tree_ptr aux_tree = search_tree(aux, countrys);
+        aux_subcity=strdup(strchr(yytext,'>')+1);
+        *strchr(aux_subcity,'<')='\0';
+        insert_subtree(trimspace(aux_subcity), &countrys);
+        insert(trimspace(aux_subcity), &citys);
+        BEGIN 0;
+    }
+{enamex}{person}{pal}{eclose}   {
+        aux=strdup(strchr(yytext,'>')+1);
+        *strchr(aux,'<')='\0';
+        insert(trimspace(aux), &persons);
+    }
+{enamex}{org}{pal}{eclose}  {
+        aux=strdup(strchr(yytext,'>')+1);
+        *strchr(aux,'<')='\0';
+        insert(trimspace(aux), &organizations);
+    }
+{enamex}{loc}{subcity}{pal}{eclose}   {
+       aux=strdup(strchr(yytext,'>')+1);
+       *strchr(aux,'<')='\0';
+       insert(trimspace(aux), &citys);
+   }
+{enamex}{loc}{pal}{eclose}  {
+        aux=strdup(strchr(yytext,'>')+1);
+        *strchr(aux,'<')='\0';
+        insert(trimspace(aux), &otherlocations);
+    }
 
-<*>.|\n                                                             ;
+<*>.|\n                     ;
     
 
 %%
