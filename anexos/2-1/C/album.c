@@ -141,18 +141,21 @@ void init(){
 void appendPhoto(photo_ptr p, FILE* file){
 
 	if(p!=NULL) {
-
-		appendPhoto(p->left, file);
-		fprintf(file, "  <div class=\"photo\">\n</br>\n");
-		fprintf(file, "    <div class=\"fact\"><h3>Descricao:</h3> %s</div>\n</br>\n",p->fact);
-		fprintf(file, "    <div class=\"img\" align=\"center\">\n");
-		fprintf(file, "      <img src=\"%s\" alt=\"%s\" width=800 height=600>\n    </div>\n</br>\n</br>\n",p->file,p->file);
-		fprintf(file, "    <div class=\"data\"><b>Data:</b> %s</div>\n",p->date);
-		fprintf(file, "    <div class=\"local\"><b>Local:</b> %s</div>\n",p->loc);
-		fprintf(file, "    <div class=\"who\"><b>Quem:</b> %s</div>\n",p->who);
-		fprintf(file, "  </div>\n");
-		appendPhoto(p->right, file);
-
+        
+        appendPhoto(p->left, file);
+        fprintf(file, "  <div class=\"photo\">\n</br>\n");
+        fprintf(file, "    <div class=\"fact\"><h3>Descricao:</h3>");
+        fprintf(file, "         %s</div>\n</br>\n",p->fact);
+        fprintf(file, "    <div class=\"img\" align=\"center\">\n");
+        fprintf(file, "      <img src=\"%s\" alt=\"%s\"",p->file,p->file);
+        fprintf(file, "            width=800 height=600>\n");
+        fprintf(file, "          </div>\n</br>\n</br>\n");
+        fprintf(file, "    <div class=\"data\"><b>Data:</b> %s</div>\n",p->date);
+        fprintf(file, "    <div class=\"local\"><b>Local:</b> %s</div>\n",p->loc);
+        fprintf(file, "    <div class=\"who\"><b>Quem:</b> %s</div>\n",p->who);
+        fprintf(file, "  </div>\n");
+        appendPhoto(p->right, file);
+        
 	}	
 }
 

@@ -54,7 +54,11 @@ Uma breve leitura do problema permite-nos entender algumas das funcionalidades n
 \label{seq:enamex-est}
 Com o intuito de cumprir todos os requisitos estruturais definidos anteriormente, foi desenvolvida uma estrutura de dados única capaz de armazenar todos os dados necessários. Assim, escolhemos implementar uma árvore binária de procura, na qual os nodos possuem a informação a guardar sobre a forma de array de caracteres. A escolha desta estrutura facilita a ordenação alfabética dos diversos nomes que possamos processar, e é de implementação relativamente simples. Creemos ser superior a outras estruturas tais como listas ligadas cuja implementação, apesar de mais simples, torna-se mais complexa quando é necessária a ordenação dos seus elementos (O(N)) e a tabelas de hash cuja implementação é mais complexa, sendo que para elevadas quantidades de dados possuem ainda a necessidade de reHashing e garbage colection. 
 
-<-tree.png-> ???
+\begin{figure}[H]
+\centering
+\includegraphics[width=7cm]{anexos/2-2/tree.png}
+\caption{Representação gráfica da estrutura de dados}
+\end{figure}
 
 Para casos em que apenas é necessário o armazenamento da entidade, sem qualquer tipo de associação, uma árvore com dois apontadores (esquerda e direita) e com a capacidade de armazenar a informação (array de caracteres) bastaria para abordar todos os casos. No entanto, de forma a armazenar a possível associação entre os países e as suas cidades, modificamos a árvore previamente referida, e adicionamos-lhe um apontador extra, que poderá ser visto como o apontador para a raiz de uma nova árvore, constituída por todas as cidades que pertencem a um dado país. Como curiosidade, adicionamos também um inteiro em cada nodo que servirá como contador para todas as ocorrências de um dado elemento. Todo o código referente a esta estrutura encontra-se implementado no ficheiros "tree.c" e "tree.h" e pode ser consultado em anexo.
 
@@ -118,11 +122,13 @@ Estas expressões devem encontrar-se no topo de todas as outras, devido à prece
 \subsection{Funcionamento}
 \label{seq:enamex-func}
 
-No cabeçalho do ficheiro flex são declarados todos os apontadores referentes às estruturas onde irá ser armazenada a informação. Existe um apontador para cada tipo de estrutura, nomeadamente: pessoas, paises, cidades, organizações e outras localizações. São também declarados dois apontadores para arrays de caracteres que irão auxiliar o processamento das expressões capturadas. Após início do programa, é efetuada a chamada ao analisador léxico, responsável por capturar os dados referentes às expressões definidas. Cada vez que este efetua uma captura, estes dados são processados, sendo inseridos na estrutura correspondente, sendo que caso necessário lhes são retirados os espaços em branco que possam ter antes e depois da seu conteúdo, por forma a evitar inconsistência de dados. Após o término da leitura do input em questão, todos os dados presentes nas estruturas são escritos nos ficheiros HTML correspondentes, estando estes interligados através de hiperligações (tags <a href=""/>). Cada estrutura (tipo de entidade) é escrita em ficheiro através da função treeToHTML (implementada no ficheiro tree.c), responsável por receber como parâmetros um apontador para estrutura e um identificador de ficheiro (previamente declarado), e transferir a informação para o ficheiro no formato adequado.
+No cabeçalho do ficheiro flex são declarados todos os apontadores referentes às estruturas onde irá ser armazenada a informação. Existe um apontador para cada tipo de estrutura, nomeadamente: pessoas, países, cidades, organizações e outras localizações. São também declarados dois apontadores para arrays de caracteres que irão auxiliar o processamento das expressões capturadas. Após início do programa, é efetuada a chamada ao analisador léxico, responsável por capturar os dados referentes às expressões definidas. Cada vez que este efetua uma captura, estes dados são processados, sendo inseridos na estrutura correspondente, sendo que caso necessário lhes são retirados os espaços em branco que possam ter antes e depois da seu conteúdo, por forma a evitar inconsistência de dados. Após o término da leitura do input em questão, todos os dados presentes nas estruturas são escritos nos ficheiros HTML correspondentes, estando estes interligados através de hiperligações (tags <a href=""/>). Cada estrutura (tipo de entidade) é escrita em ficheiro através da função treeToHTML (implementada no ficheiro tree.c), responsável por receber como parâmetros um apontador para estrutura e um identificador de ficheiro (previamente declarado), e transferir a informação para o ficheiro no formato adequado.
 
-
-<- constituiçao do programa.png ->
-
+\begin{figure}[H]
+\centering
+\includegraphics[width=7cm]{anexos/2-2/programa.png}
+\caption{Componentes do programa}
+\end{figure}
 \section{Testes realizados}
 \label{seq:enamex-test}
 Estão documentados neste secção 3 testes realizados ao autómato, utilizando como input os ficheiros que se encontram em anexo: \ref{seq:anex-music-test-in01}, \ref{seq:anex-music-test-in02} e \ref{seq:anex-music-test-in03}.
