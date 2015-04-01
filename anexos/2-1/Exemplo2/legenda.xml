@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE fotos SYSTEM "Users/sony/mp/fotos.dtd">
+<fotos> 
+  <foto ficheiro="028-F-01.jpg"> 
+	 <onde>Taberna do Fausto</onde> 
+	 <quando data="2000-09-22"/> 
+	 <quem>José António Nunes da Silva, mais conhecido por "Matroco"</quem> 
+  </foto> 
+  <foto ficheiro="030-F-01.jpg">
+  <onde>Taberna do Fausto</onde>
+  <quando data="2000.09.22"/>
+  <quem>Júlio Rodrigues Barbado, o pescador mais velho da Afurada.</quem>
+  </foto>
+  <foto ficheiro="030-F-02.jpg">
+  <onde>Taberna do Fausto</onde>
+  <quando data="2000.09.22"/>
+  <quem>Júlio Rodrigues Barbado com um amigo.</quem>
+  </foto>
+  <foto ficheiro="031-F-01.jpg">
+  <onde>Taberna do Fausto</onde>
+  <quando data="2000.09.22"/>
+  <quem>Francisco de Sousa, cujo alcunha é "Chico Francês".</quem>
+  </foto>
+  <foto ficheiro="031-F-02.jpg">
+  <onde>Taberna do Fausto</onde>
+  <quando data="2000.09.22"/>
+  <quem>Francisco de Sousa a beber um "pescador", que é uma mistura de vinho tinto com 7up.</quem>
+  </foto>
+  <foto ficheiro="031-F-03.jpg">
+  <onde>Taberna do Fausto</onde>
+  <quando data="2000.09.22"/>
+  <quem>Francisco de Sousa com os amigos.</quem>
+  </foto>
+</fotos>

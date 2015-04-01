@@ -1,0 +1,83 @@
+\chapter{Processamento de ficheiros com Canções}
+\label{cap:music}
+Neste problema era pretendido que fosse criado um filtro de texto que interpretasse ficheiros com letras de musica, e fosse gerado um ficheiro \emph{latex} para cada musica encontrada.
+Ainda existe a particularidade de cada ficheiro com musicas poder conter mais do que uma musica, neste caso deve ser criado 2 ficheiros \emph{latex}.
+
+\section{Analise e Especificação}
+\label{seq:music-ana}
+Existem varias questões que são deixadas em aberto no enunciado que iram ser especificadas nesta secção. 
+O programa irá ler do \emph{stardard} input e os nomes dos ficheiros \emph{latex} que irão ser gerados podem ser recebidos por argumento, caso contrario os nomes assumido utilizam numeração, começando em 0 até à n-ésima musica interpretada. 
+Uma vez que não se sabe a ordem pela qual os cabeçalhos estão nos ficheiros a ser interpretados, o mais seguro será guardar toda a musica em memoria e só imprimir para o ficheiro \emph{latex} depois do fim da musica.
+Após a analise dos \emph{Datasets} verificou-se a existência de campos no cabeçalho que não são utilizados por o programa, ou seja todos os possíveis campos no cabeçalho devem ser ignorados.
+Durante a analise também foi verificada a existência de anotações em algumas musicas que serviriam para apresentar as pautas, o nosso programa irá tentar ignorar as marcas e assim tentar apenas imprimir a letra da musica do ficheiro \emph{latex}.
+Existe ainda outro cuidado na criação do ficheiro \emph{latex} que é a utilização na musica de caracteres especiais no \emph{latex}.
+
+\section{Implementação}
+\label{seq:music-imp}
+
+\subsection{Estrutura de dados}
+\label{seq:music-est}
+De forma a complementar o enunciado na secção \ref{seq:music-ana}, foi criada uma estrutura principal chamada \verb!Music!, onde se guarda a informação geral da musica temporariamente até esta ser imprimida para um ficheiro.
+
+Nesta estrutura irá-se guardar o titulo, o nome do autor entre outros campos do cabeçalho necessários, e também a letra da musica.
+
+A letra da musica é guardada numa lista ligada onde cada nodo é um linha da letra e é representada pela estrutura \verb!MusicLine!.
+A estrutura pode ser encontrada em anexo \ref{seq:anex-music-est}.
+
+\subsection{Filtro de Texto}
+\label{seq:music-filtro}
+Para a filtragem do texto foram criadas varias expressões regulares, o ficheiro pode ser encontrado em anexo (\ref{seq:anex-music-filtro}).
+
+As primeiras expressões regulares, do tipo \verb!^title:.+! servem para apanhar os cabeçalhos que serão necessários, para alem do \verb!title! existe mais as seguinte: \verb!from!, \verb!author!, \verb!lyrics!, \verb!music! e \verb!singer!, todas com equivalentes. 
+De forma a ignorar qualquer outro campo do cabeçalho que não tivesse sido previsto foi ainda criada a seguinte expressão regular: \verb!^[a-zA-Z]+:.+!.
+
+Quanto à detenção da letra da musica existem duas expressões regulares: uma para apanhar uma linha da lírica, outra para apanhar as linhas em branco entre os poemas, que são respetivamente: \verb![ ].*! e \verb!$^\n!.
+
+Tal como dito na analise (\ref{seq:music-ana}), existem algumas anotações no meio da letra da musica que eram necessárias ser retiradas. Para isso foram criadas as seguintes expressões regulares:
+
+\begin{itemize}
+\item \verb!{abc}(.|\n)*{abcclose}! para retirar a pauta da musica.
+\item \verb![ ].*! que ignora as notas no meio dos poemas (pois estas tem um espaço no inicio).
+\end{itemize}
+
+Ainda assim estas duas expressões regulares não eram suficientes e na deteção de uma linha da letra, antes de guardar a linha, passa-se a linha por duas funções: \verb!takeOffAnotations! e \verb!takeOffUnderSccore!. Em que a primeira tira anotações que estao na mesma linha, e a segunda tira os caracteres '\_'  que estão no meio da linha.
+
+\subsection{Funcionamento}
+\label{seq:music-func}
+
+De forma a perceber melhor o funcionamento do autómato esta secção irá fazer a ponte entre o filtro de texto (\ref{seq:music-filtro}) e a estrutura de dados (\ref{seq:music-est}).
+
+À medida que o autómato recolhe os campos do cabeçalho da musica, guarda a informação, com as funções de \verb!append!. Como por exemplo \verb!appendAuthor!, \verb!appendLyrics!, entre outras. Estas funções guardam os campos na variável \verb!Music!.
+
+Enquanto que as linhas da letra são guardadas através das funções \verb!appendLine! e \verb!appendWhiteLine!.
+
+Quando é detetado o inicio de uma nova letra, através de expressão regular, é executado \verb!commitCheckNext()! que escreve a letra que esta atualmente na variável \verb!Music! para o ficheiro \emph{latex}, neste ponto caso seja detetado a falta de algum item obrigatório então a escrita para o ficheiro é cancelada.
+De seguida a variável \verb!Music! é reiniciada para a musica seguinte com a função \verb!Start()!.
+
+Na escrita do ficheiro \emph{latex} a letra é escrita entre as \emph{tags} da \emph{latex} de \emph{Verbatim} para evitar erros no \emph{latex} por falta de caracteres escape.
+
+\subsection{Testes realizados}
+\label{seq:music-test}
+Estão documentados neste secção 3 testes realizados ao autómato, utilizando com input os ficheiro que estão em anexo: \ref{seq:anex-music-test-in01}, \ref{seq:anex-music-test-in02} e \ref{seq:anex-music-test-in03}.
+
+\subsubsection{Teste nº 1}
+
+Após a utilização do autómato no ficheiro \ref{seq:anex-music-test-in01}, este gerou o output (\ref{seq:anex-music-test-out01}).
+Este ficheiro não tem nenhuma situação excecional, é um caso normal.
+
+\subsubsection{Teste nº 2}
+
+Após a utilização do autómato no ficheiro \ref{seq:anex-music-test-in02}, este gerou o output (\ref{seq:anex-music-test-out02}).
+Este ficheiro tem duas situações excecionais, o carácter '\_' no meio de palavras e notas musicais no fim das frases.
+Podemos verificar no output que apenas tem a letra da musica.
+
+\subsubsection{Teste nº 3}
+
+Após a utilização do autómato no ficheiro \ref{seq:anex-music-test-in03}, este gerou o output (\ref{seq:anex-music-test-out03}).
+Este ficheiro tem uma situação excecional, antes da letra da musica tem as tags \verb!<abc>...</abc>! com anotações de notas musicas.
+Podemos verificar que no output já não está presente.
+
+
+Um exemplo de uma possível utilização do autómato é:\\
+\verb!cat <inputFile> | ./play <output1.tex> <output2.tex> ...!
+

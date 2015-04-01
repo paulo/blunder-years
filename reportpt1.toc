@@ -1,0 +1,46 @@
+\select@language {portuguese}
+\contentsline {chapter}{\numberline {1}Introdu\IeC {\c c}\IeC {\~a}o}{3}{chapter.1}
+\contentsline {chapter}{\numberline {2}Museu da Pessoa \IeC {\textemdash } tratamento de fotografias}{4}{chapter.2}
+\contentsline {section}{\numberline {2.1}Analise e Especifica\IeC {\c c}\IeC {\~a}o}{4}{section.2.1}
+\contentsline {section}{\numberline {2.2}Implementa\IeC {\c c}\IeC {\~a}o}{4}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Estrutura de dados}{4}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Filtro de Texto}{4}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}Funcionamento}{4}{subsection.2.2.3}
+\contentsline {section}{\numberline {2.3}Testes realizados}{4}{section.2.3}
+\contentsline {chapter}{\numberline {3}Museu da Pessoa \IeC {\textemdash } tratamento de fotografias}{6}{chapter.3}
+\contentsline {section}{\numberline {3.1}Analise e Especifica\IeC {\c c}\IeC {\~a}o}{6}{section.3.1}
+\contentsline {section}{\numberline {3.2}Implementa\IeC {\c c}\IeC {\~a}o}{6}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Estrutura de dados}{6}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Filtro de Texto}{7}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Funcionamento}{8}{subsection.3.2.3}
+\contentsline {section}{\numberline {3.3}Testes realizados}{8}{section.3.3}
+\contentsline {chapter}{\numberline {4}Processamento de ficheiros com Can\IeC {\c c}\IeC {\~o}es}{9}{chapter.4}
+\contentsline {section}{\numberline {4.1}Analise e Especifica\IeC {\c c}\IeC {\~a}o}{9}{section.4.1}
+\contentsline {section}{\numberline {4.2}Implementa\IeC {\c c}\IeC {\~a}o}{9}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Estrutura de dados}{9}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Filtro de Texto}{10}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Funcionamento}{10}{subsection.4.2.3}
+\contentsline {subsection}{\numberline {4.2.4}Testes realizados}{11}{subsection.4.2.4}
+\contentsline {subsubsection}{Teste n\IeC {\textordmasculine } 1}{11}{section*.3}
+\contentsline {subsubsection}{Teste n\IeC {\textordmasculine } 2}{11}{section*.4}
+\contentsline {subsubsection}{Teste n\IeC {\textordmasculine } 3}{11}{section*.5}
+\contentsline {chapter}{\numberline {5}Anexos}{12}{chapter.5}
+\contentsline {section}{\numberline {5.1}Museu da Pessoa \IeC {\textemdash } tratamento de fotografias}{12}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Filtro de Texto}{12}{subsection.5.1.1}
+\contentsline {subsection}{\numberline {5.1.2}Estrutura de dados}{12}{subsection.5.1.2}
+\contentsline {subsection}{\numberline {5.1.3}Cabe\IeC {\c c}alho ficheiro C}{12}{subsection.5.1.3}
+\contentsline {section}{\numberline {5.2}Processamento de Entidades Nomeadas (Enamex)}{12}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Filtro de Texto}{12}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}Estrutura de dados}{12}{subsection.5.2.2}
+\contentsline {subsection}{\numberline {5.2.3}Cabe\IeC {\c c}alho ficheiro C}{12}{subsection.5.2.3}
+\contentsline {section}{\numberline {5.3}Processamento de ficheiros com Can\IeC {\c c}\IeC {\~o}es}{12}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Filtro de Texto}{12}{subsection.5.3.1}
+\contentsline {subsection}{\numberline {5.3.2}Estrutura de dados}{12}{subsection.5.3.2}
+\contentsline {subsection}{\numberline {5.3.3}Cabe\IeC {\c c}alho ficheiro C}{13}{subsection.5.3.3}
+\contentsline {subsection}{\numberline {5.3.4}Testes}{13}{subsection.5.3.4}
+\contentsline {subsubsection}{Input teste 1}{13}{section*.6}
+\contentsline {subsubsection}{Output teste 1}{14}{section*.7}
+\contentsline {subsubsection}{Input teste 2}{15}{section*.8}
+\contentsline {subsubsection}{Output teste 2}{16}{section*.9}
+\contentsline {subsubsection}{Input teste 3}{17}{section*.10}
+\contentsline {subsubsection}{Output teste 3}{18}{section*.11}

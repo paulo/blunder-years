@@ -1,0 +1,67 @@
+Relatório
+
+
+\chapter{Museu da Pessoa — tratamento de fotografias}
+\label{cap:museu}
+Neste problema é pretendido que, a partir de um ficheiro \emph{XML}, seja criado um filtro de texto capaz de interpretar informação relativa às entrevistas feitas para construção o Museu da Pessoa. Com toda essa informação, deverá ser criado um album em \emph{HTML} possuidor de um índice, ordenado alfabeticamente, contendo todos os nomes de pessoas presentes no álbum. Além disso, cada elemento do índice deverá estar referenciado para a página que contem todas as fotos da respectiva pessoa. Relativamente às fotos, essas deverão estar ordenadas cronologicamente e a descrição da foto deverá ser o seu título/cabeçalho.
+
+\section{Analise e Especificação}
+\label{seq:museu-ana}
+Após a análise do que é pedido no enunciado e de alguns dos \emph{Datasets}, foi nos possível verificar qual a informação essencial a retirar do ficheiro \emph{XML}. Além disso, como não é regra que as fotos e pessoas presentes no ficheiro \emph{XML} estejam já na ordem pretendida, será necessário que toda a informação seja armazenada em estruturas de dados. O nome do ficheiro \emph{HTML} resultante, poderá ser dado como argumento e caso não seja, por omissão será \emph{AlbumGerado.html}. Além deste ficheiro, serão gerados tantos ficheiros \emph{HTML} quantas as pessoas presentes no album. Esses ficheiros serão denominados numericamente (1.html,2.html,...) à medida que novos nomes são encontrados. Os ficheiros anteriormente referidos apenas serão gerados no final da leitura e filtragem de ficheiro \emph{XML}.
+
+
+\section{Implementação}
+\label{seq:museu-imp}
+\subsection{Estrutura de dados}
+\label{seq:museu-est}
+De forma a dar seguimento ao que foi especificado na secção \ref{seq:museu-ana}, foi necessária a criação de uma estrutura de dados que sirva de suporte aos dados recolhidos. Sendo assim, optamos por criar uma estrutura denominada \verb!photo_node! que terá o formato de uma árvore binária e servirá para armazenar toda a informação relativa a cada descrição de fotos encontrada no ficheiro \emph{XML}. Nesta estrutura serão guardados o nome do ficheiro que contem a foto, a data e o local em que esta foi tirada, a sua descrição e o nome das pessoas nela presentes. A inserção de fotos nesta árvore será ordenada relativamente à sua data.
+Além desta estrutura, também criamos outra, denominada \verb!person_node!, com o objectivo que esta guarde toda a informação acerca das pessoas presentes no álbum. Esta estrutura tem o formato de uma lista ligada e guardará informação como o nome da pessoa, assim como o nome do ficheiro da sua página \emph{HTML} e terá ainda um apontador para uma estrutura \verb!photo_node! em que será armazenada toda a informação relacionada com as suas fotos. Finalmente, criamos uma estrutura \verb!Album! que apenas conterá um apontador para uma estrutura \verb!person_node!, onde estará a informação relativa às pessoas nele presente, e um contador que servirá para contar o número de pessoas presentes no álbum. O contador servirá de auxílio na criação dás páginas \emph{HTML} numeradas referidas na secção \ref{seq:museu-ana}.
+
+\subsection{Filtro de Texto}
+\label{seq:museu-filtro}
+Um dos objetivos deste trabalho prático é a utilização de geradores de filtro de texto, como o \emph{Flex}. Sendo assim, foi criado um ficheiro Flex que permite encontrar determinados padrões de expressões regulares e executar uma determinada acção para cada uma delas.
+
+No ficheiro referido, podemos encontrar algumas instruções em \verb!linguagem C! como a inclusão de ficheiros de cabeçalhos ( headers, .h) e a declaração de variáveis.
+De seguida, são definidas as expressões regulares e as respetivas acções que se pretendem realizar no caso da identificação positiva do referido padrão:
+
+\verb!\<foto[ \t]+[a-zA-Z]+=\".*\"!
+A partir da análise do ficheiro \emph{XML} exemplificado no enunciado, foi possível verificar que a descrição de uma foto começa com o nome do ficheiro que a contem da seguinte forma: \verb!<foto ficheiro="ficheiro.jpg">!. Sendo assim, quando este padrão é encontrado, é inicializado um \verb!photo_node! com o nome encontrado entre as aspas. O nome é obtido retirando da expressão apenas o que se encontra à frente da primeira ocorrência de aspas e atrás da ocorrência seguinte.
+
+\verb!\<quando[ \t]+[a-zA-Z]+=\"[0-9]{4}(.|-)[0-9]{2}(.|-)[0-9]{2}!
+De seguida pretendemos encontrar a data em que a foto foi tirada. A partir do exemplo do enunciado, verificamos que a data é descrita da seguinte forma: \verb!<quando data="1961-01-15"/>!. Sendo assim, pretendemos encontrar todas as expressões no formato referido, com a possibilidade que a data esteja separada por pontos em vez de traços. A obtenção da data faz-se retirando apenas o que se encontra à frente da primeira ocorrência de aspas.
+
+\verb!\<quem>[ \t\na-zA-ZÀ-û,\"0-9;:]+!
+Um padrão essencial a encontrar é o nome das pessoas presentes na foto. Esses nomes devem estar descritos da seguinte forma: \\
+\verb!<quem>Ana de Lourdes de Oliveira Chamine; Antonio Oliveira Machado</quem>!\\
+Nesta fase, optamos por não separar ainda os nomes por tokens porque será mais útil fazê-lo apenas quando a descrição da foto estiver completa. Sendo assim, apenas retiramos tudo o que esteja entre \verb!'>'! e \verb!'<'! e adicionamos à estrutura que contem a descrição da foto.
+
+\verb!\<onde>[ \t\n0-9a-zA-ZÀ-û.,;:\"]+<!
+Continuando com a análise do exemplo do enunciado, verificamos que uma foto pode ter descrito o local em que esta foi tirada:\\
+\verb!<onde>Casa Machado, Afurada, Vila Nova de Gaia</onde>!\\
+Ora, quando este padrão é encontrado, só é necessário guardar o que está entre \verb!'>'! e \verb!'<'!, assim como no caso anterior.
+
+\verb!\<facto>[ \t\n0-9a-zA-ZÀ-û.,;:\"]+<!
+Finalmente, o último campo necessário para a descrição da foto é o facto que esta representa: \verb!<facto> Os noivos cortam o bolo de casamento</facto>!. O que é essencial retirar neste caso é o mesmo que nos casos anteriores, ou seja, apenas o que se encontra entre \verb!'>'! e \verb!'<'!.
+
+\verb!\<\/foto>!
+Sempre que é encontrado o padrão que finaliza a descrição de uma foto, \verb!</foto>!, é necessário adicionar o \verb!photo_node! criado a todos os respetivos \verb!person_node! das pessoas que se encontram na descrição da foto. É nesta fase que os nomes das pessoas presentes na foto é separado e identificado. Finalmente adiciona-se a descrição da foto a todas as pessoas nela presente.
+
+\verb!.|\n!
+Este padrão apenas é utilizado para indicar que sempre que é encontrado qualquer outro \verb!byte! ou \verb!\n!, deve ser ignorado.
+
+\subsection{Funcionamento}
+\label{seq:museu-func}
+Antes do filtro de texto ser aplicado ao ficheiro \emph{XML} é invocada a função \verb!init! que inicializa uma variável \verb!static Album!. Inicializada esta vaŕiável, é possível aplicar o filtro de texto.
+À medida que a informação do ficheiro \emph{XML} é filtrada, são invocadas funções que tratam e guardam na estrutura a informação recolhida.
+Sempre que é encontrada uma expressão que defina o início de uma descrição de uma foto, a informação relativa ao nome da foto é recolhida e é invocada a função \verb!initPhoto! que trata de alocar o espaço necessário para a informação que virá a ser recolhida posteriormente. Do mesmo modo, sempre que é encontrada uma expressão que identifique a data, a localização, a descrição ou as pessoas presentes na foto, são invocadas funções capazes de tratar e armazenar essa informação. As funções referidas são \verb!setDate, setLoc, setFact e setWho!, respetivamente. Sempre que não seja possível identificar uma destas características anteriores, estas ficam com os seus valores por defeito, ou seja, caso uma foto não tenha a tag \verb!<quem>!, o seu campo correspondente na estrutura ficará preenchido com \verb!"Desconhecidos"!. Finalmente, quando é encontrada a expressão que define o final da descrição de uma foto, é invocada a função que trata de inserir a informação da nova foto na estrutura \verb!Album!.
+Depois de tratada toda a informação, são invocadas funções auxiliares que criam e preenchem o(s) ficheiro(s) \emph{HTML} necessários.
+
+\section{Testes realizados}
+\label{seq:museu-test}
+<alguns exemplos>
+
+Possíveis exemplos de aplicação deste filtro de texto:
+\begin{itemize}
+\item\verb!cat\ <inputFile>\ |\ ./play\ <output1.html>\ !
+\item\verb!cat\ <inputFile>\ |\ ./play\ !
+\end{itemize}
