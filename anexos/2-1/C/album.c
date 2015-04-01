@@ -207,15 +207,6 @@ void createAlbum(char* filename) {
 	fclose(file);
 }
 
-void printst(photo_ptr p){
-
-	if(p!=NULL) {
-
-		printst(p->left);
-		printf("%s\n", p->file);
-		printst(p->right);
-	}	
-}
 
 int main(int argc, char* argv[]){
 	
