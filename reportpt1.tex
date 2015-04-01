@@ -58,6 +58,18 @@
 \begin{document}
 
 \include{capa}
+
+\begin{abstract}
+Este relatório descreve a resolução de um conjunto de exercícios propostos, que consistem no desenvolvimento de programas na linguagem C com o auxílio de geradores de filtros de texto, como o Flex. Para cada problema é realizada uma breve análise sobre o trabalho efetuado, as decisões que lideraram o seu desenvolvimento e as estruturas implementadas, assim como uma explicação do seu funcionamento. 
+
+Os problemas resolvidos consistem no desenvolvimento de filtros de texto que:
+\begin{itemize}
+\item processa um ficheiro XML com descrições de fotografias e gerar um álbum HTML.
+\item processa de um ficheiro XML anotado com tags Enamex e gera páginas HTML apresentando as "pessoas", "países", "cidades" e organizações nele identificadas. 
+\item processa vários ficheiros de texto, compostos por letras de canções, e gera documentos em LATEX para cada uma delas.
+\end{itemize}
+Para cada problema é apresentado o código em linguagem C e as expressões regulares desenvolvidas, sendo estes suportados por exemplos e devidos resultados.
+\end{abstract}
 %----------------------------------------------------------------------
 %\newpage
 %\phantom{placeholder} % doesn't appear on page
@@ -89,6 +101,15 @@ Para isso foram selecionados 3 exercícios dentro de um grupo de 8 exercícios, 
 \include{reportpt1-1}
 \include{reportpt1-2}
 \include{reportpt1-5}
+
+\chapter{Conclusão}
+\label{cap:intro}
+Terminado o desenvolvimento do trabalho, é importante referir que o mesmo nos permitiu aprofundar o conhecimento acerca do Gerador Léxico Flex assim como da análise léxica no geral, obrigando-nos também a utilizar ferramentas tais como HTML e Latex.
+Relativamente ao problema do "Museu da Pessoa", a dificuldade recaiu na definição da estrutura de suporte de dados, dado que devido à falta de claridade do enunciado foi necessário re-implementar a estrutura de forma a que esta admitisse a funcionalidade de ter um índice geral em HTML.
+No problema de "Processamento de Entidades Nomeadas" foi necessário chegar a um consenso acerca das tags que deveriam ser validadas e o relacionamento possível que estas teriam entre si. Após essa decisão, o desenvolvimento da estrutura que suporta esta informação tornou-se relativamente simples.
+O problema "Processamento de Ficheiros com Canções" foi resolvida através da implementação de uma estrutura capaz de evitar que a ordem dos dados no ficheiro não seja significativa (e então armazena em memória a informação). A presença de certos elementos em datasets mais diversos (tais como header's não esperados e anotações em músicas) deram origem a problemas, sendo que a solução consistiu em ignorar essa informação. 
+Cada elemento do grupo realizou um exercício do enunciado proposto, apoiando-se mutuamente na existência de dificuldades. Apesar das dificuldades iniciais, encontramos-nos satisfeitos com o resultado final e estamos confiantes para o próximo trabalho.
+
 \include{anexos}
 \end{document}
 
