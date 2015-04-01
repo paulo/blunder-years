@@ -68,5 +68,8 @@
     <ClCompile Include="FactoryCylinder.cpp">
       <Filter>Source Files\FigureFactory</Filter>
     </ClCompile>
+    <ClCompile Include="FactoryTree.cpp">
+      <Filter>Source Files\FigureFactory</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

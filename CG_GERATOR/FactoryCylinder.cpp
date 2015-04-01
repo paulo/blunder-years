@@ -11,15 +11,33 @@
 */
 Figure FigureFactory::createCylinder(float raiob, float altura, int fatias, int camadas){
 	Figure f;
+/*	
 	float angulo_circ = 2 * ((float)M_PI) / fatias; // auxiliar para calcular o tamanho das fatias
 	float meio = altura / 2;
 	float altura_aux1, altura_aux2 = -meio; // auxiliares de pontos altura
+*/
 
 	int i, j;
 	float tam_camadas = altura / camadas; // auxiliar da altura das camadas
+	float meio = altura / 2;
+	point3D *points = new point3D[camadas + 2];
+
+	points[0].x = 0;
+	points[0].y = meio;
+
+	for (i = 0; i <= camadas; i++){
+		points[i].x = raiob;
+		points[i].y = meio - i * tam_camadas ;
+	}
+
+	points[i].x = 0;
+	points[i].y = -meio;
+	
+	createRotate(&f, points, camadas + 2, fatias);
+
 
 	//base
-	createCircleAux(&f, raiob, fatias, -meio, 0);
+	/*createCircleAux(&f, raiob, fatias, -meio, 0);
 	for (i = 0; i<camadas; i++){
 		altura_aux1 = altura_aux2;
 		altura_aux2 += tam_camadas;
@@ -35,7 +53,7 @@ Figure FigureFactory::createCylinder(float raiob, float altura, int fatias, int 
 
 		}
 	}
-
+	*/
 
 	//baixo
 	createCircleAux(&f, raiob, fatias, meio, 1);

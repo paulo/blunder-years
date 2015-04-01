@@ -12,6 +12,7 @@ public:
 	Figure createPlane(float x,float z);
 	Figure createCircle(float raio, int fatias);
 	Figure createCylinder(float raiob, float altura, int fatias, int camadas);
+	Figure createTree(float raiob, float alturab, float raioc, float altura, int fatias, int camadas);
 private :
 	void createPlaneAux(Figure* f, float p[3], int axisFirst, int axisSecond);
 	void createCircleAux(Figure* f, float raio, int fatias, float altura, int orient);
