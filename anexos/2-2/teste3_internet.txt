@@ -1,0 +1,93 @@
+<DOC>
+<DOCID> nyt960214.0704 </DOCID>
+<STORYID cat=f pri=u> A4479 </STORYID>
+<SLUG fv=taf-z> BC-<ENAMEX TYPE="PERSON">MURDOCH</ENAMEX>-SATELLITE-NYT </SLUG>
+<DATE> <TIMEX TYPE="DATE">02-14</TIMEX> </DATE>
+<NWORDS> 0608 </NWORDS>
+<PREAMBLE>
+BC-<ENAMEX TYPE="PERSON">MURDOCH</ENAMEX>-SATELLITE-NYT
+<ENAMEX TYPE="PERSON">MURDOCH</ENAMEX> SATELLITE FOR LATIN PROGRAMMING EXPLODES ON TAKEOFF
+(kd)
+By <ENAMEX TYPE="PERSON">MARK LANDLER</ENAMEX>
+c.<TIMEX TYPE="DATE">1996</TIMEX> <ENAMEX TYPE="ORGANIZATION">N.Y. Times News Service</ENAMEX>
+</PREAMBLE>
+<TEXT>
+<p>
+A Chinese rocket carrying a television satellite exploded
+seconds after launch <TIMEX TYPE="DATE">Wednesday</TIMEX>, dealing a potential blow to <ENAMEX TYPE="PERSON">Rupert
+Murdoch</ENAMEX>'s ambitions to offer satellite programming in <ENAMEX TYPE="LOCATION">Latin
+America</ENAMEX>.
+<p>
+<ENAMEX TYPE="PERSON">Murdoch</ENAMEX>'s <ENAMEX TYPE="ORGANIZATION">News Corp.</ENAMEX> is one of four media companies in a
+partnership that had leased space on the <ENAMEX TYPE="ORGANIZATION">Intelsat</ENAMEX> satellite to
+offer the Latin American service. The other partners are
+<ENAMEX TYPE="ORGANIZATION">Tele-Communications Inc.</ENAMEX>, the nation's largest cable operator;
+<ENAMEX TYPE="ORGANIZATION">Grupo Televisa SA</ENAMEX>, the Mexican broadcaster and publisher, and the
+giant Brazilian media conglomerate <ENAMEX TYPE="ORGANIZATION">Globo</ENAMEX>.
+<p>
+<ENAMEX TYPE="PERSON">Llennel Evangelista</ENAMEX>, a spokesman for <ENAMEX TYPE="ORGANIZATION">Intelsat</ENAMEX>, a global
+satellite consortium based in <ENAMEX TYPE="LOCATION">Washington</ENAMEX>, said the accident
+occurred at <TIMEX TYPE="TIME">2 p.m. EST</TIMEX> <TIMEX TYPE="DATE">Wednesday</TIMEX>, or <TIMEX TYPE="TIME">early Thursday morning</TIMEX> at the
+<ENAMEX TYPE="LOCATION">Xichang</ENAMEX> launch site in <ENAMEX TYPE="LOCATION">Sichuan Province</ENAMEX> in southwestern <ENAMEX TYPE="LOCATION">China</ENAMEX>. ``We
+have no details on what caused the accident,'' he said.
+<p>
+<ENAMEX TYPE="PERSON">Evangelista</ENAMEX> said the Chinese-built Long March rocket veered off
+course and was destroyed after it failed to reach orbit. <ENAMEX TYPE="ORGANIZATION">Intelsat</ENAMEX>
+was using the Long March rocket for the first time to launch one of
+its satellites. <ENAMEX TYPE="ORGANIZATION">Intelsat</ENAMEX> currently has 23 satellites in orbit.
+<p>
+A spokesman for <ENAMEX TYPE="ORGANIZATION">News Corp.</ENAMEX>, <ENAMEX TYPE="PERSON">Howard Rubenstein</ENAMEX>, said the accident
+would not hinder the group's plans to offer 150 channels of
+entertainment, news and sports programming to viewers in <ENAMEX TYPE="LOCATION">Latin
+America</ENAMEX> and the <ENAMEX TYPE="LOCATION">Caribbean</ENAMEX>.
+<p>
+``<ENAMEX TYPE="ORGANIZATION">News Corp.</ENAMEX> has a number of other real options and will
+disclose them shortly,'' <ENAMEX TYPE="PERSON">Rubinstein</ENAMEX> said in a statement.
+<p>
+<ENAMEX TYPE="ORGANIZATION">Grupo Televisa</ENAMEX> and <ENAMEX TYPE="ORGANIZATION">Globo</ENAMEX> plan to offer national and local
+programming in Spanish and Portuguese. Initially, the venture's
+partners said they planned to invest <NUMEX TYPE="MONEY">$500 million</NUMEX>.
+<p>
+But a similar explosion <TIMEX TYPE="DATE">last year</TIMEX> delayed the plans of several
+American media companies to offer a package of satellite television
+services in <ENAMEX TYPE="LOCATION">Asia</ENAMEX>. <ENAMEX TYPE="ORGANIZATION">Viacom</ENAMEX>, <ENAMEX TYPE="ORGANIZATION">Time Warner</ENAMEX>'s <ENAMEX TYPE="ORGANIZATION">Home Box Office</ENAMEX> and <ENAMEX TYPE="ORGANIZATION">Turner
+Broadcasting System</ENAMEX> were among the companies that had leased space
+on an Apstar 2 satellite to beam MTV, CNN and other channels
+throughout <ENAMEX TYPE="LOCATION">Asia</ENAMEX>.
+<p>
+After the rocket carrying that satellite exploded, media
+analysts said the companies had to settle for space on a series of
+regional satellites, which had less reach than the Apstar 2 would
+have offered.
+<p>
+<ENAMEX TYPE="ORGANIZATION">News Corp.</ENAMEX> actually benefited from that accident. In <TIMEX TYPE="DATE">1993</TIMEX>, the
+company had purchased a controlling stake in a rival Asian
+satellite service, <ENAMEX TYPE="ORGANIZATION" STATUS="OPT">Star TV</ENAMEX>. With his biggest competitors unable to
+enter the Asian market, <ENAMEX TYPE="PERSON">Murdoch</ENAMEX> was able to build <ENAMEX TYPE="ORGANIZATION" STATUS="OPT">Star TV</ENAMEX> into the
+dominant programming service.
+<p>
+A spokeswoman for <ENAMEX TYPE="ORGANIZATION">Tele-Communications</ENAMEX>, <ENAMEX TYPE="PERSON">LaRae Marsik</ENAMEX>, said the
+partners in the Latin American venture intended to begin service by
+<TIMEX TYPE="DATE">the end of 1996</TIMEX>. When the companies announced their plans <TIMEX TYPE="DATE">last
+November</TIMEX>, they said they planned to be in business by <TIMEX TYPE="DATE">May</TIMEX>.
+<p>
+Ms. <ENAMEX TYPE="PERSON">Marsik</ENAMEX> said <ENAMEX TYPE="ORGANIZATION">Tele-Communications</ENAMEX> and its partners had a
+back-up plan, which could include leasing space on another
+satellite, but she declined to offer details. ``It is an
+unfortunate incident,'' she said, ``but it is not a
+make-it-or-break-it event for us.''
+<p>
+<ENAMEX TYPE="PERSON">Jessica Reif</ENAMEX>, a media analyst at <ENAMEX TYPE="ORGANIZATION">Merrill Lynch & Co.</ENAMEX>, said, ``If
+they can get up and running with exclusive programming <TIMEX TYPE="DATE" STATUS="OPT">within six
+months</TIMEX>, it doesn't set the venture back that far.''
+<p>
+<ENAMEX TYPE="ORGANIZATION">Hughes Electronics</ENAMEX>, a subsidiary of the <ENAMEX TYPE="ORGANIZATION">General Motors Corp.</ENAMEX>, is
+starting its own satellite broadcast service in <ENAMEX TYPE="LOCATION">Latin America</ENAMEX>. Ms.
+<ENAMEX TYPE="PERSON">Reif</ENAMEX> said that venture, which is based on <ENAMEX TYPE="ORGANIZATION">Hughes</ENAMEX>'s <ENAMEX TYPE="ORGANIZATION" STATUS="OPT">DirecTV</ENAMEX> service
+in the <ENAMEX TYPE="LOCATION">United States</ENAMEX>, would benefit if the explosion delayed the
+<ENAMEX TYPE="PERSON">Murdoch</ENAMEX>-led venture.
+</TEXT>
+<TRAILER>
+NYT-<TIMEX TYPE="DATE">02-14-96</TIMEX> <TIMEX TYPE="TIME">2029EST</TIMEX>
+</TRAILER>
+</DOC>
