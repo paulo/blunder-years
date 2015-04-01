@@ -23,7 +23,7 @@
 \contentsline {subsection}{\numberline {4.2.1}Estrutura de dados}{13}{subsection.4.2.1}
 \contentsline {subsection}{\numberline {4.2.2}Filtro de Texto}{14}{subsection.4.2.2}
 \contentsline {subsection}{\numberline {4.2.3}Funcionamento}{14}{subsection.4.2.3}
-\contentsline {subsection}{\numberline {4.2.4}Testes realizados}{15}{subsection.4.2.4}
+\contentsline {section}{\numberline {4.3}Testes realizados}{15}{section.4.3}
 \contentsline {subsubsection}{Teste n\IeC {\textordmasculine } 1}{15}{section*.8}
 \contentsline {subsubsection}{Teste n\IeC {\textordmasculine } 2}{15}{section*.9}
 \contentsline {subsubsection}{Teste n\IeC {\textordmasculine } 3}{15}{section*.10}
@@ -39,28 +39,28 @@
 \contentsline {subsubsection}{Input teste 2}{26}{section*.16}
 \contentsline {subsubsection}{Output teste 2}{27}{section*.17}
 \contentsline {subsubsection}{Input teste 3}{30}{section*.21}
-\contentsline {subsubsection}{Output teste 3}{31}{section*.22}
-\contentsline {subsubsection}{Input teste 4}{34}{section*.26}
-\contentsline {subsubsection}{Output teste 4}{34}{section*.27}
-\contentsline {section}{\numberline {6.2}Processamento de Entidades Nomeadas (Enamex)}{38}{section.6.2}
-\contentsline {subsection}{\numberline {6.2.1}Filtro de Texto}{38}{subsection.6.2.1}
-\contentsline {subsection}{\numberline {6.2.2}Estrutura de dados}{41}{subsection.6.2.2}
-\contentsline {subsection}{\numberline {6.2.3}Cabe\IeC {\c c}alho ficheiro C}{45}{subsection.6.2.3}
-\contentsline {subsection}{\numberline {6.2.4}Testes}{46}{subsection.6.2.4}
-\contentsline {subsubsection}{Input teste 1}{46}{section*.31}
-\contentsline {subsubsection}{Output teste 1}{46}{section*.32}
-\contentsline {subsubsection}{Input teste 2}{46}{section*.34}
-\contentsline {subsubsection}{Output teste 2}{47}{section*.35}
-\contentsline {subsubsection}{Input teste 3}{47}{section*.37}
-\contentsline {subsubsection}{Output teste 3}{51}{section*.38}
-\contentsline {section}{\numberline {6.3}Processamento de ficheiros com Can\IeC {\c c}\IeC {\~o}es}{51}{section.6.3}
-\contentsline {subsection}{\numberline {6.3.1}Filtro de Texto}{51}{subsection.6.3.1}
-\contentsline {subsection}{\numberline {6.3.2}Estrutura de dados}{52}{subsection.6.3.2}
-\contentsline {subsection}{\numberline {6.3.3}Cabe\IeC {\c c}alho ficheiro C}{56}{subsection.6.3.3}
-\contentsline {subsection}{\numberline {6.3.4}Testes}{56}{subsection.6.3.4}
-\contentsline {subsubsection}{Input teste 1}{56}{section*.40}
-\contentsline {subsubsection}{Output teste 1}{57}{section*.41}
-\contentsline {subsubsection}{Input teste 2}{58}{section*.42}
-\contentsline {subsubsection}{Output teste 2}{59}{section*.43}
-\contentsline {subsubsection}{Input teste 3}{60}{section*.44}
-\contentsline {subsubsection}{Output teste 3}{61}{section*.45}
+\contentsline {subsubsection}{Output teste 3}{32}{section*.22}
+\contentsline {subsubsection}{Input teste 4}{35}{section*.26}
+\contentsline {subsubsection}{Output teste 4}{36}{section*.27}
+\contentsline {section}{\numberline {6.2}Processamento de Entidades Nomeadas (Enamex)}{40}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}Filtro de Texto}{40}{subsection.6.2.1}
+\contentsline {subsection}{\numberline {6.2.2}Estrutura de dados}{43}{subsection.6.2.2}
+\contentsline {subsection}{\numberline {6.2.3}Cabe\IeC {\c c}alho ficheiro C}{46}{subsection.6.2.3}
+\contentsline {subsection}{\numberline {6.2.4}Testes}{47}{subsection.6.2.4}
+\contentsline {subsubsection}{Input teste 1}{47}{section*.31}
+\contentsline {subsubsection}{Output teste 1}{48}{section*.32}
+\contentsline {subsubsection}{Input teste 2}{48}{section*.34}
+\contentsline {subsubsection}{Output teste 2}{49}{section*.35}
+\contentsline {subsubsection}{Input teste 3}{49}{section*.37}
+\contentsline {subsubsection}{Output teste 3}{53}{section*.38}
+\contentsline {section}{\numberline {6.3}Processamento de ficheiros com Can\IeC {\c c}\IeC {\~o}es}{53}{section.6.3}
+\contentsline {subsection}{\numberline {6.3.1}Filtro de Texto}{53}{subsection.6.3.1}
+\contentsline {subsection}{\numberline {6.3.2}Estrutura de dados}{54}{subsection.6.3.2}
+\contentsline {subsection}{\numberline {6.3.3}Cabe\IeC {\c c}alho ficheiro C}{58}{subsection.6.3.3}
+\contentsline {subsection}{\numberline {6.3.4}Testes}{58}{subsection.6.3.4}
+\contentsline {subsubsection}{Input teste 1}{58}{section*.40}
+\contentsline {subsubsection}{Output teste 1}{59}{section*.41}
+\contentsline {subsubsection}{Input teste 2}{60}{section*.42}
+\contentsline {subsubsection}{Output teste 2}{61}{section*.43}
+\contentsline {subsubsection}{Input teste 3}{62}{section*.44}
+\contentsline {subsubsection}{Output teste 3}{63}{section*.45}

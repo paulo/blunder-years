@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.3.24)  1 APR 2015 22:36
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.3.24)  1 APR 2015 22:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1099,13 +1099,8 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 5.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 5.
- [23]
-Overfull \hbox (208.52866pt too wide) in paragraph at lines 15--16
-[][][][][][][][][][][][][][][][][]\T1/cmr/m/n/10 é[][][][][][][][][][][][][][]$
-[]$[][][][][][][][][] 
- []
-
-) (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+ [23])
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2013/08/26 1.5b listings language file
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
@@ -1129,50 +1124,16 @@ File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-1/Exemplo1/1.html
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 3.
+(babel)             in language  on input line 2.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 3.
- [24 <./anexos/2-1/Exemplo1/Screenshots/indice.png>]
-Overfull \hbox (7.64557pt too wide) in paragraph at lines 7--8
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (148.05669pt too wide) in paragraph at lines 16--17
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][]\T1/cmr/m/n/10 é[][]á
-[][][][]ã[][][][][] 
- []
-
-
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 20--21
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (12.08893pt too wide) in paragraph at lines 25--26
-[][][][][][][][][][][][][][][][][][][][][][][][][][][]\T1/cmr/m/n/10 é[][][][][
-][][][] 
- []
-
-
-Overfull \hbox (352.4946pt too wide) in paragraph at lines 30--31
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]\T1/cmr/m/n/1
-0 é[][][][][][][][][][][][][][]$[]$[][][][][][][][][] 
- []
-
-
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 33--34
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (12.08893pt too wide) in paragraph at lines 38--39
-[][][][][][][][][][][][][][][][][][][][][][][][][][][]\T1/cmr/m/n/10 é[][][][][
-][][][] 
- []
-
-)
-<anexos/2-1/Exemplo1/Screenshots/pag1.png, id=677, 1199.48125pt x 661.47125pt>
+(babel)             in language  on input line 2.
+ [24 <./anexos/2-1/Exemplo1/Screenshots/indice.png>])
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 37.
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 37.
+ [25]
+<anexos/2-1/Exemplo1/Screenshots/pag1.png, id=725, 1199.48125pt x 661.47125pt>
 File: anexos/2-1/Exemplo1/Screenshots/pag1.png Graphic file (type png)
 
 <use anexos/2-1/Exemplo1/Screenshots/pag1.png>
@@ -1184,12 +1145,8 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 41--42
  [][] 
  []
 
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 44.
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 44.
-[25]
-<anexos/2-1/Exemplo1/Screenshots/pag2.png, id=727, 1287.81125pt x 522.95375pt>
+
+<anexos/2-1/Exemplo1/Screenshots/pag2.png, id=726, 1287.81125pt x 522.95375pt>
 File: anexos/2-1/Exemplo1/Screenshots/pag2.png Graphic file (type png)
 
 <use anexos/2-1/Exemplo1/Screenshots/pag2.png>
@@ -1205,66 +1162,22 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 47--48
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-1/Exemplo2/legenda.xml
-Overfull \hbox (53.0792pt too wide) in paragraph at lines 7--8
-[][][][][][][]\T1/cmr/m/n/10 é[][]ó[][][][][][][][][][][][][][][][][][][][][][]
- 
- []
-
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 8.
+(babel)             in language  on input line 6.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 8.
-[26 <./anexos/2-1/Exemplo1/Screenshots/pag1.png> <./anexos/2-1/Exemplo1/Screens
-hots/pag2.png>]
-Overfull \hbox (19.19835pt too wide) in paragraph at lines 12--13
-[][][][][][][]\T1/cmr/m/n/10 ú[][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (168.05203pt too wide) in paragraph at lines 27--28
-[][][][][][][][][][][][][][][][][][][][][][][][][][]\T1/cmr/m/n/10 é[][][][][][
-][][][][][][][][][][][][][][][] 
- []
-
-) (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+(babel)             in language  on input line 6.
+ [26 <./anexos/2-1/Exemplo1/Screenshots/pag1.png> <./anexos/2-1/Exemplo1/Screen
+shots/pag2.png>])
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-1/Exemplo2/AlbumGerado.html
-Overfull \hbox (30.08467pt too wide) in paragraph at lines 16--17
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]\T1/cmr
-/m/n/10 é[]
- []
-
-
-Overfull \hbox (94.51384pt too wide) in paragraph at lines 18--19
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][]\T1/cmr/m/n/10 é[][][][
-][]ê[][][][][][][][][][] 
- []
-
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 19.
+(babel)             in language  on input line 14.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 19.
-[27]
-Overfull \hbox (137.05933pt too wide) in paragraph at lines 19--20
-[][][][][][][][][][][][][][][][][]\T1/cmr/m/n/10 é[][]ó[][][][][][][][][][][][]
-[][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (13.19977pt too wide) in paragraph at lines 20--21
-[][][][][][][][][][][][][][][][][]\T1/cmr/m/n/10 ú[][][][][][][][][][][][][][][
-][][][][] 
- []
-
-
-Overfull \hbox (139.16997pt too wide) in paragraph at lines 21--22
-[][][][][][][][][][][][][][][][][]\T1/cmr/m/n/10 ú[][][][][][][][][][][][][][][
-][][][][][][][][][][][] 
- []
-
-)
-<anexos/2-1/Exemplo2/Screenshots/indice.png, id=793, 1236.62pt x 274.02374pt>
+(babel)             in language  on input line 14.
+ [27])
+<anexos/2-1/Exemplo2/Screenshots/indice.png, id=788, 1236.62pt x 274.02374pt>
 File: anexos/2-1/Exemplo2/Screenshots/indice.png Graphic file (type png)
 
 <use anexos/2-1/Exemplo2/Screenshots/indice.png>
@@ -1280,33 +1193,12 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 61--62
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-1/Exemplo2/5.html
-Overfull \hbox (7.64557pt too wide) in paragraph at lines 7--8
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (138.05913pt too wide) in paragraph at lines 9--10
-[][][][][][][][][][][][][][][][][][][][][][][][][][]\T1/cmr/m/n/10 é[][][][][][
-][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 19--20
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (72.07474pt too wide) in paragraph at lines 25--26
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][]\T1/cmr/m/n/10 é[]
- []
-
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 29.
+(babel)             in language  on input line 18.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 29.
-[28 <./anexos/2-1/Exemplo2/Screenshots/indice.png>])
-<anexos/2-1/Exemplo2/Screenshots/pag1.png, id=836, 1239.63126pt x 662.475pt>
+(babel)             in language  on input line 18.
+ [28 <./anexos/2-1/Exemplo2/Screenshots/indice.png>])
+<anexos/2-1/Exemplo2/Screenshots/pag1.png, id=825, 1239.63126pt x 662.475pt>
 File: anexos/2-1/Exemplo2/Screenshots/pag1.png Graphic file (type png)
 
 <use anexos/2-1/Exemplo2/Screenshots/pag1.png>
@@ -1322,25 +1214,12 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 70--71
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-1/Exemplo2/6.html
-Overfull \hbox (7.64557pt too wide) in paragraph at lines 7--8
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 19--20
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 24.
+(babel)             in language  on input line 10.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 24.
-[29 <./anexos/2-1/Exemplo2/Screenshots/pag1.png>]
-Overfull \hbox (13.64415pt too wide) in paragraph at lines 25--26
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-) <anexos/2-1/Exemplo2/Screenshots/pag2.png, id=869, 1239.63126pt x 662.475pt>
+(babel)             in language  on input line 10.
+ [29 <./anexos/2-1/Exemplo2/Screenshots/pag1.png>]) <anexos/2-1/Exemplo2/Screen
+shots/pag2.png, id=855, 1239.63126pt x 662.475pt>
 File: anexos/2-1/Exemplo2/Screenshots/pag2.png Graphic file (type png)
 
 <use anexos/2-1/Exemplo2/Screenshots/pag2.png>
@@ -1356,60 +1235,20 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 79--80
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-1/Exemplo3/legenda.xml
-Overfull \hbox (13.64415pt too wide) in paragraph at lines 5--6
-[][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (49.63564pt too wide) in paragraph at lines 7--8
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (13.64415pt too wide) in paragraph at lines 8--9
-[][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 18.
+(babel)             in language  on input line 2.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 18.
-[30 <./anexos/2-1/Exemplo2/Screenshots/pag2.png>]
-Overfull \hbox (37.63847pt too wide) in paragraph at lines 20--21
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (61.6328pt too wide) in paragraph at lines 33--34
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (217.5959pt too wide) in paragraph at lines 39--40
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][] 
- []
-
-) (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+(babel)             in language  on input line 2.
+ [30 <./anexos/2-1/Exemplo2/Screenshots/pag2.png>]
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 45.
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 45.
+ [31]) (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-(./anexos/2-1/Exemplo3/AlbumGerado.html
-Overfull \hbox (19.64273pt too wide) in paragraph at lines 17--18
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
-
- []
-
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 18.
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 18.
-[31]
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 18--19
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-)
-<anexos/2-1/Exemplo3/Screenshots/indice.png, id=953, 1227.58624pt x 223.83624pt
+(./anexos/2-1/Exemplo3/AlbumGerado.html)
+<anexos/2-1/Exemplo3/Screenshots/indice.png, id=932, 1227.58624pt x 223.83624pt
 >
 File: anexos/2-1/Exemplo3/Screenshots/indice.png Graphic file (type png)
  <use anexos/2-1/Exemplo3/Screenshots/indice.png>
@@ -1425,35 +1264,12 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 93--94
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-1/Exemplo3/3.html
-Overfull \hbox (7.64557pt too wide) in paragraph at lines 7--8
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (145.61293pt too wide) in paragraph at lines 16--17
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][] 
- []
-
-
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 20--21
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (67.63138pt too wide) in paragraph at lines 25--26
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][] 
- []
-
-
-Overfull \hbox (43.63705pt too wide) in paragraph at lines 26--27
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][] 
- []
-
-)
-<anexos/2-1/Exemplo3/Screenshots/pag2.png, id=954, 1246.6575pt x 661.47125pt>
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 8.
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 8.
+ [32 <./anexos/2-1/Exemplo3/Screenshots/indice.png>])
+<anexos/2-1/Exemplo3/Screenshots/pag2.png, id=974, 1246.6575pt x 661.47125pt>
 File: anexos/2-1/Exemplo3/Screenshots/pag2.png Graphic file (type png)
 
 <use anexos/2-1/Exemplo3/Screenshots/pag2.png>
@@ -1466,35 +1282,19 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 102--103
  []
 
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 104.
+(babel)             in language  on input line 105.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 104.
-[32 <./anexos/2-1/Exemplo3/Screenshots/indice.png>]
-(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+(babel)             in language  on input line 105.
+[33] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-1/Exemplo3/4.html
-Overfull \hbox (7.64557pt too wide) in paragraph at lines 7--8
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (217.5959pt too wide) in paragraph at lines 16--17
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][][] 
- []
-
-
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 20--21
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 29.
+(babel)             in language  on input line 26.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 29.
-[33 <./anexos/2-1/Exemplo3/Screenshots/pag2.png>])
-<anexos/2-1/Exemplo3/Screenshots/pag1.png, id=1032, 1242.6425pt x 660.4675pt>
+(babel)             in language  on input line 26.
+ [34 <./anexos/2-1/Exemplo3/Screenshots/pag2.png>])
+<anexos/2-1/Exemplo3/Screenshots/pag1.png, id=1033, 1242.6425pt x 660.4675pt>
 File: anexos/2-1/Exemplo3/Screenshots/pag1.png Graphic file (type png)
 
 <use anexos/2-1/Exemplo3/Screenshots/pag1.png>
@@ -1509,37 +1309,17 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 111--112
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-(./anexos/2-1/Exemplo4/exemplo.xml
-Overfull \hbox (19.64273pt too wide) in paragraph at lines 4--5
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (19.64273pt too wide) in paragraph at lines 10--11
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (157.61009pt too wide) in paragraph at lines 11--12
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][] 
- []
-
-) (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+(./anexos/2-1/Exemplo4/exemplo.xml)
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 121.
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 121.
+ [35 <./anexos/2-1/Exemplo3/Screenshots/pag1.png>] (/usr/share/texlive/texmf-di
+st/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-(./anexos/2-1/Exemplo4/AlbumGerado.html
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 7.
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 7.
- [34 <./anexos/2-1/Exemplo3/Screenshots/pag1.png>]
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 16--17
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-)
-<anexos/2-1/Exemplo4/Screenshots/indice.png, id=1063, 1301.86375pt x 212.795pt>
+(./anexos/2-1/Exemplo4/AlbumGerado.html)
+<anexos/2-1/Exemplo4/Screenshots/indice.png, id=1062, 1301.86375pt x 212.795pt>
 File: anexos/2-1/Exemplo4/Screenshots/indice.png Graphic file (type png)
 <use anexos/2-1/Exemplo4/Screenshots/indice.png>
 Package pdftex.def Info: anexos/2-1/Exemplo4/Screenshots/indice.png used on inp
@@ -1554,56 +1334,12 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 125--126
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-1/Exemplo4/1.html
-Overfull \hbox (7.64557pt too wide) in paragraph at lines 7--8
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (85.62712pt too wide) in paragraph at lines 16--17
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-] 
- []
-
-
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 19--20
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 23.
+(babel)             in language  on input line 15.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 23.
-[35 <./anexos/2-1/Exemplo4/Screenshots/indice.png>]
-Overfull \hbox (181.60442pt too wide) in paragraph at lines 25--26
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][] 
- []
-
-
-Overfull \hbox (355.56326pt too wide) in paragraph at lines 29--30
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 32--33
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (79.62854pt too wide) in paragraph at lines 37--38
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][] 
- []
-
-
-Overfull \hbox (181.60442pt too wide) in paragraph at lines 38--39
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][] 
- []
-
-)
-<anexos/2-1/Exemplo4/Screenshots/pag1.png, id=1109, 1243.64626pt x 663.47874pt>
+(babel)             in language  on input line 15.
+ [36 <./anexos/2-1/Exemplo4/Screenshots/indice.png>])
+<anexos/2-1/Exemplo4/Screenshots/pag1.png, id=1105, 1243.64626pt x 663.47874pt>
 File: anexos/2-1/Exemplo4/Screenshots/pag1.png Graphic file (type png)
 <use anexos/2-1/Exemplo4/Screenshots/pag1.png>
 Package pdftex.def Info: anexos/2-1/Exemplo4/Screenshots/pag1.png used on input
@@ -1614,61 +1350,20 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 134--135
  [][] 
  []
 
-(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 137.
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 137.
+[37] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-1/Exemplo4/2.html
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 5.
+(babel)             in language  on input line 26.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 5.
- [36 <./anexos/2-1/Exemplo4/Screenshots/pag1.png>]
-Overfull \hbox (7.64557pt too wide) in paragraph at lines 7--8
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (85.62712pt too wide) in paragraph at lines 16--17
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-] 
- []
-
-
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 19--20
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (181.60442pt too wide) in paragraph at lines 25--26
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][] 
- []
-
-
-Overfull \hbox (355.56326pt too wide) in paragraph at lines 29--30
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (1.64699pt too wide) in paragraph at lines 32--33
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (79.62854pt too wide) in paragraph at lines 37--38
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][] 
- []
-
-
-Overfull \hbox (181.60442pt too wide) in paragraph at lines 38--39
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][] 
- []
-
-)
-<anexos/2-1/Exemplo4/Screenshots/pag2_2.png, id=1142, 1242.6425pt x 522.95375pt
+(babel)             in language  on input line 26.
+ [38 <./anexos/2-1/Exemplo4/Screenshots/pag1.png>])
+<anexos/2-1/Exemplo4/Screenshots/pag2_2.png, id=1171, 1242.6425pt x 522.95375pt
 >
 File: anexos/2-1/Exemplo4/Screenshots/pag2_2.png Graphic file (type png)
  <use anexos/2-1/Exemplo4/Screenshots/pag2_2.png>
@@ -1681,11 +1376,6 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 143--144
  []
 
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 146.
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 146.
-[37]
-Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 147.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 150.
@@ -1694,12 +1384,12 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 152.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 152.
- [38 <./anexos/2-1/Exemplo4/Screenshots/pag2_2.png>]
+[39 <./anexos/2-1/Exemplo4/Screenshots/pag2_2.png>]
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 152.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 152.
- [39]
+ [40]
 Overfull \hbox (85.62328pt too wide) in paragraph at lines 152--152
 []    \T1/cmtt/m/n/10 fprintf(f, "<DOCTYPE !html>\n<html>\n\t<head> <meta chars
 et=\"UTF-8\">\n Grupo 7</head>\n");[] 
@@ -1711,7 +1401,11 @@ Overfull \hbox (38.38481pt too wide) in paragraph at lines 152--152
 ef=\"stylesheet.css\"/>");[] 
  []
 
-
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 152.
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 152.
+[41]
 Overfull \hbox (1.64378pt too wide) in paragraph at lines 152--152
 []    \T1/cmtt/m/n/10 fprintf(f, "<a href=\"countrys.html\"><p class=\"ind\">Co
 untrys</p></a>\n");[] 
@@ -1729,11 +1423,7 @@ Overfull \hbox (69.87712pt too wide) in paragraph at lines 152--152
 d\">Other Locations</p></a>\n");[] 
  []
 
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 152.
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 152.
-[40]
+
 Overfull \hbox (6.8925pt too wide) in paragraph at lines 152--152
 []    \T1/cmtt/m/n/10 fprintf(p, "<a href=\"index.html\"><p>Voltar</p></a>\n\t<
 /body>\n</html>\n");[] 
@@ -1751,7 +1441,11 @@ Overfull \hbox (6.8925pt too wide) in paragraph at lines 152--152
 /body>\n</html>\n");[] 
  []
 
-
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 152.
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 152.
+[42]
 Overfull \hbox (12.14122pt too wide) in paragraph at lines 152--152
 []    \T1/cmtt/m/n/10 fprintf(ac, "<a href=\"index.html\"><p>Voltar</p></a>\n\t
 </body>\n</html>\n");[] 
@@ -1769,30 +1463,25 @@ Package babel Info: Redefining portuges shorthand "|
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 ) (./anexos/2-2/tree.c
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 12.
+(babel)             in language  on input line 30.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 12.
+(babel)             in language  on input line 30.
 
-[41]
+[43]
 Overfull \hbox (31.6399pt too wide) in paragraph at lines 58--59
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 61.
+(babel)             in language  on input line 79.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 61.
-[42]
+(babel)             in language  on input line 79.
+[44]
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 112.
+(babel)             in language  on input line 128.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 112.
- [43]
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 159.
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 159.
- [44])
+(babel)             in language  on input line 128.
+ [45])
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 158.
  (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
@@ -1801,7 +1490,11 @@ File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 (./anexos/2-2/tree.h
 LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 8.
-
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 14.
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 14.
+ [46]
 Overfull \hbox (73.62996pt too wide) in paragraph at lines 26--27
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
@@ -1809,33 +1502,33 @@ Overfull \hbox (73.62996pt too wide) in paragraph at lines 26--27
 )
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 163.
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 167.
-Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 167.
- [45] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+ (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-2/teste1_locais.txt)
 No file anexos/2-2/2-5-a-out.
-<anexos/2-2/output_teste1.png, id=1427, 166.6225pt x 273.02pt>
+<anexos/2-2/output_teste1.png, id=1400, 166.6225pt x 273.02pt>
 File: anexos/2-2/output_teste1.png Graphic file (type png)
 
 <use anexos/2-2/output_teste1.png>
 Package pdftex.def Info: anexos/2-2/output_teste1.png used on input line 174.
 (pdftex.def)             Requested size: 113.81102pt x 186.4885pt.
-
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 176.
+Package babel Info: Redefining portuges shorthand "|
+(babel)             in language  on input line 176.
+ [47]
 (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-(./anexos/2-2/teste2_enunciado.txt
+(./anexos/2-2/teste2_enunciado.txt)
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 5.
+(babel)             in language  on input line 180.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 5.
- [46 <./anexos/2-2/output_teste1.png>])
+(babel)             in language  on input line 180.
+ [48 <./anexos/2-2/output_teste1.png>]
 No file anexos/2-2/2-5-a-out.
-<anexos/2-2/output_teste2.png, id=1442, 109.40875pt x 248.93pt>
+<anexos/2-2/output_teste2.png, id=1454, 109.40875pt x 248.93pt>
 File: anexos/2-2/output_teste2.png Graphic file (type png)
 
 <use anexos/2-2/output_teste2.png>
@@ -1847,23 +1540,23 @@ File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (./anexos/2-2/teste3_internet.txt
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 4.
+(babel)             in language  on input line 14.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 4.
- [47 <./anexos/2-2/output_teste2.png>]
+(babel)             in language  on input line 14.
+ [49 <./anexos/2-2/output_teste2.png>]
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 35.
+(babel)             in language  on input line 45.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 35.
+(babel)             in language  on input line 45.
 
-[48]
+[50]
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 67.
+(babel)             in language  on input line 77.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 67.
- [49])
+(babel)             in language  on input line 77.
+ [51])
 No file anexos/2-2/2-5-a-out.
-<anexos/2-2/output_teste3.png, id=1530, 188.705pt x 553.06625pt>
+<anexos/2-2/output_teste3.png, id=1548, 188.705pt x 553.06625pt>
 File: anexos/2-2/output_teste3.png Graphic file (type png)
 
 <use anexos/2-2/output_teste3.png>
@@ -1873,7 +1566,7 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 201.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 201.
- [50]
+ [52]
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 207.
 Package babel Info: Redefining portuges shorthand "|
@@ -1883,7 +1576,7 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 212.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 212.
- [51 <./anexos/2-2/output_teste3.png>]
+ [53 <./anexos/2-2/output_teste3.png>]
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 214.
 
@@ -1895,7 +1588,7 @@ Package babel Info: Redefining portuges shorthand "|
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 7.
 
-[52]
+[54]
 Overfull \hbox (49.63564pt too wide) in paragraph at lines 7--8
 [][][][][][] 
  []
@@ -1919,12 +1612,12 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 55.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 55.
-[53]
+[55]
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 104.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 104.
- [54]
+ [56]
 Overfull \hbox (19.64273pt too wide) in paragraph at lines 140--141
 [][][][][][][][][][][][][][][][][][][][][][][][] 
  []
@@ -1933,7 +1626,7 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 153.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 153.
-[55])
+[57])
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 218.
  (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
@@ -1947,31 +1640,31 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 226.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 226.
- [56]
+ [58]
 File: anexos/2-5/2-5-a-out  (verbatim)
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 230.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 230.
- [57]
+ [59]
 File: anexos/2-5/2-5-a-in  (verbatim)
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 234.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 234.
- [58]
+ [60]
 File: anexos/2-5/2-5-b-out  (verbatim)
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 238.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 238.
- [59]
+ [61]
 File: anexos/2-5/2-5-c-in  (verbatim)
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 242.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 242.
- [60]
+ [62]
 Overfull \hbox (6.8925pt too wide) in paragraph at lines 242--242
 []\T1/cmtt/m/n/10 z/2 D/2E/2F/2 G>G | AG F2 |1 z/2 D/2E/2F/2 G>G | AG F2 :|2 z 
 F/2A/2 GG | FE DD |][] 
@@ -1982,7 +1675,7 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 246.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 246.
-[61] <anexos/2-5/2-5-a-img1.png, id=1800, 853.1875pt x 941.5175pt>
+[63] <anexos/2-5/2-5-a-img1.png, id=1808, 853.1875pt x 941.5175pt>
 File: anexos/2-5/2-5-a-img1.png Graphic file (type png)
 
 <use anexos/2-5/2-5-a-img1.png>
@@ -1993,7 +1686,7 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 250--251
  [][] 
  []
 
-<anexos/2-5/2-5-a-img2.png, id=1802, 854.19125pt x 917.4275pt>
+<anexos/2-5/2-5-a-img2.png, id=1810, 854.19125pt x 917.4275pt>
 File: anexos/2-5/2-5-a-img2.png Graphic file (type png)
 
 <use anexos/2-5/2-5-a-img2.png>
@@ -2004,7 +1697,7 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 255--256
 [][] 
  []
 
-<anexos/2-5/2-5-b-img.png, id=1803, 663.47874pt x 825.0825pt>
+<anexos/2-5/2-5-b-img.png, id=1811, 663.47874pt x 825.0825pt>
 File: anexos/2-5/2-5-b-img.png Graphic file (type png)
 
 <use anexos/2-5/2-5-b-img.png>
@@ -2015,7 +1708,7 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 262--263
  [][] 
  []
 
-<anexos/2-5/2-5-b-img2.png, id=1804, 791.95876pt x 924.45375pt>
+<anexos/2-5/2-5-b-img2.png, id=1812, 791.95876pt x 924.45375pt>
 File: anexos/2-5/2-5-b-img2.png Graphic file (type png)
 
 <use anexos/2-5/2-5-b-img2.png>
@@ -2026,7 +1719,7 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 268--269
 [][] 
  []
 
-<anexos/2-5/2-5-c-img.png, id=1805, 1205.50375pt x 816.04875pt>
+<anexos/2-5/2-5-c-img.png, id=1813, 1205.50375pt x 816.04875pt>
 File: anexos/2-5/2-5-c-img.png Graphic file (type png)
 
 <use anexos/2-5/2-5-c-img.png>
@@ -2042,33 +1735,33 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
- [62]
+ [64]
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
- [63 <./anexos/2-5/2-5-a-img1.png>]
+ [65 <./anexos/2-5/2-5-a-img1.png>]
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
- [64 <./anexos/2-5/2-5-a-img2.png>]
+ [66 <./anexos/2-5/2-5-a-img2.png>]
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
 
-[65 <./anexos/2-5/2-5-b-img.png>]
+[67 <./anexos/2-5/2-5-b-img.png>]
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
- [66 <./anexos/2-5/2-5-b-img2.png>]
+ [68 <./anexos/2-5/2-5-b-img2.png>]
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
 Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 119.
- [67 <./anexos/2-5/2-5-c-img.png>]
+ [69 <./anexos/2-5/2-5-c-img.png>]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 120.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 120.
  (./reportpt1.aux (./capa.aux) (./reportpt1-1.aux)
@@ -2076,7 +1769,7 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 120.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 120.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 120.
 Package rerunfilecheck Info: File `reportpt1.out' has not changed.
-(rerunfilecheck)             Checksum: 4036AC1624E4C52FD48171C6762032E6;2726.
+(rerunfilecheck)             Checksum: 9E0E2D5146D900DAE0A359B9FFE60CB9;2719.
 
 
 LaTeX Warning: There were multiply-defined labels.
@@ -2084,13 +1777,13 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 120.
  ) 
 Here is how much of TeX's memory you used:
- 12529 strings out of 495004
- 187114 string characters out of 6180662
- 465191 words of memory out of 5000000
+ 12531 strings out of 495004
+ 187118 string characters out of 6180662
+ 468265 words of memory out of 5000000
  14028 multiletter control sequences out of 15000+600000
  14360 words of font info for 30 fonts, out of 8000000 for 9000
  16 hyphenation exceptions out of 8191
- 39i,8n,54p,1404b,1535s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 39i,8n,54p,1404b,1505s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/ruioliveiras/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0700.600pk> <
 /home/ruioliveiras/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx0700.600pk> </hom
 e/ruioliveiras/.texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk> </home/ru
@@ -2103,10 +1796,10 @@ r/fonts/pk/ljfour/jknappen/ec/ecrm1440.600pk> </home/ruioliveiras/.texmf-var/fo
 nts/pk/ljfour/jknappen/ec/ecbx2488.600pk> </home/ruioliveiras/.texmf-var/fonts/
 pk/ljfour/jknappen/ec/ecbx1440.600pk></usr/share/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmsy10.pfb>
-Output written on reportpt1.pdf (69 pages, 4290775 bytes).
+Output written on reportpt1.pdf (71 pages, 4291493 bytes).
 PDF statistics:
- 2642 PDF objects out of 2984 (max. 8388607)
- 2044 compressed objects within 21 object streams
- 1383 named destinations out of 1440 (max. 500000)
+ 2648 PDF objects out of 2984 (max. 8388607)
+ 2050 compressed objects within 21 object streams
+ 1385 named destinations out of 1440 (max. 500000)
  443 words of extra memory for PDF output out of 10000 (max. 10000000)
 
