@@ -85,6 +85,9 @@ void CameraFP::bindKey(unsigned char key) {
 void CameraFP::moveMouse(float x, float y){
 	yaw -= (y - windowWidth / 2) * M_PI / 180 * 0.02;
 	pitch -= (x - windowHeight / 2) * M_PI / 180 * 0.02;
+	if (yaw > M_PI / 2 - 0.01) yaw = M_PI / 2 - 0.01;
+	if (yaw < -(M_PI / 2 - 0.01)) yaw = -(M_PI / 2 - 0.01);
+
 
 	glutWarpPointer(windowWidth / 2, windowHeight / 2);
 }

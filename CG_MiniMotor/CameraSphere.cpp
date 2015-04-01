@@ -82,8 +82,8 @@ void CameraSphere::moveRadios(float alfa){
 */
 void CameraSphere::moveUp(float alfa){
 	yaw += alfa;
-	if (yaw > 90) yaw = 90;
-	if (yaw < -90) yaw = -90;
+	if (yaw > M_PI / 2 - 0.01) yaw = M_PI / 2 - 0.01;
+	if (yaw < -(M_PI / 2 - 0.01)) yaw = -(M_PI / 2 - 0.01);
 }
 
 /*
@@ -93,8 +93,8 @@ void CameraSphere::moveUp(float alfa){
 */
 void CameraSphere::moveDown(float alfa){
 	yaw -= alfa;
-	if (yaw > 90) yaw = 90;
-	if (yaw < -90) yaw = -90;
+	if (yaw > M_PI / 2 - 0.01) yaw = M_PI / 2 - 0.01;
+	if (yaw < -(M_PI / 2 - 0.01)) yaw = -(M_PI / 2 - 0.01);
 }
 
 /*
