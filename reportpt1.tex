@@ -29,10 +29,16 @@
 \usepackage{verbatim}
 \usepackage{fancyvrb}
 \usepackage{listings}
+\usepackage{float}
 
 \usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
 
-\usepackage{listings}
+
+\lstset{
+    extendedchars=\true,
+    inputencoding=utf8
+}
+
 \renewcommand{\lstlistingname}{Código}
 \usepackage{color}
 \definecolor{grey}{rgb}{0.9,0.9,0.9}
@@ -104,10 +110,10 @@ Para isso foram selecionados 3 exercícios dentro de um grupo de 8 exercícios, 
 
 \chapter{Conclusão}
 \label{cap:intro}
-Terminado o desenvolvimento do trabalho, é importante referir que o mesmo nos permitiu aprofundar o conhecimento acerca do Gerador Léxico Flex assim como da análise léxica no geral, obrigando-nos também a utilizar ferramentas tais como HTML e Latex.
-Relativamente ao problema do "Museu da Pessoa", a dificuldade recaiu na definição da estrutura de suporte de dados, dado que devido à falta de claridade do enunciado foi necessário re-implementar a estrutura de forma a que esta admitisse a funcionalidade de ter um índice geral em HTML.
-No problema de "Processamento de Entidades Nomeadas" foi necessário chegar a um consenso acerca das tags que deveriam ser validadas e o relacionamento possível que estas teriam entre si. Após essa decisão, o desenvolvimento da estrutura que suporta esta informação tornou-se relativamente simples.
-O problema "Processamento de Ficheiros com Canções" foi resolvida através da implementação de uma estrutura capaz de evitar que a ordem dos dados no ficheiro não seja significativa (e então armazena em memória a informação). A presença de certos elementos em datasets mais diversos (tais como header's não esperados e anotações em músicas) deram origem a problemas, sendo que a solução consistiu em ignorar essa informação. 
+Terminado o desenvolvimento do trabalho, é importante referir que o mesmo nos permitiu aprofundar o conhecimento acerca do Gerador Léxico Flex assim como da análise léxica no geral, obrigando-nos também a utilizar ferramentas tais como HTML e Latex.\\
+Relativamente ao problema do "Museu da Pessoa", a dificuldade recaiu na definição da estrutura de suporte de dados, dado que devido à falta de claridade do enunciado foi necessário re-implementar a estrutura de forma a que esta admitisse a funcionalidade de ter um índice geral em HTML.\\
+No problema de "Processamento de Entidades Nomeadas" foi necessário chegar a um consenso acerca das tags que deveriam ser validadas e o relacionamento possível que estas teriam entre si. Após essa decisão, o desenvolvimento da estrutura que suporta esta informação tornou-se relativamente simples.\\
+O problema "Processamento de Ficheiros com Canções" foi resolvida através da implementação de uma estrutura capaz de evitar que a ordem dos dados no ficheiro não seja significativa (e então armazena em memória a informação). A presença de certos elementos em datasets mais diversos (tais como header's não esperados e anotações em músicas) deram origem a problemas, sendo que a solução consistiu em ignorar essa informação. \\
 Cada elemento do grupo realizou um exercício do enunciado proposto, apoiando-se mutuamente na existência de dificuldades. Apesar das dificuldades iniciais, encontramos-nos satisfeitos com o resultado final e estamos confiantes para o próximo trabalho.
 
 \include{anexos}
