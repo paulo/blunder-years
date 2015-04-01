@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.3.24)  1 APR 2015 23:18
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.3.24)  1 APR 2015 23:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -604,20 +604,20 @@ LaTeX Warning: Label `fig::anex-music-test-img' multiply defined.
 ))
 \openout1 = `reportpt1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
  (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count132
@@ -688,7 +688,7 @@ Package caption Info: End \AtBeginDocument code.
 
 \c@lstlisting=\count138
 \AtBeginShipoutBox=\box34
-Package hyperref Info: Link coloring ON on input line 64.
+Package hyperref Info: Link coloring ON on input line 63.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -697,9 +697,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count139
 )
-LaTeX Info: Redefining \ref on input line 64.
-LaTeX Info: Redefining \pageref on input line 64.
-LaTeX Info: Redefining \nameref on input line 64.
+LaTeX Info: Redefining \ref on input line 63.
+LaTeX Info: Redefining \pageref on input line 63.
+LaTeX Info: Redefining \nameref on input line 63.
 
 (./reportpt1.out) (./reportpt1.out)
 \@outlinefile=\write4
@@ -743,21 +743,21 @@ Package babel Info: Redefining portuges shorthand "|
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./imagens/EENG.jpg> <./ima
 gens/Orlando.jpg> <./imagens/Paulo.jpg> <./imagens/Oliveira.jpg>])
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 73.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 72.
  (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 73.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 72.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 78.
+(babel)             in language  on input line 77.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 78.
+(babel)             in language  on input line 77.
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.78 \end{abstract}
+l.77 \end{abstract}
                     [1
 
 ] (./reportpt1.toc
@@ -777,17 +777,17 @@ l.53 ...rline {6.2.4}Testes}{48}{subsection.6.2.4}
 \openout5 = `reportpt1.toc'.
 
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 100.
+(babel)             in language  on input line 99.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 100.
+(babel)             in language  on input line 99.
  [2]
 Cap\'{\i }tulo 1.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 100.
+(babel)             in language  on input line 99.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 107.
+(babel)             in language  on input line 106.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 107.
+(babel)             in language  on input line 106.
 [3
 
 ]
@@ -844,9 +844,9 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 68.
  [6])
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 107.
+(babel)             in language  on input line 106.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 107.
+(babel)             in language  on input line 106.
  [7]
 \openout2 = `reportpt1-2.aux'.
 
@@ -926,9 +926,9 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 144.
  [12 <./anexos/2-2/programa.png>])
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 108.
+(babel)             in language  on input line 107.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 108.
+(babel)             in language  on input line 107.
  [13]
 \openout2 = `reportpt1-5.aux'.
 
@@ -964,17 +964,17 @@ Package babel Info: Redefining portuges shorthand "|
 (babel)             in language  on input line 63.
  [15])
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 109.
+(babel)             in language  on input line 108.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 109.
+(babel)             in language  on input line 108.
  [16]
 Cap\'{\i }tulo 5.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 111.
+(babel)             in language  on input line 110.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
 [17
 
 
@@ -1736,54 +1736,54 @@ Overfull \hbox (8.53766pt too wide) in paragraph at lines 275--276
 
 )
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
  [65]
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
  [66 <./anexos/2-5/2-5-a-img1.png>]
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
  [67 <./anexos/2-5/2-5-a-img2.png>]
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
 
 [68 <./anexos/2-5/2-5-b-img.png>]
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
  [69 <./anexos/2-5/2-5-b-img2.png>]
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
 Package babel Info: Redefining portuges shorthand "|
-(babel)             in language  on input line 119.
+(babel)             in language  on input line 118.
  [70 <./anexos/2-5/2-5-c-img.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 120.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 120.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 119.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 119.
  (./reportpt1.aux (./capa.aux) (./reportpt1-1.aux)
 (./reportpt1-2.aux) (./reportpt1-5.aux) (./anexos.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 120.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 120.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 119.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 119.
 Package rerunfilecheck Info: File `reportpt1.out' has not changed.
 (rerunfilecheck)             Checksum: 9E0E2D5146D900DAE0A359B9FFE60CB9;2719.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 120.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 119.
  ) 
 Here is how much of TeX's memory you used:
  12537 strings out of 495004
  187185 string characters out of 6180662
- 468267 words of memory out of 5000000
+ 468255 words of memory out of 5000000
  14029 multiletter control sequences out of 15000+600000
  14360 words of font info for 30 fonts, out of 8000000 for 9000
  16 hyphenation exceptions out of 8191
@@ -1800,9 +1800,9 @@ r/fonts/pk/ljfour/jknappen/ec/ecrm1440.600pk> </home/ruioliveiras/.texmf-var/fo
 nts/pk/ljfour/jknappen/ec/ecbx2488.600pk> </home/ruioliveiras/.texmf-var/fonts/
 pk/ljfour/jknappen/ec/ecbx1440.600pk></usr/share/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmsy10.pfb>
-Output written on reportpt1.pdf (72 pages, 4293884 bytes).
+Output written on reportpt1.pdf (72 pages, 4294492 bytes).
 PDF statistics:
- 2665 PDF objects out of 2984 (max. 8388607)
+ 2666 PDF objects out of 2984 (max. 8388607)
  2062 compressed objects within 21 object streams
  1390 named destinations out of 1440 (max. 500000)
  443 words of extra memory for PDF output out of 10000 (max. 10000000)
