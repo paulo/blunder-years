@@ -20,6 +20,8 @@ public:
 	void toFile(string  file);
 	void toFileVBO(string  file);
 	void append(Point3D p);
+	void appendIndice(unsigned int p);
+	int appendPoint(Point3D p);
 };
 
 #endif

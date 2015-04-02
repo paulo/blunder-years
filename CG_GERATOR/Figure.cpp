@@ -28,6 +28,15 @@ void Figure::toFileVBO(string filename){
 	}
 }
 
+void Figure::appendIndice(unsigned int p){
+	indices.push_back(p);
+}
+
+int Figure::appendPoint(Point3D p){
+	triangles.push_back(p);
+	return triangles.size() - 1;
+}
+
 /**
 *Adiciona um ponto ao conjunto de pontos de uma figura.
 *
