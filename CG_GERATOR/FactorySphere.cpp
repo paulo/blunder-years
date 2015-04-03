@@ -40,95 +40,48 @@ Figure FigureFactory::createSphere(float raio, int camadas, int fatias){
 	return f;
 }
 
-int convertPointIndice(bool isXZero, int nPFatia, int nSharedP, int ifatia, int jP ){
-	if (isXZero){
-		return jP;
-	}
-	else{
-		return jP - (nPFatia - nSharedP);
-	}
-}
-
 void FigureFactory::createRotate(Figure* f, Point3D points[], int camadas, int fatias){
-	int i, j, nPNCperF; // nPoints not Common per Fatia 
+	int i, j, ii, in, nPNCperF = 0; // nPoints not Common per Fatia 
 	float angulo_circ = 2 * ((float)M_PI) / fatias; //angulo para calcular o tamanho de cada camada
-	int ii,in;
+	int *auxIndex = new int[camadas];
 
-
-	// create all initial the points, 
+	// initialize centrall points, and count the "nPoints not Common per Fatia"
 	for (j = 0; j < camadas; j++) {
-		if (points[j].x == 0){
-			points[j].z = f->appendPoint({ 0, points[j].y, points[j].x });
-		}
+		if (points[j].x == 0){ auxIndex[j] = f->appendPoint({ 0, points[j].y, 0 }); }
+		else { nPNCperF++; }
 	}
-	nPNCperF = 0;
+	// initialize  other points
 	for (j = 0; j < camadas; j++) {
-		if (points[j].x != 0){
-			points[j].z = f->appendPoint({ 0, points[j].y, points[j].x });
-			nPNCperF++;
-		}
+		if (points[j].x != 0) { auxIndex[j] = f->appendPoint({ 0, points[j].y, points[j].x }); }
 	}
-	ii = 0; in = nPNCperF;
-	for (i = 0; i<fatias; i++){
-		//append dos pontos
+	// Create all other points
+	for (i = 0; i < fatias - 1; i++){
 		float circ = angulo_circ * (i + 1);
+		for (j = 0; j < camadas; j++) {
+			if (points[j].x != 0) {f->appendPoint({ points[j].x * sin(circ), points[j].y, points[j].x * cos(circ) });}
+		}
+	}
+	// create trigangles
+	ii = 0; in = nPNCperF;
+	for (i = 0; i < fatias; i++) {
+		for (j = 0; j < camadas - 1; j++) {
+			if (points[j].x != 0) {
+				f->appendIndice(auxIndex[j] + ii);
+				f->appendIndice((points[j + 1].x == 0) ? auxIndex[j + 1] : auxIndex[j + 1] + ii);
+				f->appendIndice(auxIndex[j] + in);
+			}
+			if (points[j + 1].x != 0) {
+				f->appendIndice((points[j].x == 0) ? auxIndex[j] : auxIndex[j] + in);
+				f->appendIndice(auxIndex[j + 1] + ii);
+				f->appendIndice(auxIndex[j + 1] + in);
+			}
+		}
 
-		// In the end connect to the init
-		if (i + 1 == fatias){
+		ii = in; in += nPNCperF;
+		// connect the last fatia to the first
+		if (i + 2 == fatias){
 			in = 0;
 		}
-		else {
-			for (j = 0; j < camadas; j++) {
-				//if points[j].x is 0 
-				//		then the point is the same in all fatias
-				//		then can be used the point created in the first first for
-				if (points[j].x != 0){
-					f->appendPoint({ points[j].x * sin(circ), points[j].y, points[j].x * cos(circ) });
-				}
-			}
-		}
-
-		//append das ligaçoes atravez indices
-		
-		for (j = 0; j < camadas - 1; j++) {
-			if (points[j].x == 0) {
-				f->appendIndice(points[j].z);
-				f->appendIndice(points[j + 1].z + ii);
-				f->appendIndice(points[j + 1].z + in);
-				//f->appendIndice(j);
-				//f->appendIndice(ii + j + 1);
-				//f->appendIndice(in + j);
-			}
-			else if (points[j + 1].x == 0) {
-				f->appendIndice(points[j].z  + ii);
-				f->appendIndice(points[j + 1].z);
-				f->appendIndice(points[j].z + in );
-			} else {
-				f->appendIndice(points[j].z + ii);
-				f->appendIndice(points[j + 1].z + ii);
-				f->appendIndice(points[j].z + in);
-
-				f->appendIndice(points[j].z + in);
-				f->appendIndice(points[j + 1].z + ii);
-				f->appendIndice(points[j + 1].z + in);
-			}
-		}
-
-		ii = in;
-		in += nPNCperF;
-
-		
-		/*
-		for (j = 0; j < camadas - 1; j++) {
-
-			f->append({ points[j].x * sin(circ_aux1), points[j].y, points[j].x * cos(circ_aux1) });
-			f->append({ points[j + 1].x * sin(circ_aux1), points[j + 1].y, points[j + 1].x * cos(circ_aux1) });
-			f->append({ points[j].x * sin(circ_aux2), points[j].y, points[j].x  * cos(circ_aux2) });
-
-			f->append({ points[j + 1].x * sin(circ_aux1), points[j + 1].y, points[j + 1].x * cos(circ_aux1) });
-			f->append({ points[j + 1].x * sin(circ_aux2), points[j + 1].y, points[j + 1].x * cos(circ_aux2) });
-			f->append({ points[j].x * sin(circ_aux2), points[j].y, points[j].x * cos(circ_aux2) });
-		}
-		*/
 	}
+	delete(auxIndex);
 }
