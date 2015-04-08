@@ -18,20 +18,21 @@ static string filename;
 static int cameraActual = 1;
 static CameraSphere cameraSph = CameraSphere(10);
 static CameraFP cameraFP = CameraFP();
-
+static int frame = 0, time, timebase = 0;
 static Scene actualScene;
 static XMLElement* root = NULL;
 Figure f;
 
 void calcFPS(){
-	int fps, frame, timebase = 0, time = glutGet(GLUT_ELAPSED_TIME);
+	int fps;
 	char s[256];
 
 	frame++;
 	time = glutGet(GLUT_ELAPSED_TIME);
 	if (time - timebase > 1000) {
 		fps = frame*1000.0 / (time - timebase);
-		sprintf(s, "%d", fps);
+		sprintf_s(s, "%d", fps);
+		printf("%d\n",fps);
 		glutSetWindowTitle(s);
 		timebase = time;
 		frame = 0;
@@ -50,7 +51,6 @@ void init(int argc, char **argv){
 	glutInitWindowSize(800, 800);
 	glutCreateWindow("Motor");
 
-	calcFPS();
 
 	glewInit();
 
@@ -59,7 +59,7 @@ void init(int argc, char **argv){
 
 	//function listening
 	glutDisplayFunc(renderScene);
-	//glutIdleFunc(renderScene);
+	glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
 	glutSpecialFunc(specialKeys);
 	glutKeyboardFunc(normalKeys);
@@ -207,7 +207,7 @@ void renderScene(void){
 	glutAddMenuEntry("DIRECT MODE", 5);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
-
+	calcFPS();
 	//
 	// End of frame
 	glutSwapBuffers();
