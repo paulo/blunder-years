@@ -73,6 +73,9 @@ void CameraSphere::refresh(){
 */
 void CameraSphere::moveRadios(float alfa){
 	radios += alfa;
+	if (radios < 0){
+		radios = 0;
+	}
 }
 
 /*
