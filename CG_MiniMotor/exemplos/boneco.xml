@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+	<cena>
+		<grupo>
+			<translacao X='10'/>
+			<modelo ficheiro='exemplos/bonecoEsf.3d' />
+		</grupo>
+
+		<grupo>
+			<translacao X='-1'/>
+			<rotacao angulo='90' eixoX='0' eixoY='0' eixoZ='1' />
+			<modelo ficheiro='exemplos/a.3d' />
+		</grupo>
+		<grupo>
+			<translacao X='-1'/>
+			<escala  X='1' Y='2' Z='1' />
+			<modelo ficheiro='exemplos/a.3d' />
+		</grupo>
+	</cena>
+</xml>
