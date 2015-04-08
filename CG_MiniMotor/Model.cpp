@@ -142,6 +142,12 @@ void Scene::setDrawMode(int mode){
 	this->drawMode = mode;
 }
 
+void Scene::setCameraPosition(float x, float y, float z){
+	this->camX = x;
+	this->camY = y;
+	this->camZ = z;
+}
+
 /*
 *Implementa um parser de leitura de um ficheiro XML
 *
@@ -182,6 +188,13 @@ int Scene::parseXML(XMLNode* root, Group* current){
 					
 				}
 			}
+		}
+		if (tag.compare("camera") == 0){
+			x = y = z = 50;
+			if (elem->Attribute("X")) x = elem->FloatAttribute("X");
+			if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
+			if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
+			setCameraPosition(x, y, z);
 		}
 		// only one model 
 		if (tag.compare("modelo") == 0) {

@@ -52,7 +52,12 @@ public:
 
 class Scene: public Group {
 	int drawMode;
+	float camX;
+	float camY;
+	float camZ;
+
 public:
+	void setCameraPosition(float x, float y, float z);
 	static const int DRAWMODE_VBO;
 	static const int DRAWMODE_DIRECT;
 	int parseXML(XMLNode* root, Group* current);
