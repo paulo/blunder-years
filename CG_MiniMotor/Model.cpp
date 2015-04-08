@@ -123,11 +123,10 @@ void Group::reset() {
 
 void Group::draw(){
 	glPushMatrix();
-	std::vector<Action*>::iterator itActions = actions.begin();
-	while (itActions != actions.end()){
-		(*itActions)->doAction();
-		itActions++;
-	}
+	std::vector<Action*>::iterator it;
+	for (it = actions.begin(); it < actions.end(); it++)
+		(**it).doAction();
+
 	std::vector<Drawable*>::iterator d = elements.begin();
 	while (d != elements.end()){
 		(*d)->draw();
@@ -169,13 +168,14 @@ int Scene::parseXML(XMLNode* root, Group* current){
 						if (this->drawMode == Scene::DRAWMODE_VBO){
 							FigureVBO* ff = new FigureVBO();
 							ff->fromFile(elem->Attribute("ficheiro"));
-							append(ff);
+							current->append(ff);
 						}
 						else{
 							Figure* ff = new Figure();
 							ff->fromFile(elem->Attribute("ficheiro"));
 							append(ff);
 							mdls = 1;
+							current->append(ff);
 						}
 						// be carefull f need to destroyed and recreated, they are doing pushback
 					}
@@ -189,12 +189,12 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				if (this->drawMode == Scene::DRAWMODE_VBO){
 					FigureVBO* ff = new FigureVBO();
 					ff->fromFile(elem->Attribute("ficheiro"));
-					append(ff);
+					current->append(ff);
 				}
 				else{
 					Figure* ff = new Figure();
 					ff->fromFile(elem->Attribute("ficheiro"));
-					append(ff);
+					current->append(ff);
 				}
 			}
 		}
@@ -215,8 +215,8 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				eixoX = eixoY = eixoZ = 0.0; angulo = 0.0;
 
 				if (elem->Attribute("angulo")) angulo = elem->FloatAttribute("angulo");
-				if (elem->Attribute("eixoX")) eixoX = elem->FloatAttribute("angulo");
-				if (elem->Attribute("eixoY")) eixoY = elem->FloatAttribute("angulo");
+				if (elem->Attribute("eixoX")) eixoX = elem->FloatAttribute("eixoX");
+				if (elem->Attribute("eixoY")) eixoY = elem->FloatAttribute("eixoY");
 				if (elem->Attribute("eixoZ")) eixoZ = elem->FloatAttribute("eixoZ");
 
 				current->appendAction(new Rotation(angulo, eixoX, eixoY, eixoZ));
@@ -258,7 +258,7 @@ Translation::Translation(float x, float y, float z){
 }
 
 void Translation::doAction(){
-	glTranslatef(transVector.x, transVector.y, transVector.z);
+	glTranslatef(this->transVector.x, this->transVector.y, transVector.z);
 }
 
 Rotation::Rotation(float angle, float x, float y, float z){
