@@ -1,6 +1,7 @@
 // CC_MiniMotor.cpp : Defines the entry point for the console application.
 //
 
+#include <stdio.h>
 #include "stdafx.h"
 #include <stdlib.h>
 #define _USE_MATH_DEFINES
@@ -21,16 +22,34 @@ static Scene actualScene;
 static XMLElement* root = NULL;
 Figure f;
 
+void calcFPS(){
+	int fps, frame, timebase = 0, time = glutGet(GLUT_ELAPSED_TIME);
+	char s[256];
+
+	frame++;
+	time = glutGet(GLUT_ELAPSED_TIME);
+	if (time - timebase > 1000) {
+		fps = frame*1000.0 / (time - timebase);
+		sprintf(s, "%d", fps);
+		glutSetWindowTitle(s);
+		timebase = time;
+		frame = 0;
+	}
+}
+
 void init(int argc, char **argv){
 	// parse argumets
 	string xmlFile = "somewhere.xml";
 	glutInit(&argc, argv);
+	
 
-	// otptions
+	// options
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(800, 800);
 	glutCreateWindow("Motor");
+
+	calcFPS();
 
 	glewInit();
 
