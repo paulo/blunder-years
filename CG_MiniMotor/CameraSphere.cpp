@@ -44,9 +44,9 @@ void CameraSphere::bindKey(unsigned char key){
 		break;
 	case 'd': moveLeft(alfa); refresh();
 		break;
-	case 'r': moveRadios(1); refresh();
+	case 'f': moveRadios(1); refresh();
 		break;
-	case 'f': moveRadios(-1); refresh();
+	case 'r': moveRadios(-1); refresh();
 		break;
 	}
 }

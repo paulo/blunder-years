@@ -14,6 +14,7 @@ void renderScene(void);
 void changeSize(int w, int h);
 void MouseMotion(int x, int y);
 
+static string filename;
 static int cameraActual = 1;
 static CameraSphere cameraSph = CameraSphere(10);
 static CameraFP cameraFP = CameraFP();
@@ -73,11 +74,12 @@ void init(int argc, char **argv){
 void _start(const char* filename){
 	XMLDocument doc;
 
-	int loadOk = doc.LoadFile("exemplos/esfera.xml");
+	int loadOk = doc.LoadFile(filename);
 	if (loadOk != 0){
 		printf("Erro!! Falha ao ler o ficheiro!\n");
 	}
 	else {
+		actualScene.reset();
 		root = doc.RootElement();
 		actualScene.parseXML(root->FirstChild(), &actualScene);
 		glutMainLoop();
@@ -159,6 +161,16 @@ void viewOptions(int x){
 	case 3: glPolygonMode(GL_FRONT, GL_POINT);
 		glPointSize(12);
 		break;
+	case 4:
+		actualScene.setDrawMode(Scene::DRAWMODE_VBO);
+		_start(filename.c_str());
+		glutPostRedisplay();
+		break;
+	case 5:
+		actualScene.setDrawMode(Scene::DRAWMODE_DIRECT);
+		_start(filename.c_str());
+		glutPostRedisplay();
+		break;
 	default: glPolygonMode(GL_FRONT, GL_LINE);
 	}
 	glutPostRedisplay();
@@ -191,6 +203,8 @@ void renderScene(void){
 	glutAddMenuEntry("GL FILL", 1);
 	glutAddMenuEntry("GL LINE", 2);
 	glutAddMenuEntry("GL POINT", 3);
+	glutAddMenuEntry("VBO MODE", 4);
+	glutAddMenuEntry("DIRECT MODE", 5);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 
@@ -235,7 +249,7 @@ void changeSize(int w, int h){
 int main(int argc, char **argv) {
 	init(argc, argv);
 
-	string filename;
+	
 	if (argc == 2) {
 		_start(argv[1]);
 	}

@@ -88,8 +88,7 @@ void CameraFP::moveMouse(float x, float y){
 	if (yaw > M_PI / 2 - 0.01) yaw = M_PI / 2 - 0.01;
 	if (yaw < -(M_PI / 2 - 0.01)) yaw = -(M_PI / 2 - 0.01);
 
-
-	glutWarpPointer(windowWidth / 2, windowHeight / 2);
+	glutWarpPointer(windowHeight / 2, windowWidth / 2);
 }
 
 /*
