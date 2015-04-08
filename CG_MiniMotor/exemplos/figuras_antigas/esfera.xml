@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xml>
     <cena>
-        <modelo ficheiro='a.3d'/>
+        <modelo ficheiro='exemplos/tunnel.3d'/>
     </cena>
 </xml>
