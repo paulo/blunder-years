@@ -44,14 +44,19 @@ class Group: public Drawable {
 	vector<Drawable*> elements;
 	vector<Action*> actions;
 public:
+	void reset();
 	void append(Drawable* element);
 	void appendAction(Action* element);
 	void draw();
 };
 
 class Scene: public Group {
+	int drawMode;
 public:
+	static const int DRAWMODE_VBO;
+	static const int DRAWMODE_DIRECT;
 	void parseXML(XMLNode* root, Group* current);
+	void setDrawMode(const int mode);
 };
 
 class Translation : public Action {

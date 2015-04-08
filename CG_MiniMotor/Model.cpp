@@ -15,15 +15,35 @@ using namespace std;
 * @param filename		nome do ficheiro a ler
 */
 void Figure::fromFile(string filename){
-	ifstream ifs;
-	ifs.open(filename);
-	Point3D point;
-	string line;
-	//float p1, p2, p3;
-	while (!ifs.eof() 
-		&& ifs >> point.x >> point.y >> point.z) {		
-			triangles.push_back(point);
+	ifstream ifs; ifs.open(filename);
+	int nPoints, nIndice, i; Point3D point;
+	GLuint indice;
+	
+	ifs >> nPoints >> nIndice;
+	float *triangles1 = new float[nPoints * 3];
+
+
+	i = 0;
+	while (!ifs.eof()
+		&& i < nPoints
+		&& ifs >> point.x >> point.y >> point.z
+		) {
+		triangles1[i * 3 + 0] = point.x;
+		triangles1[i * 3 + 1] = point.y;
+		triangles1[i * 3 + 2] = point.z;
+		i++;
 	}
+
+	i = 0;
+	while (!ifs.eof()
+		&& i < nIndice
+		&& ifs >> indice
+		) {
+			triangles.push_back({ triangles1[indice*3], triangles1[indice*3 +1], triangles1[indice*3 +2] });
+		i++;
+	}
+
+	delete(triangles1);
 }
 
 /**
@@ -96,6 +116,11 @@ void Group::append(Drawable* figure) {
 	elements.push_back(figure);
 }
 
+void Group::reset() {
+	elements.clear();
+	actions.clear();
+}
+
 void Group::draw(){
 	glPushMatrix();
 	std::vector<Action*>::iterator itActions = actions.begin();
@@ -109,6 +134,13 @@ void Group::draw(){
 		d++;
 	}
 	glPopMatrix();
+}
+
+const int Scene::DRAWMODE_DIRECT = 1;
+const int Scene::DRAWMODE_VBO = 2;
+
+void Scene::setDrawMode(int mode){
+	this->drawMode = mode;
 }
 
 /*
@@ -132,9 +164,16 @@ void Scene::parseXML(XMLNode* root, Group* current){
 			for (modelo = child->FirstChild(); modelo; modelo = modelo->NextSibling()) {
 				if (tag.compare("modelo") == 0) {
 					if (elem->Attribute("ficheiro")){
-						FigureVBO* ff = new FigureVBO();
-						ff->fromFile(elem->Attribute("ficheiro"));
-						append(ff);
+						if (this->drawMode == Scene::DRAWMODE_VBO){
+							FigureVBO* ff = new FigureVBO();
+							ff->fromFile(elem->Attribute("ficheiro"));
+							append(ff);
+						}
+						else{
+							Figure* ff = new Figure();
+							ff->fromFile(elem->Attribute("ficheiro"));
+							append(ff);
+						}
 						// be carefull f need to destroyed and recreated, they are doing pushback
 					}
 				}
@@ -143,10 +182,16 @@ void Scene::parseXML(XMLNode* root, Group* current){
 		// only one model 
 		if (tag.compare("modelo") == 0) {
 			if (elem->Attribute("ficheiro")){
-				FigureVBO* ff = new FigureVBO();
-				ff->fromFile(elem->Attribute("ficheiro"));
-				current->append(ff);
-				//f.draw();
+				if (this->drawMode == Scene::DRAWMODE_VBO){
+					FigureVBO* ff = new FigureVBO();
+					ff->fromFile(elem->Attribute("ficheiro"));
+					append(ff);
+				}
+				else{
+					Figure* ff = new Figure();
+					ff->fromFile(elem->Attribute("ficheiro"));
+					append(ff);
+				}
 			}
 		}
 		else if (tag.compare("grupo") == 0) {
