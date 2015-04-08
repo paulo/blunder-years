@@ -148,19 +148,21 @@ void Scene::setDrawMode(int mode){
 *
 *@param root	raiz do documento
 */
-void Scene::parseXML(XMLNode* root, Group* current){
+int Scene::parseXML(XMLNode* root, Group* current){
 	XMLNode* child;
 	Figure f;
 	float x, y, z;
 	float angulo, eixoX, eixoY, eixoZ;
+	int rt = 0, tr = 0, sc = 0, mdls = 0, grp = 0;
+	int ok = 0;
 
 	for (child = root->FirstChild(); child; child = child->NextSibling()) {
 		XMLElement *elem = child->ToElement();
 		string tag = child->Value();
 
 		// more than one model
-		if (tag.compare("modelos") == 0){
-			XMLNode* modelo;
+		if (tag.compare("modelos") == 0 && mdls == 0) {
+			XMLNode* modelo;	
 			for (modelo = child->FirstChild(); modelo; modelo = modelo->NextSibling()) {
 				if (tag.compare("modelo") == 0) {
 					if (elem->Attribute("ficheiro")){
@@ -173,9 +175,11 @@ void Scene::parseXML(XMLNode* root, Group* current){
 							Figure* ff = new Figure();
 							ff->fromFile(elem->Attribute("ficheiro"));
 							append(ff);
+							mdls = 1;
 						}
 						// be carefull f need to destroyed and recreated, they are doing pushback
 					}
+					
 				}
 			}
 		}
@@ -194,41 +198,58 @@ void Scene::parseXML(XMLNode* root, Group* current){
 				}
 			}
 		}
-		else if (tag.compare("grupo") == 0) {
+		else 
+			if (tag.compare("grupo") == 0) {
 			// glPushMatrix();
 			// guardar, nao desenhar..
 			Group *g = new Group;
-			parseXML(child, g);
+			if (( parseXML(child, g)) == -1){
+				return -1;
+			}
 			current->append(g);
+			grp = true;
 			// glPopMatrix();
 		}
-		else if (tag.compare("rotacao") == 0) {
-			eixoX = eixoY = eixoZ = 0.0; angulo = 0.0;
+		else if (tag.compare("rotacao") == 0 ) {
+			if (rt == 0 && mdls == 0 && grp == 0){
+				eixoX = eixoY = eixoZ = 0.0; angulo = 0.0;
 
-			if (elem->Attribute("angulo")) angulo = elem->FloatAttribute("angulo");
-			if (elem->Attribute("eixoX")) eixoX = elem->FloatAttribute("angulo");
-			if (elem->Attribute("eixoY")) eixoY = elem->FloatAttribute("angulo");
-			if (elem->Attribute("eixoZ")) eixoZ = elem->FloatAttribute("eixoZ");
+				if (elem->Attribute("angulo")) angulo = elem->FloatAttribute("angulo");
+				if (elem->Attribute("eixoX")) eixoX = elem->FloatAttribute("angulo");
+				if (elem->Attribute("eixoY")) eixoY = elem->FloatAttribute("angulo");
+				if (elem->Attribute("eixoZ")) eixoZ = elem->FloatAttribute("eixoZ");
 
-			current->appendAction(new Rotation(angulo, eixoX, eixoY, eixoZ ));
+				current->appendAction(new Rotation(angulo, eixoX, eixoY, eixoZ));
+				rt = 1;
+			}
+			else return -1;
 	 	}
 		else if (tag.compare("translacao") == 0){
-			x = y = z = 0.0;
-			if (elem->Attribute("X")) x = elem->FloatAttribute("X");
-			if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
-			if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
-			current->appendAction(new Translation(x,y,z));
+			if (tr == 0 && mdls == 0 && grp == 0){
+				if (elem->Attribute("X")) x = elem->FloatAttribute("X");
+				if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
+				if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
+				current->appendAction(new Translation(x, y, z));
+				tr = 1;
+			}
+			else return -1;
 		}
-		else if (tag.compare("escala") == 0){
-			x = y = z = 1.0;
-			if (elem->Attribute("X")) x = elem->FloatAttribute("X");
-			if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
-			if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
+		else if (tag.compare("escala") == 0 ){
+			if (sc == 0 && !mdls == 0 && grp == 0){
+				x = y = z = 1.0;
+				if (elem->Attribute("X")) x = elem->FloatAttribute("X");
+				if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
+				if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
 
-			current->appendAction(new Scale(x,y,z));
+				current->appendAction(new Scale(x, y, z));
+				sc = 1;
+			}
+			else return -1;	
+
 		}
 	}
-}
+	return ok;
+ }
 
 Translation::Translation(float x, float y, float z){
 	this->transVector.x = x;

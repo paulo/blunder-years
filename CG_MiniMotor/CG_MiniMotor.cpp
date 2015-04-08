@@ -15,6 +15,7 @@ void MouseMotion(int x, int y);
 
 static string filename;
 static int cameraActual = 1;
+static int xmlOk = 0;
 static CameraSphere cameraSph = CameraSphere(10);
 static CameraFP cameraFP = CameraFP();
 
@@ -62,11 +63,12 @@ void _start(const char* filename){
 	else {
 		actualScene.reset();
 		root = doc.RootElement();
-		actualScene.parseXML(root->FirstChild(), &actualScene);
-		glutMainLoop();
+		if (actualScene.parseXML(root->FirstChild(), &actualScene) != -1)
+			glutMainLoop();
+		else cout << "Erro na escrita do ficheiro!!" << endl;
 	}
 }
-
+	
 /*
 *Interpreta as teclas premidas no teclado
 *
@@ -79,7 +81,7 @@ void normalKeys(unsigned char key, int x, int y){
 	{
 	case '1':
 		cameraActual = 1;
-		cameraSph.refresh();
+		cameraSph.refresh();	
 		break;
 	case '2':	
 		cameraActual = 2;

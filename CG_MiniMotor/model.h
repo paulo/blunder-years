@@ -55,7 +55,7 @@ class Scene: public Group {
 public:
 	static const int DRAWMODE_VBO;
 	static const int DRAWMODE_DIRECT;
-	void parseXML(XMLNode* root, Group* current);
+	int parseXML(XMLNode* root, Group* current);
 	void setDrawMode(const int mode);
 };
 
