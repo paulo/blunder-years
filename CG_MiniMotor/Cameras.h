@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 typedef struct sCameraPosition{
 	float x;
 	float y;
@@ -12,6 +14,10 @@ class CameraSphere
 public:
 	CameraSphere(float radios);
 	void setLookAt(float x, float y, float z);
+	void setPos(float x, float y, float z);
+	struct point3D getPos();
+	float getPitch();
+	float getYaw();
 
 	void refresh();
 	void bindKey(unsigned char a);
@@ -31,6 +37,9 @@ public:
 	CameraFP();
 	void setWindowSize(float wWidth, float wHeight);
 	void start();
+	void setPos(float x, float y, float z);
+	void setAngles(float yaw, float pitch);
+	struct point3D getPos();
 
 	void refresh();
 	void bindKey(unsigned char a);

@@ -1,0 +1,37 @@
+#Primitivas graficas
+
+
+Era necessario que o motor 3D suportasse as seguintes primitivas graficas: Translação, Rotação e Escala.
+Cada uma destas primitivas está relacionado com o grupo onde está inserido, e devem ser executado pela ordem que está no XML.
+Assim cada Grupo, para além dos elementos do tipo Drawble tem também um vetor com todas as primitivas a serem executadas pela respetiva ordem.
+
+<Estrutura de class>
+
+A class que representa a Primitiva é a Action. Esta class depois é herdade por cada uma das implementações das primitivas graficas: Translation, Rotation e Scale. 
+Cada uma destas class implementão a função doAction que executa a respetiva primitiva do openGL, utilizando os seus proprios parametros que foram inicializados durante a leitura do XML.
+
+##Lista das Primitivas graficas
+
+###Translation
+Para criar um objeto do tipo Translation é necessario um vetor que indica a translação a realizar, ou seja float x, float y, float z.
+A primitiva no no metodo doAction é glTranslatef.
+
+###Rotation
+Para criar um objeto do tipo Rotation é necessario um vetor da rotação e um angulo, ou seja float x, float y, float z e ainda um float angle.
+A primitiva no no metodo doAction é glRotatef.
+
+###Scale
+Para criar um objeto do tipo Scale é necessario uma constante para cada eixo com a escala a ser usada, ou seja float x, float y, float z.
+A primitiva no no metodo doAction é glScalef.
+
+## Execução das primitivas
+
+Tal como visto anteriormente quer a figura quer o grupo implementam o tipo a Interface Drawble, que obriga a implementar o metodo Draw().
+Tambem vimos que um grupo tem um vetor de Drawbles e outro vetor de Actions.
+
+Assim durante o desenho de um grupo comessa-se por salvar o estado da matriz do estado do openGL.
+Executa-se todas as primitivas de desenho, e mediante a sua implementação irá executar uma translação, rotação ou escala. De notar que são executadas pela ordem que estão no XML.
+Depois desenha-se os Drawbles, que mediante a sua implementação serão Figuras ou outros grupos.
+Qualquer seja um ou outro serão afetos pelas primitivas uasadas anteriormente.
+No fim retoma-se o estado da matriz de estado do openGL.
+

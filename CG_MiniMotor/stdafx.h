@@ -15,5 +15,11 @@
 #include <glew.h>
 #include <GL/glut.h>
 
+typedef struct point3D {
+	float x;
+	float y;
+	float z;
+} Point3D;
+
 using namespace tinyxml2;
 using namespace std;

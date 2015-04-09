@@ -26,8 +26,19 @@ void CameraFP::setWindowSize(float wWidth, float wHeight){
 void CameraFP::start(){
 	//glutSetCursor(GLUT_CURSOR_NONE);
 	glutWarpPointer(windowWidth / 2, windowHeight / 2);
-	posY = posX = 0;
-	posZ = 5;
+}
+
+void CameraFP::setPos(float x, float y, float z){
+	this->posX = x; this->posY = y; this->posZ = z;
+}
+
+struct point3D CameraFP::getPos(){
+	return{ this->posX, this->posY, this->posZ };
+}
+
+void CameraFP::setAngles(float yaw, float pitch){
+	this->yaw = yaw;
+	this->pitch = pitch;
 }
 
 /*
@@ -39,6 +50,7 @@ void CameraFP::refresh(){
 	float pz = cos(pitch) * cos(yaw);
 	
 	glMatrixMode(GL_MODELVIEW);
+	printf("sphere %f %f\n", yaw, pitch);
 	glLoadIdentity();
 	gluLookAt(
 		posX, posY, posZ,

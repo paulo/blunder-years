@@ -7,12 +7,6 @@
 
 using namespace std;
 
-typedef struct point3D {
-	float x;
-	float y;
-	float z;
-} Point3D;
-
 class Drawable {
 public:
 	virtual void draw()=0;

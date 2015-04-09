@@ -8,6 +8,7 @@
 #include "model.h"
 #include <fstream>
 
+Point3D getCurrentCameraPosition();
 void normalKeys(unsigned char key, int x, int y);
 void specialKeys(int key, int x, int y);
 void renderScene(void);
@@ -33,7 +34,7 @@ void calcFPS(){
 	if (time - timebase > 1000) {
 		fps = frame*1000.0 / (time - timebase);
 		sprintf_s(s, "%d", fps);
-		printf("%d\n",fps);
+		
 		glutSetWindowTitle(s);
 		timebase = time;
 		frame = 0;
@@ -96,14 +97,22 @@ void _start(const char* filename){
 *@param y		localização do ponteiro do rato relativamente à janela
 */
 void normalKeys(unsigned char key, int x, int y){
+	Point3D p;
 	switch (key)
 	{
 	case '1':
+		p = getCurrentCameraPosition();
 		cameraActual = 1;
+		cameraSph.setPos(p.x, p.y, p.z);
 		cameraSph.refresh();	
 		break;
 	case '2':	
+		p = getCurrentCameraPosition();
+		if (cameraActual == 1) {
+			cameraFP.setAngles(-cameraSph.getYaw(), M_PI + cameraSph.getPitch());
+		}
 		cameraActual = 2;
+		cameraFP.setPos(p.x, p.y, p.z);
 		cameraFP.start();
 		break;
 	default:
@@ -120,6 +129,17 @@ void normalKeys(unsigned char key, int x, int y){
 
 	glutPostRedisplay();
 }
+
+Point3D getCurrentCameraPosition(){
+	if (cameraActual == 1){
+		return cameraSph.getPos();
+	}
+	else if (cameraActual == 2){
+		return cameraFP.getPos();
+	}
+	return{ 0, 0, 0 };
+}
+
 void specialKeys(int key, int x, int y){
 
 }
