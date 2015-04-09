@@ -52,6 +52,7 @@ class Scene: public Group {
 
 public:
 	void setCameraPosition(float x, float y, float z);
+	Point3D getCameraPosition();
 	static const int DRAWMODE_VBO;
 	static const int DRAWMODE_DIRECT;
 	int parseXML(XMLNode* root, Group* current);

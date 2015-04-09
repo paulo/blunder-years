@@ -148,6 +148,10 @@ void Scene::setCameraPosition(float x, float y, float z){
 	this->camZ = z;
 }
 
+Point3D Scene::getCameraPosition(){
+	return{ camX, camY, camZ };
+}
+
 /*
 *Implementa um parser de leitura de um ficheiro XML
 *

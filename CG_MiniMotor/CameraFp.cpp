@@ -50,7 +50,7 @@ void CameraFP::refresh(){
 	float pz = cos(pitch) * cos(yaw);
 	
 	glMatrixMode(GL_MODELVIEW);
-	printf("sphere %f %f\n", yaw, pitch);
+	//printf("sphere %f %f\n", yaw, pitch);
 	glLoadIdentity();
 	gluLookAt(
 		posX, posY, posZ,

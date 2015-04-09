@@ -82,10 +82,16 @@ void _start(const char* filename){
 	}
 	else {
 		actualScene.reset();
+		actualScene.setCameraPosition(25, 25, 25);
 		root = doc.RootElement();
-		if (actualScene.parseXML(root->FirstChild(), &actualScene) != -1)
+		if (actualScene.parseXML(root->FirstChild(), &actualScene) != -1) {
+			Point3D p = actualScene.getCameraPosition();
+			cameraSph.setPos(p.x, p.y, p.y);
 			glutMainLoop();
-		else cout << "Erro na escrita do ficheiro!!" << endl;
+		}
+		else {
+			cout << "Erro na escrita do ficheiro!!" << endl;
+		}
 	}
 }
 	

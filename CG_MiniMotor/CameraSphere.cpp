@@ -93,7 +93,7 @@ void CameraSphere::refresh(){
 	float py = radios * sin(yaw);	
 	float pz = radios * cos(pitch) * cos(yaw);
 	glLoadIdentity();
-	printf("sphere %f %f\n",yaw,pitch);
+	//printf("sphere %f %f\n",yaw,pitch);
 	gluLookAt(
 		lookX + px, lookY + py, lookZ + pz,
 		lookX, lookY, lookZ,
