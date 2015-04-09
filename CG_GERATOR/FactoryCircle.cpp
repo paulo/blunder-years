@@ -10,7 +10,11 @@
 */
 Figure FigureFactory::createCircle(float raio, int fatias){
 	Figure f;
-	createCircleAux(&f, raio, fatias, 0, 1);
+	Point3D* p = new Point3D[2];
+	p[0].x = 0; p[0].y = 0;
+	p[1].x = raio; p[1].y = 0;
+	createRotate(&f, p, 2, fatias);
+	//createCircleAux(&f, raio, fatias, 0, 1);
 	return f;
 }
 

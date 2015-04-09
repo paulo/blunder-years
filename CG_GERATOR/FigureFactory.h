@@ -14,6 +14,7 @@ public:
 	Figure createCylinder(float raiob, float altura, int fatias, int camadas);
 	Figure createTree(float raiob, float alturab, float raioc, float altura, int fatias, int camadas);
 private :
+	void createIndiceStripe(Figure* f, float a1, float a2, float a3, float a4);
 	void createPlaneAux(Figure* f, float p[3], int axisFirst, int axisSecond);
 	void createCircleAux(Figure* f, float raio, int fatias, float altura, int orient);
 	void createRotate(Figure* f, Point3D points[], int camadas, int fatias);
