@@ -248,7 +248,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 			else return -1;
 		}
 		else if (tag.compare("escala") == 0 ){
-			if (sc == 0 && !mdls == 0 && grp == 0){
+			if (sc == 0 && mdls == 0 && grp == 0){
 				x = y = z = 1.0;
 				if (elem->Attribute("X")) x = elem->FloatAttribute("X");
 				if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
