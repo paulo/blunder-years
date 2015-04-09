@@ -243,6 +243,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 	 	}
 		else if (tag.compare("translacao") == 0){
 			if (tr == 0 && mdls == 0 && grp == 0){
+				x = y = z = 0.0;
 				if (elem->Attribute("X")) x = elem->FloatAttribute("X");
 				if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
 				if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
