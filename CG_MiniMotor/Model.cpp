@@ -108,8 +108,8 @@ void FigureVBO::draw() {
 	glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, this->indices);
 }
 
-void Group::appendAction(Action* element){
-	actions.push_back(element);
+void Group::appendTransformation(GTransformation* element){
+	transformations.push_back(element);
 }
 
 void Group::append(Drawable* figure) {
@@ -118,14 +118,14 @@ void Group::append(Drawable* figure) {
 
 void Group::reset() {
 	elements.clear();
-	actions.clear();
+	transformations.clear();
 }
 
 void Group::draw(){
 	glPushMatrix();
-	std::vector<Action*>::iterator it;
-	for (it = actions.begin(); it < actions.end(); it++)
-		(**it).doAction();
+	std::vector<GTransformation*>::iterator it;
+	for (it = transformations.begin(); it < transformations.end(); it++)
+		(**it).doTransformation();
 
 	std::vector<Drawable*>::iterator d = elements.begin();
 	while (d != elements.end()){
@@ -236,7 +236,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				if (elem->Attribute("eixoY")) eixoY = elem->FloatAttribute("eixoY");
 				if (elem->Attribute("eixoZ")) eixoZ = elem->FloatAttribute("eixoZ");
 
-				current->appendAction(new Rotation(angulo, eixoX, eixoY, eixoZ));
+				current->appendTransformation(new Rotation(angulo, eixoX, eixoY, eixoZ));
 				rt = 1;
 			}
 			else return -1;
@@ -246,7 +246,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				if (elem->Attribute("X")) x = elem->FloatAttribute("X");
 				if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
 				if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
-				current->appendAction(new Translation(x, y, z));
+				current->appendTransformation(new Translation(x, y, z));
 				tr = 1;
 			}
 			else return -1;
@@ -258,7 +258,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
 				if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
 
-				current->appendAction(new Scale(x, y, z));
+				current->appendTransformation(new Scale(x, y, z));
 				sc = 1;
 			}
 			else return -1;	
@@ -274,7 +274,7 @@ Translation::Translation(float x, float y, float z){
 	this->transVector.z = z;
 }
 
-void Translation::doAction(){
+void Translation::doTransformation(){
 	glTranslatef(this->transVector.x, this->transVector.y, transVector.z);
 }
 
@@ -284,7 +284,7 @@ Rotation::Rotation(float angle, float x, float y, float z){
 	this->p.y = y;
 	this->p.z = z;
 }
-void Rotation::doAction(){
+void Rotation::doTransformation(){
 	glRotatef(angle, p.x, p.y, p.z);
 }
 Scale::Scale(float x, float y, float z){
@@ -293,7 +293,7 @@ Scale::Scale(float x, float y, float z){
 	this->scale.z = z;
 
 }
-void Scale::doAction(){
+void Scale::doTransformation(){
 	glScalef(scale.x, scale.y, scale.z);
 }
 

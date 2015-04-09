@@ -12,9 +12,9 @@ public:
 	virtual void draw()=0;
 };
 
-class Action {
+class GTransformation {
 public:
-	virtual void doAction()=0;
+	virtual void doTransformation()=0;
 };
 
 class Figure: public Drawable {
@@ -36,11 +36,11 @@ public:
 
 class Group: public Drawable {
 	vector<Drawable*> elements;
-	vector<Action*> actions;
+	vector<GTransformation*> transformations;
 public:
 	void reset();
 	void append(Drawable* element);
-	void appendAction(Action* element);
+	void appendTransformation(GTransformation* element);
 	void draw();
 };
 
@@ -59,26 +59,26 @@ public:
 	void setDrawMode(const int mode);
 };
 
-class Translation : public Action {
+class Translation : public GTransformation {
 	point3D transVector;
 public:
 	Translation(float x, float y, float z);
-	void doAction();
+	void doTransformation();
 };
 
-class Rotation : public Action {
+class Rotation : public GTransformation {
 	point3D p;
 	float angle;
 public:
 	Rotation(float alfa, float x, float y, float z);
-	void doAction();
+	void doTransformation();
 };
 
-class Scale : public Action {
+class Scale : public GTransformation {
 	point3D scale;
 public:
 	Scale(float x, float y, float z);
-	void doAction();
+	void doTransformation();
 };
 
 
