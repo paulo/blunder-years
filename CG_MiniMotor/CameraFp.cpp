@@ -94,7 +94,7 @@ void CameraFP::bindKey(unsigned char key) {
 *@param x	posição do rato relativamente à janela
 *@param y	posição do rato relativamente à janela
 */
-void CameraFP::moveMouse(float x, float y){
+void CameraFP::moveMouse(float x, float y) {
 	yaw -= (y - windowWidth / 2) * M_PI / 180 * 0.02;
 	pitch -= (x - windowHeight / 2) * M_PI / 180 * 0.02;
 	if (yaw > M_PI / 2 - 0.01) yaw = M_PI / 2 - 0.01;
@@ -153,9 +153,15 @@ void CameraFP::moveLeft(float alfa){
 	//vy = v1z * v2x - v1x * v2z
 	//vz = v1x * v2y - v1y * v2x
 	// in this case the v2y is the unique non-zero
-	posX += pz * alfa;
-	posY += 0 * alfa;
-	posZ += -px* alfa;
+	float lx = 1 * pz - 0 * py;
+	float ly = 0 * px - 0 * pz;
+	float lz = 0 * py - 1 * px;
+
+	float l = sqrt(lx*lx + ly*ly + lz*lz);
+
+	posX += (lx / l) * alfa; 
+	posY += (ly / l) * alfa;
+	posZ += (lz / l) * alfa;
 }
 
 /*
@@ -173,7 +179,13 @@ void CameraFP::moveRight(float alfa){
 	//vy = v1z * v2x - v1x * v2z
 	//vz = v1x * v2y - v1y * v2x
 	// in this case the v1y is the unique non-zero
-	posX += -pz * alfa;
-	posY += 0 * alfa;
-	posZ += px * alfa;
+	float lx = py * 0 - pz * 1;
+	float ly = pz * 0 - px * 0;
+	float lz = px * 1 - py * 0;
+
+	float l = sqrt(lx*lx + ly*ly + lz*lz);
+
+	posX += (lx / l) * alfa; 
+	posY += (ly / l) * alfa;
+	posZ += (lz / l) * alfa;
 }
