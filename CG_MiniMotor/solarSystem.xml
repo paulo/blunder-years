@@ -18,6 +18,7 @@
                 <modelo ficheiro='planeta.3d'/><!-- VENUS -->
             </grupo>
             <grupo>
+		<rotacao tempo='5' eixoY='1'/>
                 <translacao X= '40'/>
                 <escala X='1.27' Y='1.27' Z='1.27'/>
                 <modelo ficheiro='planeta.3d'/><!-- TERRA -->

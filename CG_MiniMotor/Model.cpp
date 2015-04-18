@@ -161,7 +161,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 	XMLNode* child;
 	Figure f;
 	float x, y, z;
-	float angulo, eixoX, eixoY, eixoZ;
+	float tempo, angulo, eixoX, eixoY, eixoZ;
 	int rt = 0, tr = 0, sc = 0, mdls = 0, grp = 0;
 	int ok = 0;
 
@@ -200,6 +200,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 			if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
 			setCameraPosition(x, y, z);
 		}
+
 		// only one model 
 		if (tag.compare("modelo") == 0) {
 			if (elem->Attribute("ficheiro")){
@@ -230,13 +231,20 @@ int Scene::parseXML(XMLNode* root, Group* current){
 		else if (tag.compare("rotacao") == 0 ) {
 			if (rt == 0 && mdls == 0 && grp == 0){
 				eixoX = eixoY = eixoZ = 0.0; angulo = 0.0;
+				tempo = 0.0;
 
 				if (elem->Attribute("angulo")) angulo = elem->FloatAttribute("angulo");
 				if (elem->Attribute("eixoX")) eixoX = elem->FloatAttribute("eixoX");
 				if (elem->Attribute("eixoY")) eixoY = elem->FloatAttribute("eixoY");
 				if (elem->Attribute("eixoZ")) eixoZ = elem->FloatAttribute("eixoZ");
+				if (elem->Attribute("tempo")) tempo = elem->FloatAttribute("tempo");
 
-				current->appendTransformation(new Rotation(angulo, eixoX, eixoY, eixoZ));
+				if (tempo == 0.0){
+					current->appendTransformation(new Rotation(angulo, eixoX, eixoY, eixoZ));	
+				} else {
+					current->appendTransformation(new TimeRotation(angulo, tempo, eixoX, eixoY, eixoZ));
+				}
+				
 				rt = 1;
 			}
 			else return -1;
@@ -263,7 +271,6 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				sc = 1;
 			}
 			else return -1;	
-
 		}
 	}
 	return ok;
@@ -288,6 +295,23 @@ Rotation::Rotation(float angle, float x, float y, float z){
 void Rotation::doTransformation(){
 	glRotatef(angle, p.x, p.y, p.z);
 }
+
+TimeRotation::TimeRotation(float angle, float time, float x, float y, float z) 
+	: elapseBefore(0.0), Rotation(angle, x, y, z) {
+	this->time = time;
+}
+void TimeRotation::doTransformation(){
+	float elapsedNow = glutGet(GLUT_ELAPSED_TIME);
+	float deltaTime = elapsedNow - this->elapseBefore;
+    float anglePerMili = 360 / (this->time * 1000);
+	this->angle = (deltaTime * anglePerMili + this->angle);
+	while(this->angle > 360){
+		this->angle -= 360;
+	}
+	glRotatef(angle, p.x, p.y, p.z);
+    elapseBefore = elapsedNow;
+}
+
 Scale::Scale(float x, float y, float z){
 	this->scale.x = x;
 	this->scale.y = y;

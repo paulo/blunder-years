@@ -25,6 +25,7 @@ public:
 };
 
 class FigureVBO : public Drawable {
+protected:
 	GLuint index;
 	GLuint *indices;
 	GLuint nIndices;
@@ -32,7 +33,6 @@ public:
 	void draw();
 	void fromFile(string  file);
 };
-
 
 class Group: public Drawable {
 	vector<Drawable*> elements;
@@ -67,10 +67,19 @@ public:
 };
 
 class Rotation : public GTransformation {
+protected:
 	point3D p;
 	float angle;
 public:
 	Rotation(float alfa, float x, float y, float z);
+	void doTransformation();
+};
+
+class TimeRotation : public Rotation {
+	float time;
+	float elapseBefore;
+public:
+	TimeRotation(float alfa, float time, float x, float y, float z ) ;
 	void doTransformation();
 };
 
