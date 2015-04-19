@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+	<cena>
+		<!--Corpo-->
+		<grupo>
+			<rotacao angulo='90' eixoX='0' eixoY='0' eixoZ='1'/>
+			<modelo ficheiro='gato/cil2.3d' />
+			<!--Perna frente esquerda-->
+			<grupo>
+				<translacao Y='-1.3' X='-1.3' Z='0.6'  />
+				<rotacao angulo='90' eixoX='0' eixoY='0' eixoZ='1'/>
+				<escala X='0.125' Y='0.40' Z='0.125'/>
+				<modelo ficheiro='gato/cil2.3d' />
+			</grupo>
+			<!--Perna frente direita-->
+			<grupo>
+				<translacao Y='-1.3' X='-1.3' Z='-0.6'  />
+				<rotacao angulo='90' eixoX='0' eixoY='0' eixoZ='1'/>
+				<escala X='0.125' Y='0.40' Z='0.125'/>
+				<modelo ficheiro='gato/cil2.3d' />
+			</grupo>
+			<!--Perna trás esquerda-->
+			<grupo>
+				<translacao Y='1.3' X='-1.3' Z='0.6'  />
+				<rotacao angulo='90' eixoX='0' eixoY='0' eixoZ='1'/>
+				<escala X='0.125' Y='0.40' Z='0.125'/>
+				<modelo ficheiro='gato/cil2.3d' />
+			</grupo>
+			<!--Perna trás direita-->
+			<grupo>
+				<translacao Y='1.3' X='-1.3' Z='-0.6'  />
+				<rotacao angulo='90' eixoX='0' eixoY='0' eixoZ='1'/>
+				<escala X='0.125' Y='0.40' Z='0.125'/>
+				<modelo ficheiro='gato/cil2.3d' />
+			</grupo>
+			<!--Cabeça-->
+			<grupo>
+				<translacao Y='-2.4' X='1'  />
+				<escala X='0.80' Y='0.550' Z='0.80'/>
+				<modelo ficheiro='gato/esferaGato.3d' />
+				<!--Olho Esquerdo-->
+				<grupo>
+					<translacao Y='-0.95' X='0' Z='0.4' />
+					<rotacao angulo='110' eixoX='0' eixoY='1' eixoZ='0'/>
+					<escala X='0.04' Y='0.01' Z='0.025'/>
+					<modelo ficheiro='gato/bonecoAnel.3d' />
+				</grupo>
+				<!--Centro Olho Esquerdo-->
+				<grupo>
+					<translacao Y='-1' X='0' Z='0.4' />
+					<rotacao angulo='0' eixoX='0' eixoY='1' eixoZ='0'/>
+					<escala X='0.1' Y='0.005' Z='0.02'/>
+					<modelo ficheiro='gato/esferaGato.3d' />
+				</grupo>
+				<!--Olho Direito-->
+				<grupo>
+					<translacao Y='-0.95' X='0' Z='-0.4' />
+					<rotacao angulo='-110' eixoX='0' eixoY='1' eixoZ='0'/>
+					<escala X='0.04' Y='0.01' Z='0.025'/>
+					<modelo ficheiro='gato/bonecoAnel.3d' />
+				</grupo>
+				<!--Centro Olho Direito-->
+				<grupo>
+					<translacao Y='-1' X='0' Z='-0.4' />
+					<rotacao angulo='0' eixoX='0' eixoY='1' eixoZ='0'/>
+					<escala X='0.1' Y='0.005' Z='0.02'/>
+					<modelo ficheiro='gato/esferaGato.3d' />
+				</grupo>
+				<!--Nariz-->
+				<grupo>
+					<translacao Y='-0.95' X='-0.45' />
+					<rotacao angulo='180' eixoX='1' eixoY='-1'/>
+					<escala X='0.01' Y='0.025' Z='0.02'/>
+					<modelo ficheiro='gato/a.3d' />
+				</grupo>
+				<!--Bigode 1 em-->
+				<grupo>
+					<translacao Y='-0.8' X='-0.55' Z='0.8' />
+					<rotacao angulo='90' eixoX='1' eixoY='0' eixoZ='0'/>
+					<escala X='0.01' Y='0.4' Z='0.01'/>
+					<modelo ficheiro='gato/cil2.3d' />
+				</grupo>
+				<!--Bigode 2 ec-->
+				<grupo>
+					<translacao Y='-0.7' X='-0.33' Z='0.75' />
+					<rotacao angulo='145' eixoX='1' eixoY='1.5' eixoZ='1'/>
+					<escala X='0.01' Y='0.4' Z='0.01'/>
+					<modelo ficheiro='gato/cil2.3d' />
+				</grupo>
+				<!--Bigode 3 eb-->
+				<grupo>
+					<translacao Y='-0.7' X='-0.76' Z='0.75' />
+					<rotacao angulo='145' eixoX='1' eixoY='-1.5' eixoZ='-1'/>
+					<escala X='0.01' Y='0.4' Z='0.01'/>
+					<modelo ficheiro='gato/cil2.3d' />
+				</grupo>
+				<!--Bigode 4 dm-->
+				<grupo>
+					<translacao Y='-0.8' X='-0.55' Z='-0.8' />
+					<rotacao angulo='90' eixoX='1' eixoY='0' eixoZ='0'/>
+					<escala X='0.01' Y='0.4' Z='0.01'/>
+					<modelo ficheiro='gato/cil2.3d' />
+				</grupo>
+				<!--Bigode 5 dc-->
+				<grupo>
+					<translacao Y='-0.7' X='-0.33' Z='-0.75' />
+					<rotacao angulo='145' eixoX='-1' eixoY='-1.5' eixoZ='1'/>
+					<escala X='0.01' Y='0.4' Z='0.01'/>
+					<modelo ficheiro='gato/cil2.3d' />
+				</grupo>
+				<!--Bigode 6 db-->
+				<grupo>
+					<translacao Y='-0.9' X='-0.76' Z='-0.75' />
+					<rotacao angulo='145' eixoX='1' eixoY='1.5' eixoZ='1'/>
+					<escala X='0.01' Y='0.4' Z='0.01'/>
+					<modelo ficheiro='gato/cil2.3d' />
+				</grupo>
+				<!--Orelha Esquerda-->
+				<grupo>
+					<translacao Z='0.6' X='0.8' Y='-0.7'/>
+					<rotacao angulo='145' eixoX='1' eixoY='0.4' eixoZ='0.03'/>
+					<escala X='0.045' Y='0.045' Z='0.045'/>
+					<modelo ficheiro='gato/a.3d' />
+				</grupo>
+				<!--Orelha Direita-->
+				<grupo>
+					<translacao Z='-0.6' X='0.8' Y='-0.7'/>
+					<rotacao angulo='215' eixoX='1' eixoY='0.4' eixoZ='0.03'/>
+					<escala X='0.045' Y='0.045' Z='0.045'/>
+					<modelo ficheiro='gato/a.3d' />
+				</grupo>
+			</grupo>
+			<!--Pescoço-->
+			<grupo>
+				<translacao Z='0' X='0.6' Y='-1.7'/>
+				<escala X='0.5' Y='0.15' Z='0.5'/>
+				<modelo ficheiro='gato/cil2.3d' />
+			</grupo>
+			<!--Cauda-->
+			<grupo>
+				<translacao Y='2.6' X='1.5' />
+				<rotacao angulo='135' eixoX='0' eixoY='0' eixoZ='1'/>
+				<escala X='0.05' Y='0.3' Z='0.05'/>
+				<modelo ficheiro='gato/a.3d' />
+			</grupo>
+			<grupo>
+				<translacao Y='2.45' X='1.35'  />
+				<rotacao angulo='135' eixoX='0' eixoY='0' eixoZ='1'/>
+				<escala X='0.05' Y='0.25' Z='0.05'/>
+				<modelo ficheiro='gato/a.3d' />
+			</grupo>
+		</grupo>
+	</cena>
+</xml>
