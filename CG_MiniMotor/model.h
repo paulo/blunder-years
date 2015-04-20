@@ -66,6 +66,18 @@ public:
 	void doTransformation();
 };
 
+class TimeTranslation : public GTransformation {
+	vector<point3D> pointVector;
+	float time;
+	float elapseBefore;
+public:
+	TimeTranslation(float);
+	void calculateTransformation(float, float*, int*);
+	void doTransformation();
+	void appendPoint(point3D);
+	float giveIndex(int, int, int*);
+};
+
 class Rotation : public GTransformation {
 protected:
 	point3D p;

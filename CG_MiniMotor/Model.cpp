@@ -10,7 +10,7 @@
 using namespace std;
 
 /**
-* Lê de um ficheiro e guarda os pontos lidos em estruturas Ponto3D.
+* LÃª de um ficheiro e guarda os pontos lidos em estruturas Ponto3D.
 *
 * @param filename		nome do ficheiro a ler
 */
@@ -47,7 +47,7 @@ void Figure::fromFile(string filename){
 }
 
 /**
-* Desenha a figura através das coordenadas dos seus pontos
+* Desenha a figura atravÃ©s das coordenadas dos seus pontos
 */
 void Figure::draw(){
 	
@@ -252,13 +252,31 @@ int Scene::parseXML(XMLNode* root, Group* current){
 		else if (tag.compare("translacao") == 0){
 			if (tr == 0 && mdls == 0 && grp == 0){
 				x = y = z = 0.0;
+				tempo = 0.0;
+				XMLNode* pointchild;	
 				if (elem->Attribute("X")) x = elem->FloatAttribute("X");
 				if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
 				if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
-				current->appendTransformation(new Translation(x, y, z));
-				tr = 1;
-			}
-			else return -1;
+				if (elem->Attribute("tempo")) tempo = elem->FloatAttribute("tempo");
+				if (!elem -> FirstChild()){ 
+					current->appendTransformation(new Translation(x, y, z));				
+				} else {
+					TimeTranslation *tt = new TimeTranslation(tempo);
+					for (pointchild = child->FirstChild(); pointchild; pointchild = pointchild->NextSibling()) {
+						XMLElement *point = child->ToElement();
+						string tag2 = child->Value();
+						if (tag2.compare("ponto") == 0) {
+							if (point->Attribute("X")) x = point->FloatAttribute("X"); 
+							if (point->Attribute("Y")) y = point->FloatAttribute("Y");
+							if (point->Attribute("Z")) z = point->FloatAttribute("Z");
+							tt->appendPoint({x,y,z});
+						}		
+					}
+					current->appendTransformation(tt);
+				}
+					tr = 1;
+				}
+				else return -1;
 		}
 		else if (tag.compare("escala") == 0 ){
 			if (sc == 0 && mdls == 0 && grp == 0){
@@ -284,6 +302,63 @@ Translation::Translation(float x, float y, float z){
 
 void Translation::doTransformation(){
 	glTranslatef(this->transVector.x, this->transVector.y, transVector.z);
+}
+
+TimeTranslation::TimeTranslation(float time) 
+	: elapseBefore(0.0) {
+	this->time=time;
+}
+
+void TimeTranslation::appendPoint(Point3D p3d){
+	pointVector.push_back(p3d);
+}
+
+
+//talvez depois implementar a contar com a tensao
+void TimeTranslation::doTransformation(){
+
+	float elapsedNow = glutGet(GLUT_ELAPSED_TIME);
+	float deltaTime = (elapsedNow - this->elapseBefore)/this->time;;
+
+	float res[3];
+
+	int point_count = pointVector.size();
+	float t = deltaTime * point_count;
+	int index = floor(t);
+	t = t - index;
+
+	int indexes[4];
+	indexes[0] = (index + point_count-1) % point_count;	
+	indexes[1] = (indexes[0]+1) % point_count;
+	indexes[2] = (indexes[1]+1) % point_count; 
+	indexes[3] = (indexes[2]+1) % point_count;
+
+	calculateTransformation(t, res, indexes);
+
+	glTranslatef(res[0], res[1], res[2]);
+
+    this->elapseBefore = elapsedNow;
+}
+
+void TimeTranslation::calculateTransformation(float x, float *res, int *indexes){
+	double c1,c2,c3,c4;
+	int i;
+	float m[4][4] = {{0.0,1.0,0.0,0.0},{-0.5,0.0,0.5,0.0},{1.0,-2.5,2.0,-0.5},{-0.5,1.5,-1.5,0.5}}; 
+
+	for(i=0;i<3;i++){
+		c1 =  	      							m[1][2]*giveIndex(1, i, indexes);
+		c2 = m[2][1]*giveIndex(0, i, indexes)									    + m[2][3]*giveIndex(2, i, indexes);
+		c3 = m[3][1]*giveIndex(0, i, indexes) + m[3][2]*giveIndex(1, i, indexes) + m[3][3]*giveIndex(2, i, indexes) + m[3][4]*giveIndex(3, i, indexes);
+		c4 = m[4][1]*giveIndex(0, i, indexes) + m[4][2]*giveIndex(1, i, indexes) + m[4][3]*giveIndex(2, i, indexes) + m[4][4]*giveIndex(3, i, indexes);
+
+		res[i] = (((c4*x + c3)*x +c2)*x + c1);
+	}
+}
+
+float TimeTranslation::giveIndex(int index, int point, int*indexes){
+	if(point == 0) return pointVector[indexes[index]].x;
+		else if(point == 1) return pointVector[indexes[index]].y;
+			else return pointVector[indexes[index]].z;
 }
 
 Rotation::Rotation(float angle, float x, float y, float z){
@@ -312,12 +387,17 @@ void TimeRotation::doTransformation(){
     elapseBefore = elapsedNow;
 }
 
+
+
+
 Scale::Scale(float x, float y, float z){
 	this->scale.x = x;
 	this->scale.y = y;
 	this->scale.z = z;
 
 }
+
+
 void Scale::doTransformation(){
 	glScalef(scale.x, scale.y, scale.z);
 }
