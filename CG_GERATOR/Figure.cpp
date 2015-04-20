@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "model.h"
-#include <iostream>
-#include <fstream>
 
 /**
 * Escreve num ficheiro todas coordenadas dos pontos de uma figura.
@@ -44,4 +42,12 @@ int Figure::appendPoint(Point3D p){
 void Figure::append(Point3D p){
 	triangles.push_back(p);
 	indices.push_back(triangles.size() - 1);
+}
+
+vector<unsigned int> Figure::getIndexes(){
+	return indices;
+}
+
+vector<Point3D> Figure::getPoints(){
+	return triangles;
 }

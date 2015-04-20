@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CG_GERATOR.cpp" />
+    <ClCompile Include="FactoryBezier.cpp" />
     <ClCompile Include="FactoryCylinder.cpp" />
     <ClCompile Include="FactoryCircle.cpp" />
     <ClCompile Include="factoryCone.cpp">

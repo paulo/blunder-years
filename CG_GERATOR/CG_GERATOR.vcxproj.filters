@@ -71,5 +71,8 @@
     <ClCompile Include="FactoryTree.cpp">
       <Filter>Source Files\FigureFactory</Filter>
     </ClCompile>
+    <ClCompile Include="FactoryBezier.cpp">
+      <Filter>Source Files\FigureFactory</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

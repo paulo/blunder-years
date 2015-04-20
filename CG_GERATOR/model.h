@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -22,6 +24,8 @@ public:
 	void append(Point3D p);
 	void appendIndice(unsigned int p);
 	int appendPoint(Point3D p);
+	vector<unsigned int> getIndexes();
+	vector<Point3D> getPoints();
 };
 
 #endif

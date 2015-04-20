@@ -2,14 +2,11 @@
 //
 
 #include "stdafx.h"
-
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include "FigureFactory.h"
-
-using namespace std;
 
 static FigureFactory figureFactory;
 
@@ -21,8 +18,8 @@ static FigureFactory figureFactory;
 */
 int main(int argc, char* argv[]){
 
-	string filename, args[12], form;
-	int i;
+	string filename, args[12], form, patchFile;
+	int i, tess;
 
 	//gerador esfera 2.5 5 5 esfera.3d
 	if (argc <= 100){
@@ -195,6 +192,21 @@ int main(int argc, char* argv[]){
 
 				f = figureFactory.createTree(stof(args[2]), stof(args[3]), stof(args[4]), stof(args[5]), stoi(args[6]), 1);
 				filename = args[7];
+		}
+
+		else if (args[1] == "patch") {
+
+			if (i == 5){
+
+				patchFile = args[2];
+				filename = args[4];
+				tess = stoi(args[3]);
+				f = figureFactory.createBezierSurface(&f,patchFile, tess);
+			}
+			else{
+				cout << "O número de argumentos do comando introduzido está incorreto!" << endl
+					<< "O comando deve ser do tipo \"gerador patch ficheiro.patch <tesselação> ficheiro.3d\"." << endl;
+			}
 		}
 		else {
 			cout << "A figura " << args[1] << " nao existe!" << endl;
