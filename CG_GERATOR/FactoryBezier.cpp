@@ -54,14 +54,14 @@ Point3D Calculate(float u, float v) {
 Figure definePatches(Figure aux, int tess, int in, int pn){
 
 	Figure f;
-	int i, j, k, o=0;
+	int i, j, k, o = 0;
 	int row, col;
 	Point3D cpoint;
 	float u, v;
 
 	for (k = 0; k < in; k++){
 		for (i = 0; i < 16; i++){
-			cpoint = aux.getPoints()[aux.getIndexes()[i]];
+			cpoint = aux.getPoints()[aux.getIndexes()[k*16 + i]];
 			row = (int)i / 4;
 			col = i - 4 * row;
 			cp[row][col].x = cpoint.x;
@@ -77,28 +77,30 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 				f.appendPoint(p);
 			}
 		}
-				
+
 	}
-	
-	col = (tess ) * (tess );
-	for (i = 0; i<in; i++){ //os ciclos estão bem pois in*tess*tess = 12800 = nro vertices
-		for (j = 0; j<tess; j++) {
-			for (k = 0; k<tess; k++) {
-				
-				f.appendIndice(i*col + j*(tess + 1) + k); 
-				f.appendIndice(i*col + j*(tess + 1) + k + 1);
-				f.appendIndice(i*col + (j + 1)*(tess + 1) + k);
-				f.appendIndice(i*col + j*(tess + 1) + k + 1);
-				f.appendIndice(i*col + (j + 1)*(tess + 1) + k + 1);
-				f.appendIndice(i*col + (j + 1)*(tess + 1) + k);
+	int offi = 0;
+
+	for (i = 0; i < in; i++){
+		for (j = 0; j < tess - 1; j++) {
+			for (k = 0; k < tess - 1; k++) {
+
+				f.appendIndice(offi + (k*tess) + j + 1);
+				f.appendIndice(offi + (k*tess) + j);
+				f.appendIndice(offi + (k*tess) + j + tess);
+
+				f.appendIndice(offi + (k*tess) + j + 1);
+				f.appendIndice(offi + (k*tess) + j + tess);
+				f.appendIndice(offi + (k*tess) + j + tess + 1);
 			}
 		}
+		offi += tess * tess;
 	}
 
 	return f;
 }
 
-Figure FigureFactory::createBezierSurface(Figure* f , std::string patchfile, int tess) {
+Figure FigureFactory::createBezierSurface(Figure* f, std::string patchfile, int tess) {
 
 	Figure aux;
 	int i, j, in, pn, ind, row, col;
@@ -110,7 +112,7 @@ Figure FigureFactory::createBezierSurface(Figure* f , std::string patchfile, int
 	ifstream filename(patchfile, ios::in);
 
 	if (filename.is_open()) {
-		
+
 		filename >> in;
 		getline(filename, line);
 
@@ -130,7 +132,7 @@ Figure FigureFactory::createBezierSurface(Figure* f , std::string patchfile, int
 
 		for (i = 0; i < pn && getline(filename, line); i++) {
 			stringstream ss(line);
-			for (j = 0; j < 3 && getline(ss, field, ','); j++) { 
+			for (j = 0; j < 3 && getline(ss, field, ','); j++) {
 				stringstream fs(field);
 				coord = 0.0;
 				fs >> coord;
@@ -146,11 +148,12 @@ Figure FigureFactory::createBezierSurface(Figure* f , std::string patchfile, int
 		filename.close();
 		*f = definePatches(aux, tess, in, pn);
 
-	}else {
+	}
+	else {
 		cout << "Erro no ficheiro .patch!" << endl;
 	}
-	
-	 
+
+
 
 	return *f;
 }
