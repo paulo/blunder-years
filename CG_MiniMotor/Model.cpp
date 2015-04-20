@@ -263,8 +263,8 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				} else {
 					TimeTranslation *tt = new TimeTranslation(tempo);
 					for (pointchild = child->FirstChild(); pointchild; pointchild = pointchild->NextSibling()) {
-						XMLElement *point = child->ToElement();
-						string tag2 = child->Value();
+						XMLElement *point = pointchild->ToElement();
+						string tag2 = pointchild->Value();
 						if (tag2.compare("ponto") == 0) {
 							if (point->Attribute("X")) x = point->FloatAttribute("X"); 
 							if (point->Attribute("Y")) y = point->FloatAttribute("Y");
@@ -318,14 +318,20 @@ void TimeTranslation::appendPoint(Point3D p3d){
 void TimeTranslation::doTransformation(){
 
 	float elapsedNow = glutGet(GLUT_ELAPSED_TIME);
-	float deltaTime = (elapsedNow - this->elapseBefore)/this->time;;
+	
+	float time = this->time * 1000;
 
 	float res[3];
-
 	int point_count = pointVector.size();
-	float t = deltaTime * point_count;
-	int index = floor(t);
-	t = t - index;
+	float aux = ((elapsedNow / time) - (int)(elapsedNow / time));
+	float aux2 = ((elapsedNow * point_count / time) - (int)(elapsedNow * point_count / time));
+	int index = floor(aux * point_count);
+
+
+	//int point_count = pointVector.size();
+	//float t = deltaTime * point_count;
+	//int index = floor(t);
+	//t = t - index;
 
 	int indexes[4];
 	indexes[0] = (index + point_count-1) % point_count;	
@@ -333,7 +339,7 @@ void TimeTranslation::doTransformation(){
 	indexes[2] = (indexes[1]+1) % point_count; 
 	indexes[3] = (indexes[2]+1) % point_count;
 
-	calculateTransformation(t, res, indexes);
+	calculateTransformation(aux2, res, indexes);
 
 	glTranslatef(res[0], res[1], res[2]);
 
@@ -346,10 +352,10 @@ void TimeTranslation::calculateTransformation(float x, float *res, int *indexes)
 	float m[4][4] = {{0.0,1.0,0.0,0.0},{-0.5,0.0,0.5,0.0},{1.0,-2.5,2.0,-0.5},{-0.5,1.5,-1.5,0.5}}; 
 
 	for(i=0;i<3;i++){
-		c1 =  	      							m[1][2]*giveIndex(1, i, indexes);
-		c2 = m[2][1]*giveIndex(0, i, indexes)									    + m[2][3]*giveIndex(2, i, indexes);
-		c3 = m[3][1]*giveIndex(0, i, indexes) + m[3][2]*giveIndex(1, i, indexes) + m[3][3]*giveIndex(2, i, indexes) + m[3][4]*giveIndex(3, i, indexes);
-		c4 = m[4][1]*giveIndex(0, i, indexes) + m[4][2]*giveIndex(1, i, indexes) + m[4][3]*giveIndex(2, i, indexes) + m[4][4]*giveIndex(3, i, indexes);
+		c1 =  	      							m[0][1]*giveIndex(1, i, indexes);
+		c2 = m[1][0]*giveIndex(0, i, indexes)									    + m[1][2]*giveIndex(2, i, indexes);
+		c3 = m[2][0]*giveIndex(0, i, indexes) + m[2][1]*giveIndex(1, i, indexes) + m[2][2]*giveIndex(2, i, indexes) + m[2][3]*giveIndex(3, i, indexes);
+		c4 = m[3][0]*giveIndex(0, i, indexes) + m[3][1]*giveIndex(1, i, indexes) + m[3][2]*giveIndex(2, i, indexes) + m[3][3]*giveIndex(3, i, indexes);
 
 		res[i] = (((c4*x + c3)*x +c2)*x + c1);
 	}
@@ -383,6 +389,7 @@ void TimeRotation::doTransformation(){
 	while(this->angle > 360){
 		this->angle -= 360;
 	}
+
 	glRotatef(angle, p.x, p.y, p.z);
     elapseBefore = elapsedNow;
 }
