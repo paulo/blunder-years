@@ -69,9 +69,9 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 			cp[row][col].z = cpoint.z;
 		}
 
-		for (i = 0; i != tess; ++i) {
+		for (i = 0; i < tess; i++) {
 			u = (float)i / (tess - 1);
-			for (j = 0; j != tess; ++j) {
+			for (j = 0; j < tess; j++) {
 				v = (float)j / (tess - 1);
 				Point3D p = Calculate(u, v);
 				f.appendPoint(p);
