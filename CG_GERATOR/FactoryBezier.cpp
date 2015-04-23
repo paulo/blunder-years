@@ -2,16 +2,20 @@
 #include "FigureFactory.h"
 
 
-Point3D cp[4][4]; //control points structure
+Point3D cp[4][4]; 
 
+/*
+* Função auxiliar da função definePatches()
+*/
 Point3D CalculateU(float t, int linha) {
 
 	Point3D p;
 
-	float it = 1.0 - t;
+	float it = 1.0f - t;
+
 	float m0 = it*it*it;
-	float m1 = 3 * t*it*it;
-	float m2 = 3 * t*t*it;
+	float m1 = 3*t*it*it;
+	float m2 = 3*t*t*it;
 	float m3 = t*t*t;
 
 	p.x = m0*cp[linha][0].x + m1*cp[linha][1].x + m2*cp[linha][2].x + m3*cp[linha][3].x;
@@ -21,14 +25,19 @@ Point3D CalculateU(float t, int linha) {
 	return p;
 }
 
+
+/*
+* Função auxiliar da função definePatches()
+*/
 Point3D CalculateV(float t, Point3D* pnts) {
 
 	Point3D p;
 
 	float it = 1.0f - t;
+
 	float m0 = it*it*it;
-	float m1 = 3 * t*it*it;
-	float m2 = 3 * t*t*it;
+	float m1 = 3*t*it*it;
+	float m2 = 3*t*t*it;
 	float m3 = t*t*t;
 
 	p.x = m0*pnts[0].x + m1*pnts[1].x + m2*pnts[2].x + m3*pnts[3].x;
@@ -38,26 +47,21 @@ Point3D CalculateV(float t, Point3D* pnts) {
 	return p;
 }
 
-
-Point3D Calculate(float u, float v) {
-
-	Point3D temp[4];
-
-	temp[0] = CalculateU(u, 0);
-	temp[1] = CalculateU(u, 1);
-	temp[2] = CalculateU(u, 2);
-	temp[3] = CalculateU(u, 3);
-
-	return CalculateV(v, temp);
-}
-
+/*
+* Para cada patch, calcula os pontos da superfície de Bézier a partir dos pontos de controlo
+*@param aux		figura com os índices e os pontos recolhidos do ficheiro
+*@param tess	grau de tesselação
+*@param in		número de patches do ficheiro *.patch
+*@param pn		número de pontos do ficheiro *.patch
+*@return		figura com índices e os pontos a desenhar
+*/
 Figure definePatches(Figure aux, int tess, int in, int pn){
 
 	Figure f;
-	int i, j, k, o = 0;
-	int row, col;
-	Point3D cpoint;
+	int i, j, k, row, col, tm = tess - 1;
 	float u, v;
+	Point3D cpoint;
+	Point3D bzr[4];
 
 	for (k = 0; k < in; k++){
 		for (i = 0; i < 16; i++){
@@ -70,14 +74,20 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 		}
 
 		for (i = 0; i < tess; i++) {
-			u = (float)i / (tess - 1);
 			for (j = 0; j < tess; j++) {
-				v = (float)j / (tess - 1);
-				Point3D p = Calculate(u, v);
+
+				u = (float)i / tm;
+				v = (float)j / tm;
+
+				bzr[0] = CalculateU(u, 0);
+				bzr[1] = CalculateU(u, 1);
+				bzr[2] = CalculateU(u, 2);
+				bzr[3] = CalculateU(u, 3);
+
+				Point3D p = CalculateV(v, bzr);
 				f.appendPoint(p);
 			}
 		}
-
 	}
 	int offi = 0;
 
@@ -100,10 +110,18 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 	return f;
 }
 
+/*
+*Analisa um ficheiro *.patch e processa a informação recolhida de modo a gerar os pontos para formar superficies de Bézier
+*
+*@param patchfile	nome do ficheiro	
+*@param f			figura com os índices e os pontos lidos do ficheiro
+*@param tess		grau de tesselação
+*@return			figura com índices e os pontos a desenhar
+*/
 Figure FigureFactory::createBezierSurface(Figure* f, std::string patchfile, int tess) {
 
 	Figure aux;
-	int i, j, in, pn, ind, row, col;
+	int i, j, in, pn, ind;
 	float coord, pnts[3];
 	string line, field;
 
@@ -152,9 +170,7 @@ Figure FigureFactory::createBezierSurface(Figure* f, std::string patchfile, int 
 	else {
 		cout << "Erro no ficheiro .patch!" << endl;
 	}
-
-
-
+		
 	return *f;
 }
 
