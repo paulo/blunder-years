@@ -7,7 +7,7 @@ Point3D cp[4][4];
 /*
 * Função auxiliar da função definePatches()
 */
-Point3D CalculateU(float t, int linha) {
+Point3D CalcU(float t, int linha) {
 
 	Point3D p;
 
@@ -29,7 +29,7 @@ Point3D CalculateU(float t, int linha) {
 /*
 * Função auxiliar da função definePatches()
 */
-Point3D CalculateV(float t, Point3D* pnts) {
+Point3D CalculateSurfacePoint(float t, Point3D* pnts) {
 
 	Point3D p;
 
@@ -79,12 +79,12 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 				u = (float)i / tm;
 				v = (float)j / tm;
 
-				bzr[0] = CalculateU(u, 0);
-				bzr[1] = CalculateU(u, 1);
-				bzr[2] = CalculateU(u, 2);
-				bzr[3] = CalculateU(u, 3);
+				bzr[0] = CalcU(u, 0);
+				bzr[1] = CalcU(u, 1);
+				bzr[2] = CalcU(u, 2);
+				bzr[3] = CalcU(u, 3);
 
-				Point3D p = CalculateV(v, bzr);
+				Point3D p = CalculateSurfacePoint(v, bzr);
 				f.appendPoint(p);
 			}
 		}
@@ -93,7 +93,7 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 
 	for (i = 0; i < in; i++){
 		for (j = 0; j < tess - 1; j++) {
-			for (k = 0; k < tess - 1; k++) {
+			for (k = 0; k < tess -1; k++) {
 
 				f.appendIndice(offi + (k*tess) + j + 1);
 				f.appendIndice(offi + (k*tess) + j);
