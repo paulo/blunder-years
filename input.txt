@@ -1,0 +1,77 @@
+evolucaoPos fabricante 'Alfa Romeo' '147'
+evolucaoPos fabricante 'Alfa Romeo' 'Centauri'
+evolucaoPos fabricante 'Audi' 'A5'
+evolucaoPos fabricante 'BMW' '525i'
+evolucaoPos fabricante 'BMW' 'Série 5'
+evolucaoPos fabricante 'Citroen' 'C5'
+evolucaoPos fabricante 'Fiat' 'Punto'
+evolucaoPos fabricante 'Fiat' 'Ducato'
+evolucaoPos fabricante 'Ford' 'Fiesta'
+evolucaoPos fabricante 'Lexus' 'IS 220d'
+evolucaoPos fabricante 'Mercedes' 'Vito'
+evolucaoPos fabricante 'Mitsubishi' 'Lancer'
+evolucaoPos fabricante 'Nissan' 'Patrol'
+evolucaoPos fabricante 'Peugeot' '406'
+evolucaoPos fabricante 'Renault' 'Megane'
+
+evolucaoPos marca  '77-JL-14' 'Alfa Romeo'
+evolucaoPos modelo  '77-JL-14' '147'
+evolucaoPos proprietario  '77-JL-14' 'Nuno Assis'
+
+evolucaoPos marca  '43-JL-27' 'Alfa Romeo'
+evolucaoPos modelo  '43-JL-27' 'Centauri'
+evolucaoPos proprietario  '43-JL-27' 'Pedro Emanuel'
+
+evolucaoPos marca  '40-NT-69' 'Audi'
+evolucaoPos modelo  '40-NT-69' 'A5'
+evolucaoPos proprietario  '40-NT-69' 'Ricardo Carvalho'
+
+evolucaoPos marca  '28-41-ZH' 'BMW'
+evolucaoPos modelo  '28-41-ZH' '525i'
+evolucaoPos proprietario  '28-41-ZH' 'Vitor Baía'
+
+evolucaoPos marca  '37-93-EF' 'BMW'
+evolucaoPos modelo  '37-93-EF' 'Série 5'
+evolucaoPos proprietario  '37-93-EF' 'Ricardo Rocha'
+
+evolucaoPos marca  '43-OF-31' 'Citroen'
+evolucaoPos modelo  '43-OF-31' 'C5'
+evolucaoPos proprietario  '43-OF-31' 'Fernando Gomes'
+
+evolucaoPos marca  '31-GV-17' 'Fiat'
+evolucaoPos modelo  '31-GV-17' 'Punto'
+evolucaoPos proprietario  '31-GV-17' 'Nuno Valente'
+
+evolucaoPos marca  '01-05-IC' 'Fiat'
+evolucaoPos modelo  '01-05-IC' 'Ducato'
+evolucaoPos proprietario  '01-05-IC' 'Paulo Ferreira'
+
+evolucaoPos marca  '67-HA-34' 'Ford'
+evolucaoPos modelo  '67-HA-34' 'Fiesta'
+evolucaoPos proprietario  '67-HA-34' 'João Pinto'
+
+evolucaoPos marca  '34-JV-17' 'Lexus'
+evolucaoPos modelo  '34-JV-17' 'IS 220d'
+evolucaoPos proprietario  '34-JV-17' 'Ricardo Quaresma'
+
+evolucaoPos marca  '21-45-XO' 'Mercedes'
+evolucaoPos modelo  '21-45-XO' 'Vito'
+evolucaoPos proprietario  '21-45-XO' 'Nuno Gomes'
+
+evolucaoPos marca  '92-AZ-94' 'Mitsubishi'
+evolucaoPos modelo  '92-AZ-94' 'Lancer'
+evolucaoPos proprietario  '92-AZ-94' 'Luís Figo'
+
+evolucaoPos marca  '79-18-JR' 'Nissan'
+evolucaoPos modelo  '79-18-JR' 'Patrol'
+evolucaoPos proprietario  '79-18-JR' 'Cristiano Ronaldo'
+
+evolucaoPos marca  '68-29-OQ' 'Peugeot'
+evolucaoPos modelo  '68-29-OQ' '406'
+evolucaoPos proprietario  '68-29-OQ' 'Cedric Soares'
+
+evolucaoPos marca  '31-57-JL' 'Renault'
+evolucaoPos modelo  '31-57-JL' 'Megane'
+evolucaoPos proprietario  '31-57-JL' 'João Moutinho'
+
+demo fabricante('Renault','Megane')
