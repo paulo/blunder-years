@@ -8,41 +8,100 @@
                 <modelo ficheiro='solarSystem/planeta.3d'/><!-- SOL -->
             </grupo>
             <grupo>
-                <escala X='0.48' Y='0.48' Z='0.48'/>
-                <translacao tempo='5'>
-                    <ponto X='40' Y='0' Z='0'/>
-                    <ponto X='28.3' Y='0' Z='28.3'/>
-                    <ponto X='0' Y='0' Z='40'/>
-                    <ponto X='-28.3' Y='0' Z='28.3'/>
-                    <ponto X='-40' Y='0' Z='0'/>
-                    <ponto X='-28.3' Y='0' Z='-28.3'/>
-                    <ponto X='0' Y='0' Z='-40'/>
-                    <ponto X='28.3' Y='0' Z='-28.3'/>
+                <translacao tempo='10'>
+                    <ponto X='20' Y='0' Z='0'/>
+                    <ponto X='14' Y='0' Z='14'/>
+                    <ponto X='0' Y='0' Z='20'/>
+                    <ponto X='-14' Y='0' Z='14'/>
+                    <ponto X='-20' Y='0' Z='0'/>
+                    <ponto X='-14' Y='0' Z='-14'/>
+                    <ponto X='0' Y='0' Z='-20'/>
+                    <ponto X='14' Y='0' Z='-14'/>
                 </translacao>
+                <escala X='0.48' Y='0.48' Z='0.48'/>
                 <modelo ficheiro='solarSystem/planeta.3d'/><!-- MERCURIO -->
             </grupo>
             <grupo>
-                <translacao X= '30'/>
+                <translacao tempo='25.5'>
+                    <ponto X='30' Y='0' Z='0'/>
+                    <ponto X='21' Y='0' Z='21'/>
+                    <ponto X='0' Y='0' Z='30'/>
+                    <ponto X='-21' Y='0' Z='21'/>
+                    <ponto X='-30' Y='0' Z='0'/>
+                    <ponto X='-21' Y='0' Z='-21'/>
+                    <ponto X='0' Y='0' Z='-30'/>
+                    <ponto X='21' Y='0' Z='-21'/>
+                </translacao>
                 <escala X='1.21' Y='1.21' Z='1.21'/>
                 <modelo ficheiro='solarSystem/planeta.3d'/><!-- VENUS -->
             </grupo>
             <grupo>
-                <translacao X= '40'/>
+                <translacao tempo='41.4'>
+                    <ponto X='40' Y='0' Z='0'/>
+                    <ponto X='28' Y='0' Z='28'/>
+                    <ponto X='0' Y='0' Z='40'/>
+                    <ponto X='-28' Y='0' Z='28'/>
+                    <ponto X='-40' Y='0' Z='0'/>
+                    <ponto X='-28' Y='0' Z='-28'/>
+                    <ponto X='0' Y='0' Z='-40'/>
+                    <ponto X='28' Y='0' Z='-28'/>
+                </translacao>
                 <escala X='1.27' Y='1.27' Z='1.27'/>
                 <modelo ficheiro='solarSystem/planeta.3d'/><!-- TERRA -->
+                <grupo>
+                    <translacao tempo='3.3'>
+                    <ponto X='2' Z='0' Y='0'/>
+                    <ponto X='1.4' Z='0' Y='1.4'/>
+                    <ponto X='0' Z='0' Y='2'/>
+                    <ponto X='-1.4' Z='0' Y='1.4'/>
+                    <ponto X='-2' Z='0' Y='0'/>
+                    <ponto X='-1.4' Z='0' Y='-1.4'/>
+                    <ponto X='0' Z='0' Y='-2'/>
+                    <ponto X='1.4' Z='0' Y='-1.4'/>
+                </translacao>
+                    <escala X='0.27' Y='0.27' Z='0.27'/>
+                    <modelo ficheiro='solarSystem/planeta.3d'/><!-- LUA -->
+                </grupo>
             </grupo>
             <grupo>
-                <translacao X= '50'/>
+                <translacao tempo='78'>
+                    <ponto X='50' Y='0' Z='0'/>
+                    <ponto X='35' Y='0' Z='35'/>
+                    <ponto X='0' Y='0' Z='50'/>
+                    <ponto X='-35' Y='0' Z='35'/>
+                    <ponto X='-50' Y='0' Z='0'/>
+                    <ponto X='-35' Y='0' Z='-35'/>
+                    <ponto X='0' Y='0' Z='-50'/>
+                    <ponto X='35' Y='0' Z='-35'/>
+                </translacao>
                 <escala X='0.67' Y='0.67' Z='0.67'/>
                 <modelo ficheiro='solarSystem/planeta.3d'/><!-- MARTE -->
             </grupo>
             <grupo>
-                <translacao X= '80'/>
+                <translacao tempo='492'>
+                    <ponto X='80' Y='0' Z='0'/>
+                    <ponto X='56' Y='0' Z='56'/>
+                    <ponto X='0' Y='0' Z='80'/>
+                    <ponto X='-56' Y='0' Z='56'/>
+                    <ponto X='-80' Y='0' Z='0'/>
+                    <ponto X='-56' Y='0' Z='-56'/>
+                    <ponto X='0' Y='0' Z='-80'/>
+                    <ponto X='56' Y='0' Z='-56'/>
+                </translacao>
                 <escala X='14.29' Y='14.29' Z='14.29'/>
                 <modelo ficheiro='solarSystem/planeta.3d'/><!-- JUPITER -->
             </grupo>
             <grupo>
-                <translacao X= '170'/>
+                <translacao tempo='1202'>
+                    <ponto X='170' Y='0' Z='0'/>
+                    <ponto X='119' Y='0' Z='119'/>
+                    <ponto X='0' Y='0' Z='170'/>
+                    <ponto X='-119' Y='0' Z='119'/>
+                    <ponto X='-170' Y='0' Z='0'/>
+                    <ponto X='-119' Y='0' Z='-119'/>
+                    <ponto X='0' Y='0' Z='-170'/>
+                    <ponto X='119' Y='0' Z='-119'/>
+                </translacao>
                 <escala X='11.64' Y='11.64' Z='11.64'/>
                 <modelo ficheiro='solarSystem/planeta.3d'/><!-- SATURNO -->
                 <grupo>
@@ -51,14 +110,46 @@
                 </grupo>  
             </grupo>
             <grupo>
-                <translacao X= '240'/>
+                <translacao tempo='3484'>
+                    <ponto X='240' Y='0' Z='0'/>
+                    <ponto X='168' Y='0' Z='168'/>
+                    <ponto X='0' Y='0' Z='240'/>
+                    <ponto X='-168' Y='0' Z='168'/>
+                    <ponto X='-240' Y='0' Z='0'/>
+                    <ponto X='-168' Y='0' Z='-168'/>
+                    <ponto X='0' Y='0' Z='-240'/>
+                    <ponto X='168' Y='0' Z='-168'/>
+                </translacao>
                 <escala X='4.69' Y='4.69' Z='4.69'/>
                 <modelo ficheiro='solarSystem/planeta.3d'/><!-- URANO -->
             </grupo>
             <grupo>
-                <translacao X= '280'/>
+                <translacao tempo='6843'>
+                    <ponto X='280' Y='0' Z='0'/>
+                    <ponto X='196' Y='0' Z='196'/>
+                    <ponto X='0' Y='0' Z='280'/>
+                    <ponto X='-196' Y='0' Z='196'/>
+                    <ponto X='-280' Y='0' Z='0'/>
+                    <ponto X='-196' Y='0' Z='-196'/>
+                    <ponto X='0' Y='0' Z='-280'/>
+                    <ponto X='196' Y='0' Z='-196'/>
+                </translacao>
                 <escala X='4.54' Y='4.54' Z='4.54'/>
                 <modelo ficheiro='solarSystem/planeta.3d'/><!-- NEPTUNO -->
+            </grupo>
+            <grupo>
+                <translacao tempo='9000000'>
+                    <ponto X='280' Y='0' Z='0'/>
+                    <ponto X='196' Y='0' Z='196'/>
+                    <ponto X='0' Y='0' Z='280'/>
+                    <ponto X='-196' Y='0' Z='196'/>
+                    <ponto X='-280' Y='0' Z='0'/>
+                    <ponto X='-196' Y='0' Z='-196'/>
+                    <ponto X='0' Y='0' Z='-280'/>
+                    <ponto X='196' Y='0' Z='-196'/>
+                </translacao>
+                <rotacao angulo='180' eixoX='0' eixoY='1' eixoZ='1'/>
+                <modelo ficheiro='solarSystem/teapot.3d'/><!-- COMETA -->
             </grupo>
         </grupo>
     </cena>
