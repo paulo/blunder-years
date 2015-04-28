@@ -162,7 +162,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 	Figure f;
 	float x, y, z;
 	float tempo, angulo, eixoX, eixoY, eixoZ;
-	int rt = 0, timeRt=0, tr = 0, sc = 0, mdls = 0, grp = 0;
+	int rt = 0, timeRt=0, tr = 0, timeTr = 0, sc = 0, mdls = 0, grp = 0;
 	int ok = 0;
 
 	for (child = root->FirstChild(); child; child = child->NextSibling()) {
@@ -229,7 +229,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 			// glPopMatrix();
 		}
 		else if (tag.compare("rotacao") == 0 ) {
-			if (rt == 0 && mdls == 0 && grp == 0 && timeRt==0){
+			if ((rt == 0 || timeRt == 0) && mdls == 0 && grp == 0){
 				eixoX = eixoY = eixoZ = 0.0; angulo = 0.0;
 				tempo = 0.0;
 
@@ -251,7 +251,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 			else return -1;
 	 	}
 		else if (tag.compare("translacao") == 0){
-			if (tr == 0 && mdls == 0 && grp == 0){
+			if ((tr == 0 || timeTr == 0) && mdls == 0 && grp == 0){
 				x = y = z = 0.0;
 				tempo = 0.0;
 				XMLNode* pointchild;	
@@ -259,8 +259,9 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
 				if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
 				if (elem->Attribute("tempo")) tempo = elem->FloatAttribute("tempo");
-				if (!elem -> FirstChild()){ 
+				if (!elem -> FirstChild()) { 
 					current->appendTransformation(new Translation(x, y, z));				
+					tr = 1;
 				} else {
 					TimeTranslation *tt = new TimeTranslation(tempo);
 					for (pointchild = child->FirstChild(); pointchild; pointchild = pointchild->NextSibling()) {
@@ -274,10 +275,10 @@ int Scene::parseXML(XMLNode* root, Group* current){
 						}		
 					}
 					current->appendTransformation(tt);
+					timeTr = 1;
 				}
-					tr = 1;
-				}
-				else return -1;
+			}
+			else return -1;
 		}
 		else if (tag.compare("escala") == 0 ){
 			if (sc == 0 && mdls == 0 && grp == 0){
