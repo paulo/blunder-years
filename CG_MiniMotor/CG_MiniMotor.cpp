@@ -14,6 +14,7 @@ void specialKeys(int key, int x, int y);
 void renderScene(void);
 void changeSize(int w, int h);
 void MouseMotion(int x, int y);
+void viewOptions(int x);
 
 static string filename;
 static int cameraActual = 1;
@@ -71,6 +72,16 @@ void init(int argc, char **argv){
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	//create MENU
+	glutCreateMenu(viewOptions);
+	glutAddMenuEntry("GL FILL", 1);
+	glutAddMenuEntry("GL LINE", 2);
+	glutAddMenuEntry("GL POINT", 3);
+	glutAddMenuEntry("VBO MODE", 4);
+	glutAddMenuEntry("DIRECT MODE", 5);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
 }
 
 void _start(const char* filename){
@@ -224,16 +235,6 @@ void renderScene(void){
 	//point3D p[] = { { 0, 1, 0 }, { 1, 1, 0 }, { 1, -1, 0 }, { 0, -1, 0 } };
 	//genericDraw(p,4,20).draw();
 	actualScene.draw();
-
-
-	//create MENU
-	glutCreateMenu(viewOptions); 
-	glutAddMenuEntry("GL FILL", 1);
-	glutAddMenuEntry("GL LINE", 2);
-	glutAddMenuEntry("GL POINT", 3);
-	glutAddMenuEntry("VBO MODE", 4);
-	glutAddMenuEntry("DIRECT MODE", 5);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	calcFPS();
 	//
