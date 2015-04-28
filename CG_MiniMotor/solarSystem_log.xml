@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+    <cena>
+	<camera X='-70' Y='45' Z='3'/>
+        <grupo>
+            <grupo>
+                <escala X='6.1436' Y='6.1436' Z='6.1436'/>
+                <modelo ficheiro='solarSystem/planeta.3d'/><!-- SOL -->
+            </grupo>
+            <grupo>
+                <translacao X= '30'/>
+                <escala X='3.6812' Y='3.6812' Z='3.6812'/>
+                <modelo ficheiro='solarSystem/planeta.3d'/><!-- MERCURIO -->
+            </grupo>
+            <grupo>
+                <translacao X= '55'/>
+                <escala X='4.0827' Y='4.0827' Z='4.0827'/>
+                <modelo ficheiro='solarSystem/planeta.3d'/><!-- VENUS -->
+            </grupo>
+            <grupo>
+                <translacao X= '90'/>
+                <escala X='4.1038' Y='4.1038' Z='4.1038'/>
+                <modelo ficheiro='solarSystem/planeta.3d'/><!-- TERRA -->
+                <grupo>
+                    <translacao Z= '2'/>
+                    <escala X='0.27' Y='0.27' Z='0.27'/>
+                    <modelo ficheiro='solarSystem/planeta.3d'/><!-- LUA -->
+                </grupo>
+            </grupo>
+            <grupo>
+                <translacao X= '120'/>
+                <escala X='3.8260' Y='3.8260' Z='3.8260'/>
+                <modelo ficheiro='solarSystem/planeta.3d'/><!-- MARTE -->
+            </grupo>
+            <grupo>
+                <translacao X= '150'/>
+                <escala X='5.1550' Y='5.1550' Z='5.1550'/>
+                <modelo ficheiro='solarSystem/planeta.3d'/><!-- JUPITER -->
+            </grupo>
+            <grupo>
+                <translacao X= '180'/>
+                <escala X='5.0660' Y='5.0660' Z='5.0660'/>
+                <modelo ficheiro='solarSystem/planeta.3d'/><!-- SATURNO -->
+                <grupo>
+                    <escala X='0.7' Y='0.1' Z='0.7' />
+                    <modelo ficheiro='solarSystem/anel.3d'/><!-- ANEL DE SATURNO -->
+                </grupo>  
+            </grupo>
+            <grupo>
+                <translacao X= '210'/>
+                <escala X='4.6715' Y='4.6715' Z='4.6715'/>
+                <modelo ficheiro='solarSystem/planeta.3d'/><!-- URANO -->
+            </grupo>
+            <grupo>
+                <translacao X= '250'/>
+                <escala X='4.6570' Y='4.6570' Z='4.6570'/>
+                <modelo ficheiro='solarSystem/planeta.3d'/><!-- NEPTUNO -->
+            </grupo>
+        </grupo>
+    </cena>
+</xml>
