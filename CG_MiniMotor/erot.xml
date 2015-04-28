@@ -1,22 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <xml>
     <cena>
         <grupo>
             <grupo>
-                <escala X='13.92' Y='13.92' Z='13.92'/>
-                <modelo ficheiro='planeta.3d'/><!-- SOL -->
-            </grupo>
-            <grupo>
-                <!--<translacao X= '50'/>
-                <translacao X= '50'/>-->
-                <translação tempo='10' >
-                    <ponto X='100' Y='0' Z='100' />
-                    <ponto X='0.707' Y='0.707' Z='1' />
-                    <ponto X='0' Y='1' Z='1' />
-                    <ponto X='-11' Y='10' Z='11' />
-                </translação>
-                <escala X='0.67' Y='0.67' Z='0.67'/>
-                <modelo ficheiro='planeta.3d'/><!-- MARTE -->
+                <translacao tempo='5' >
+                    <ponto X='5' Y='0' Z='5' />
+                    <ponto X='-5' Y='0' Z='5' />
+                    <ponto X='-5' Y='1' Z='-5' />
+                    <ponto X='5' Y='0' Z='-5' />
+                </translacao>
+                <grupo>
+                    <escala Y='0.5' X='0.5'/>
+                    <modelo ficheiro='planeta.3d'/><!-- MARTE -->
+                </grupo>
             </grupo>
         </grupo>
     </cena>

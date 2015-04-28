@@ -316,7 +316,6 @@ void TimeTranslation::appendPoint(Point3D p3d){
 
 //talvez depois implementar a contar com a tensao
 void TimeTranslation::doTransformation(){
-
 	float elapsedNow = glutGet(GLUT_ELAPSED_TIME);
 	
 	float time = this->time * 1000;
@@ -326,7 +325,11 @@ void TimeTranslation::doTransformation(){
 	float aux = ((elapsedNow / time) - (int)(elapsedNow / time));
 	float aux2 = ((elapsedNow * point_count / time) - (int)(elapsedNow * point_count / time));
 	int index = floor(aux * point_count);
-
+	float matrix[16];
+	float p[3],d[3],r[3],up[3];
+	up[0] = 0;
+	up[1] = 1;
+	up[2] = 0;
 
 	//int point_count = pointVector.size();
 	//float t = deltaTime * point_count;
@@ -339,25 +342,52 @@ void TimeTranslation::doTransformation(){
 	indexes[2] = (indexes[1]+1) % point_count; 
 	indexes[3] = (indexes[2]+1) % point_count;
 
-	calculateTransformation(aux2, res, indexes);
-
+	// do transformation
+	calculateTransformation(aux2, res, indexes,false);
 	glTranslatef(res[0], res[1], res[2]);
+	// do rotation matrix
+
+	//obter P'(t) e normalizar esse vector
+	calculateTransformation(aux2, d, indexes, true);
+	normalizeVector(d);
+
+	//obter vector r
+	crossProduct(r, d, up);
+	normalizeVector(r);
+
+	//obter vector up
+	crossProduct(up, r, d);
+	normalizeVector(up);
+
+	//calcular matriz a multiplicar(ja transposta)
+	matrix[0] = r[0]; matrix[1] = r[1]; matrix[2] = r[2]; matrix[3] = 0.0f;
+	matrix[4] = up[0]; matrix[5] = up[1]; matrix[6] = up[2]; matrix[7] = 0.0f;
+	matrix[8] = d[0]; matrix[9] = d[1]; matrix[10] = d[2]; matrix[11] = 0.0f;
+	matrix[12] = 0; matrix[13] = 0; matrix[14] = 0; matrix[15] = 1;
+	//matrix[12] = p[0]; matrix[13] = p[1]; matrix[14] = p[2]; matrix[15] = 1.0f;
+	glMultMatrixf(matrix);
 
     this->elapseBefore = elapsedNow;
 }
 
-void TimeTranslation::calculateTransformation(float x, float *res, int *indexes){
+void TimeTranslation::calculateTransformation(float x, float *res, int *indexes, bool derivate){
 	double c1,c2,c3,c4;
 	int i;
 	float m[4][4] = {{0.0,1.0,0.0,0.0},{-0.5,0.0,0.5,0.0},{1.0,-2.5,2.0,-0.5},{-0.5,1.5,-1.5,0.5}}; 
 
+
 	for(i=0;i<3;i++){
 		c1 =  	      							m[0][1]*giveIndex(1, i, indexes);
-		c2 = m[1][0]*giveIndex(0, i, indexes)									    + m[1][2]*giveIndex(2, i, indexes);
+		c2 = m[1][0]*giveIndex(0, i, indexes)								     + m[1][2]*giveIndex(2, i, indexes);
 		c3 = m[2][0]*giveIndex(0, i, indexes) + m[2][1]*giveIndex(1, i, indexes) + m[2][2]*giveIndex(2, i, indexes) + m[2][3]*giveIndex(3, i, indexes);
 		c4 = m[3][0]*giveIndex(0, i, indexes) + m[3][1]*giveIndex(1, i, indexes) + m[3][2]*giveIndex(2, i, indexes) + m[3][3]*giveIndex(3, i, indexes);
 
-		res[i] = (((c4*x + c3)*x +c2)*x + c1);
+		if (derivate){
+			res[i] = c4*x*x*3 + c3*x*2 + c2;
+		}
+		else {
+			res[i] = (((c4*x + c3)*x + c2)*x + c1);
+		}
 	}
 }
 
@@ -367,12 +397,26 @@ float TimeTranslation::giveIndex(int index, int point, int*indexes){
 			else return pointVector[indexes[index]].z;
 }
 
+void TimeTranslation::normalizeVector(float *res){
+	float length = sqrt((res[0] * res[0]) + (res[1] * res[1]) + (res[2] * res[2]));
+
+	for (int i = 0; i<3; i++) res[i] = res[i] / length;
+}
+
+void TimeTranslation::crossProduct(float *vecR, float *vec1, float *vec2){
+	vecR[0] = vec1[1] * vec2[2] - vec2[1] * vec1[2];
+	vecR[1] = vec1[2] * vec2[0] - vec2[2] * vec1[0];
+	vecR[2] = vec1[0] * vec2[1] - vec2[0] * vec1[1];
+
+}
+
 Rotation::Rotation(float angle, float x, float y, float z){
 	this->angle = angle;
 	this->p.x = x;
 	this->p.y = y;
 	this->p.z = z;
 }
+
 void Rotation::doTransformation(){
 	glRotatef(angle, p.x, p.y, p.z);
 }
@@ -393,9 +437,6 @@ void TimeRotation::doTransformation(){
 	glRotatef(angle, p.x, p.y, p.z);
     elapseBefore = elapsedNow;
 }
-
-
-
 
 Scale::Scale(float x, float y, float z){
 	this->scale.x = x;
