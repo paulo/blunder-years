@@ -72,10 +72,12 @@ class TimeTranslation : public GTransformation {
 	float elapseBefore;
 public:
 	TimeTranslation(float);
-	void calculateTransformation(float, float*, int*);
+	void calculateTransformation(float, float*, int*,bool derivate);
 	void doTransformation();
 	void appendPoint(point3D);
 	float giveIndex(int, int, int*);
+	void normalizeVector(float *res);
+	void crossProduct(float *vecR, float *vec1, float *vec2);
 };
 
 class Rotation : public GTransformation {
