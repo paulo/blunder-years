@@ -162,7 +162,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 	Figure f;
 	float x, y, z;
 	float tempo, angulo, eixoX, eixoY, eixoZ;
-	int rt = 0, tr = 0, sc = 0, mdls = 0, grp = 0;
+	int rt = 0, timeRt=0, tr = 0, sc = 0, mdls = 0, grp = 0;
 	int ok = 0;
 
 	for (child = root->FirstChild(); child; child = child->NextSibling()) {
@@ -229,7 +229,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 			// glPopMatrix();
 		}
 		else if (tag.compare("rotacao") == 0 ) {
-			if (rt == 0 && mdls == 0 && grp == 0){
+			if (rt == 0 && mdls == 0 && grp == 0 && timeRt==0){
 				eixoX = eixoY = eixoZ = 0.0; angulo = 0.0;
 				tempo = 0.0;
 
@@ -240,12 +240,13 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				if (elem->Attribute("tempo")) tempo = elem->FloatAttribute("tempo");
 
 				if (tempo == 0.0){
-					current->appendTransformation(new Rotation(angulo, eixoX, eixoY, eixoZ));	
+					current->appendTransformation(new Rotation(angulo, eixoX, eixoY, eixoZ));
+					rt = 1;
 				} else {
 					current->appendTransformation(new TimeRotation(angulo, tempo, eixoX, eixoY, eixoZ));
+					timeRt = 1;
 				}
 				
-				rt = 1;
 			}
 			else return -1;
 	 	}
