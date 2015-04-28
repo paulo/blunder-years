@@ -229,7 +229,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 			// glPopMatrix();
 		}
 		else if (tag.compare("rotacao") == 0 ) {
-			if (rt == 0 && mdls == 0 && grp == 0 && timeRt==0){
+			if ((rt == 0 || timeRt == 0) && mdls == 0 && grp == 0){
 				eixoX = eixoY = eixoZ = 0.0; angulo = 0.0;
 				tempo = 0.0;
 
