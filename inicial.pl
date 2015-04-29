@@ -158,4 +158,76 @@ naoexiste(A,[]).
 naoexiste(A,[H|T]) :- A\=H, naoexiste(A,T).
 
 
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%         Invariantes
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 
+% Invariante Estrutural:  nao permitir a insercao de conhecimento
+%                         repetido
+
++marca( P,B ) :: (solucoes( (P,B),(marca( P,B )),S ),
+                  comprimento( S,N ), 
+                  N == 1
+                  ).
+
++modelo( P,M ) :: (solucoes( (P,M),(modelo( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 1
+                  ).
+
++proprietario( P,O ) :: (solucoes( (P,O),(proprietario( P,O )),S ),
+                  comprimento( S,N ), 
+                  N == 1
+                  ).
+
++fabricante( B,M ) :: (solucoes( (B,M),(fabricante( B,M )),S ),
+                  comprimento( S,N ), 
+                  N == 1
+                  ).
+
+
+% Invariante ... : não permitir que um modelo pertença a mais de um fabricante
+
++fabricante( B,M ) :: (solucoes( X,(fabricante( X,M )),S ),
+                  comprimento( S,N ), 
+                  N == 1
+                  ).
+
+
+% Invariante ... : não permitir que uma matricula pertença a mais que uma proprietario
+
++proprietario( P,O ) :: (solucoes( M,(proprietario( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 1
+                  ).
+
+
+% Invariante ... : não permitir que uma matricula pertença a mais que uma marca
+
++marca( P,B ) :: (solucoes( M,(marca( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 1
+                  ).
+
+% Invariante ... : não permitir que uma matricula pertença a mais que um modelo
+
++modelo( P,M ) :: (solucoes( X,(modelo( P,X )),S ),
+                  comprimento( S,N ), 
+                  N == 1
+                  ).
+
+% Invariante ... : não permitir a inserção de uma matricula num um modelo, sendo que essa matricula já está
+%                  associada a uma marca que não é a fabricante do respetivo modelo 
+% ver este 
+
++modelo( P,M ) :: (solucoes( B,(marca( P,B ), fabricante( B,M )), S ),
+                  comprimento( S,N ), 
+                  N == 1
+                  ).
+
+% Invariante ... : não permitir a remoção de um modelo se existirem matriculas daquele modelo registados
+
+-fabricante( B,M ) :: (solucoes( P,(modelo( P,M )), S),
+                  comprimento( S,N ),
+                  N == 0
+                  ).
