@@ -20,7 +20,6 @@
 %          Extenção à programação em logica
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 
-
 demo( Questao,verdadeiro ) :-
     Questao.
 demo( Questao,falso ) :-
@@ -28,7 +27,6 @@ demo( Questao,falso ) :-
 demo( Questao,desconhecido ) :-
     nao( Questao ),
     nao( -Questao ).
-
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %         Evolucao

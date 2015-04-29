@@ -58,7 +58,7 @@ public class MainStand {
                 if (i == args.length) {
                     throw new ParseException(cmd + " estava a espera de 'incerto' e nao encontrou", i);
                 }
-                this.executePrint("evolucao(execao(" + predicade + "(" + String.join(", ", args) + "))).");
+                this.executePrint("evolucao(excecao(" + predicade + "(" + String.join(", ", args) + "))).");
                 this.executePrint("incerto(incerto" + numberIncerto + ").");
                 numberIncerto++;
                 break;
@@ -78,7 +78,7 @@ public class MainStand {
                 numberIntertito++;
                 break;
             case "evolucaoImpreciso":
-                this.executePrint("evolucao(execao(" + predicade + "(" + String.join(", ", args) + "))).");
+                this.executePrint("evolucao(excecao(" + predicade + "(" + String.join(", ", args) + "))).");
                 break;
             default:
                 throw new ParseException("Command not found '" + cmd + "'", 0);
@@ -101,12 +101,12 @@ public class MainStand {
     }
 
     public boolean readFromInput(Scanner reader) throws ParseException, Exception {
-        if (!reader.hasNextLine()){
+        if (!reader.hasNextLine()) {
             return false;
         }
         String input = reader.nextLine();
-        
-        if (input.length() < 2){
+
+        if (input.length() < 2) {
             return true;
         }
 
@@ -136,14 +136,21 @@ public class MainStand {
             // faz load da base de conhecimento incial
             InputStream is = new FileInputStream("input.txt");
             Scanner scanner = new Scanner(is);
-            while (ms.readFromInput(scanner)) {}
-            
+            while (ms.readFromInput(scanner)) {
+            }
+
             scanner = new Scanner(System.in);
-            while (ms.readFromInput(scanner)) {}
+            boolean b = true;
+            do {
+                try{
+                    b = ms.readFromInput(scanner);
+                }catch(ParseException ex){
+                    System.err.println(ex.toString());            
+                }
+            } while (b);
 
             //Corre os testes
             //test01();
-            
         } catch (Exception ex) {
             System.err.println(ex.toString());
         }
