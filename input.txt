@@ -74,4 +74,40 @@ evolucaoPos marca  '31-57-JL' 'Renault'
 evolucaoPos modelo  '31-57-JL' 'Megane'
 evolucaoPos proprietario  '31-57-JL' 'João Moutinho'
 
+evolucaoInterdito marca  '10-PR-14' interdito
+evolucaoPos modelo  '10-PR-14' interdito
+evolucaoPos proprietario  '10-PR-14' 'Beyonce'
+
+evolucaoInterdito marca  '35-JJ-15' interdito
+evolucaoPos modelo  '35-JJ-15' interdito
+evolucaoPos proprietario  '35-JJ-15' 'Jorge Jesus'
+
+evolucaoPos marca  '00-LP-15' 'Fiat'
+evolucaoInterdito modelo  '00-LP-15' interdito
+evolucaoPos proprietario  '00-LP-15' 'Loquetepegui'
+
+evolucaoPos marca  '88-PA-23' 'BMW'
+evolucaoInterdito modelo  '88-PA-23' interdito
+evolucaoPos proprietario  '88-PA-23' 'Paulo Araujo'
+
+evolucaoPos marca  '22-RO-06' 'Alfa Romeo'
+evolucaoPos modelo  '22-RO-06' '147'
+evolucaoInterdito proprietario  '22-RO-06' interdito
+
+evolucaoPos marca  '99-LO-74' 'Mitsubishi'
+evolucaoPos modelo  '99-LO-74' 'Lancer'
+evolucaoInterdito proprietario  '99-LO-74' interdito
+
+evolucaoInterdito marca interdito 'Nissan'
+evolucaoPos modelo  interdito 'Patrol'
+evolucaoPos proprietario  '50-LL-64' 'Simao Sabrosa'
+
+evolucaoPos marca  '11-JH-11' 'Peugeot'
+evolucaoInterdito modelo  interdito '406'
+evolucaoPos proprietario  '11-JH-11' 'Argel'
+
+evolucaoPos marca  '71-KM-19' 'Alfa Romeo'
+evolucaoPos modelo  '71-KM-19' '147'
+evolucaoInterdito proprietario  interdito 'Nene'
+
 demo fabricante('Renault','Megane')
