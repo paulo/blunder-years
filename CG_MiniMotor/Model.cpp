@@ -267,6 +267,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 					for (pointchild = child->FirstChild(); pointchild; pointchild = pointchild->NextSibling()) {
 						XMLElement *point = pointchild->ToElement();
 						string tag2 = pointchild->Value();
+						x = y = z = 0;
 						if (tag2.compare("ponto") == 0) {
 							if (point->Attribute("X")) x = point->FloatAttribute("X"); 
 							if (point->Attribute("Y")) y = point->FloatAttribute("Y");
