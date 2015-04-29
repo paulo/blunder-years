@@ -78,6 +78,13 @@ demo( A, desconhecido ) :- nao( A ), nao( -A ).
     nao(proprietario( Matricula, Proprietario )),
     nao(excecao( proprietario( Matricula, Proprietario ))).
 
+excecao(fabricante(X,Y)) :- fabricante(X,A), incerto(A).
+excecao(marca(X,Y)) :- marca(X,A), incerto(A).
+excecao(modelo(X,Y)) :- modelo(X,A), incerto(A).
+excecao(proprietario(X,Y)) :- proprietario(X,A), incerto(A).
+
+
+
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %         Evolucao
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -

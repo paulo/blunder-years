@@ -75,11 +75,11 @@ evolucaoPos modelo  '31-57-JL' 'Megane'
 evolucaoPos proprietario  '31-57-JL' 'João Moutinho'
 
 evolucaoInterdito marca  '10-PR-14' interdito
-evolucaoPos modelo  '10-PR-14' interdito
+evolucaoInterdito modelo  '10-PR-14' interdito
 evolucaoPos proprietario  '10-PR-14' 'Beyonce'
 
 evolucaoInterdito marca  '35-JJ-15' interdito
-evolucaoPos modelo  '35-JJ-15' interdito
+evolucaoInterdito modelo  '35-JJ-15' interdito
 evolucaoPos proprietario  '35-JJ-15' 'Jorge Jesus'
 
 evolucaoPos marca  '00-LP-15' 'Fiat'
@@ -99,7 +99,7 @@ evolucaoPos modelo  '99-LO-74' 'Lancer'
 evolucaoInterdito proprietario  '99-LO-74' interdito
 
 evolucaoInterdito marca interdito 'Nissan'
-evolucaoPos modelo  interdito 'Patrol'
+evolucaoInterdito modelo  interdito 'Patrol'
 evolucaoPos proprietario  '50-LL-64' 'Simao Sabrosa'
 
 evolucaoPos marca  '11-JH-11' 'Peugeot'
