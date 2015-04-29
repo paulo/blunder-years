@@ -4,12 +4,15 @@
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
 :- set_prolog_flag( unknown,fail ).
-:- set_prolog_flag(toplevel_print_options, [quoted(true),numbervars(true),portrayed(true),max_depth(100)]).
+:- set_prolog_flag( toplevel_print_options, [quoted(true),numbervars(true),portrayed(true),max_depth(100)]).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % SICStus PROLOG: definicoes iniciais
 
 :- op( 900,xfy,'::' ).
+:- op( 900,xfy,'::' ).
+:- op( 500,yfx,'e' ).
+:- op( 500,yfx,'ou' ).
 
 :- dynamic fabricante/2.
 :- dynamic marca/2.
@@ -17,18 +20,63 @@
 :- dynamic proprietario/2.
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-%          Extenção à programação em logica
+%         Extenção à programação em lógica (disjunção)
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 
+demo( (A ou B), verdadeiro ) :- demo( A, verdadeiro ), demo( B , verdadeiro). 
+demo( (A ou B), verdadeiro ) :- demo( A, verdadeiro ), demo( B , falso). 
+demo( (A ou B), verdadeiro ) :- demo( A, falso ), demo( B , verdadeiro). 
+demo( (A ou B), falso ) :- demo( A, falso ), demo( B , falso ). 
 
-demo( Questao,verdadeiro ) :-
-    Questao.
-demo( Questao,falso ) :-
-    -Questao.
-demo( Questao,desconhecido ) :-
-    nao( Questao ),
-    nao( -Questao ).
+demo( (A ou B), desconhecido ) :- demo( A, falso ), demo( B, desconhecido ).
+demo( (A ou B), desconhecido ) :- demo( A, desconhecido ), demo( B, falso ).
+demo( (A ou B), verdadeiro ) :- demo( A, verdadeiro ), demo( B, desconhecido ).
+demo( (A ou B), verdadeiro ) :- demo( A, desconhecido ), demo( B, verdadeiro ).
 
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%         Extenção à programação em lógica (conjunção)
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+
+demo( (A e B), verdadeiro ) :- demo( A, verdadeiro ), demo( B , verdadeiro).
+demo( (A e B), falso ) :- demo( A, falso ), demo( B , falso). 
+demo( (A e B), falso ) :- demo( A, verdadeiro ), demo( B , falso). 
+demo( (A e B), falso ) :- demo( A, falso ), demo( B , verdadeiro). 
+
+demo( (A e B), desconhecido ) :- demo( A, verdadeiro ), demo( B, desconhecido ).
+demo( (A e B), desconhecido ) :- demo( A, desconhecido ), demo( B, verdadeiro ).
+demo( (A e B), falso ) :- demo( A, falso ), demo( B, desconhecido ).
+demo( (A e B), falso ) :- demo( A, desconhecido ), demo( B, falso ).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%          Extenção à programação em logica (simples)
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+
+demo( A, verdadeiro ) :- A.
+demo( A, falso ) :- -A.
+demo( A, desconhecido ) :- nao( A ), nao( -A ).
+
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%         Predicados negativos de incerteza
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+
+-fabricante( Fabricante,Marca ) :-
+    nao(fabricante( Fabricante,Marca )),
+    nao(excecao( fabricante( Fabricante,Marca ))).
+    
+-marca( Matricula, Marca ) :-
+    nao(marca( Matricula, Marca )),
+    nao(excecao( marca( Matricula, Marca ))).
+
+-modelo( Matricula, Modelo ) :-
+    nao(modelo( Matricula, Modelo )),
+    nao(excecao( modelo( Matricula, Modelo ))).
+
+-proprietario( Matricula, Proprietario ) :-
+    nao(proprietario( Matricula, Proprietario )),
+    nao(excecao( proprietario( Matricula, Proprietario ))).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %         Evolucao
@@ -108,3 +156,6 @@ unicosaux(S,[],S).
 
 naoexiste(A,[]).
 naoexiste(A,[H|T]) :- A\=H, naoexiste(A,T).
+
+
+
