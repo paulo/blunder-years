@@ -208,6 +208,30 @@ int main(int argc, char* argv[]){
 					<< "O comando deve ser do tipo \"gerador patch ficheiro.patch <tesselação> ficheiro.3d\"." << endl;
 			}
 		}
+		else if (args[1] == "patchZ") {
+
+			if (i == 5){
+
+				patchFile = args[2];
+				filename = args[4];
+				tess = stoi(args[3]);
+				f = figureFactory.createBezierSurface(&f, patchFile, tess);
+				//flit z to y and y to -z
+				float aux;
+				std::vector<Point3D>* vec = f.getPoints();
+				std::vector<Point3D>::iterator it = vec->begin();
+				while (it != vec->end()){
+					aux = it->y;
+					it->y = it->z;
+					it->z = -aux;
+					it++;
+				}
+			}
+			else{
+				cout << "O número de argumentos do comando introduzido está incorreto!" << endl
+					<< "O comando deve ser do tipo \"gerador patch ficheiro.patch <tesselação> ficheiro.3d\"." << endl;
+			}
+		}
 		else {
 			cout << "A figura " << args[1] << " nao existe!" << endl;
 		}

@@ -48,6 +48,6 @@ vector<unsigned int> Figure::getIndexes(){
 	return indices;
 }
 
-vector<Point3D> Figure::getPoints(){
-	return triangles;
+vector<Point3D>* Figure::getPoints(){
+	return &triangles;
 }
