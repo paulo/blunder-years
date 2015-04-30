@@ -91,7 +91,7 @@ excecao(proprietario(X,Y)) :- proprietario(X,A), incerto(A).
 %         Evolucao
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 
-evolucao( T ) :-
+evolucaoNormal( T ) :-
     solucoes(I,+T::I,S), %% aka solucoes
     insere(T),
     teste(S).
@@ -240,3 +240,25 @@ naoexiste(A,[H|T]) :- A\=H, naoexiste(A,T).
                   comprimento( S,N ),
                   N == 0
                   ).
+
+
+% Predicado evolucao: aumentar e/ou corrigir a base de conhecimento
+
+evolucao(Q) :-
+  rmIncerto(Q),
+  rmImpreciso(Q),
+  evolucaoNormal(Q).
+
+rmIncerto( proprietario(M,P)) :-
+  execao(proprietario(M,X)),
+  incerto(X),
+  retract(execao(proprietario(M,X))),
+  retract(incerto(X)).
+
+rmIncerto(Q).
+
+rmImpreciso( proprietario(M,P)) :-
+  execao(proprietario(M,P)),
+  retract(execao(proprietario(M,X))).
+  
+rmImpreciso(Q).
