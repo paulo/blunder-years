@@ -110,4 +110,28 @@ evolucaoPos marca  '71-KM-19' 'Alfa Romeo'
 evolucaoPos modelo  '71-KM-19' '147'
 evolucaoInterdito proprietario  interdito 'Nene'
 
+evolucaoPos marca  '34-PP-23' 'BMW'
+evolucaoIncerto modelo  '34-PP-23' 'Série 5'
+evolucaoPos proprietario  '34-PP-23' 'Ricardo Cunha'
+
+evolucaoPos marca  '22-RO-06' 'Alfa Romeo'
+evolucaoPos modelo  '22-RO-06' '147'
+evolucaoIncerto proprietario  '22-RO-06' 'Ricardo Correia'
+
+evolucaoPos marca  '22-JL-71' 'Mitsubishi'
+evolucaoPos modelo  '22-JL-71' 'Lancer'
+evolucaoIncerto proprietario  '22-JL-71' 'Paulo Cunha'
+
+evolucaoIncerto marca '49-VP-94' 'Nissan'
+evolucaoIncerto modelo  '49-VP-94' 'Patrol'
+evolucaoPos proprietario  '49-VP-94' 'Vladimir Putin'
+
+evolucaoPos marca  '02-HH-11' 'Peugeot'
+evolucaoIncerto modelo  '02-HH-11' '406'
+evolucaoPos proprietario  '02-HH-11' 'The Terminator'
+
+evolucaoPos marca  '03-AA-03' 'Fiat'
+evolucaoPos modelo  '03-AA-03' 'Ducato'
+evolucaoIncerto proprietario  '03-AA-03' 'Daenerys Stormborn of the House Targaryen the First of Her Name the Unburnt Queen of Meereen Queen of the Andals and the Rhoynar and the First Men Khaleesi of the Great Grass Sea Breaker of Chains and Mother of Dragons'
+
 demo fabricante('Renault','Megane')
