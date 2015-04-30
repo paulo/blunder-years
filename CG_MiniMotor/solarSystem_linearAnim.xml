@@ -145,7 +145,7 @@
                     <ponto X='340' Y='-50' Z='0'/>
                     <ponto X='-192.5' Y='0' Z='-170'/>
                 </translacao>
-                <rotacao angulo='-90' eixoX='1' eixoY='0' eixoZ='0'/>
+                <rotacao angulo='-90' eixoX='0' eixoY='1' eixoZ='0'/>
                 <modelo ficheiro='solarSystem/teapot.3d'/><!-- COMETA -->
             </grupo>
         </grupo>
