@@ -58,7 +58,7 @@ public class MainStand {
                 if (i == args.length) {
                     throw new ParseException(cmd + " estava a espera de 'incerto' e nao encontrou", i);
                 }
-                //this.executePrint("evolucao(excecao(" + predicade + "(" + String.join(", ", args) + "))).");
+                this.executePrint("evolucao(excecao(" + predicade + "(" + String.join(", ", args) + "))).");
                 this.executePrint("incerto(incerto" + numberIncerto + ").");
                 numberIncerto++;
                 break;

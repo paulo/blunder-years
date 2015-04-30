@@ -18,6 +18,8 @@
 :- dynamic marca/2.
 :- dynamic modelo/2.
 :- dynamic proprietario/2.
+:- dynamic excecao/1.
+
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %         Extenção à programação em lógica (disjunção)
