@@ -59,7 +59,7 @@ public class MainStand {
                     throw new ParseException(cmd + " estava a espera de 'incerto' e nao encontrou", i);
                 }
                 this.executePrint("evolucao(excecao(" + predicade + "(" + String.join(", ", args) + "))).");
-                this.executePrint("incerto(incerto" + numberIncerto + ").");
+                this.executePrint("evolucao(incerto(incerto" + numberIncerto + ")).");
                 numberIncerto++;
                 break;
             case "evolucaoInterdito":
@@ -72,8 +72,8 @@ public class MainStand {
                 if (i == args.length) {
                     throw new ParseException(cmd + " estava a espera de 'interdito' e nao encontrou", i);
                 }
-                this.executePrint("evolucao(" + predicade + "(" + String.join(", ", args) + ")).");
-                this.executePrint("privado(interdito" + numberIntertito + ").");
+                this.executePrint("assert(" + predicade + "(" + String.join(", ", args) + ")).");
+                this.executePrint("evolucao(interdito(interdito" + numberIntertito + ")).");
 
                 numberIntertito++;
                 break;
@@ -92,10 +92,15 @@ public class MainStand {
         HashMap map = new HashMap();
         Query query = sp.openPrologQuery(queryString, map);
 
-        while (query.nextSolution()) {
+        if (query.nextSolution()){
+            System.out.println("yes");
             System.out.println(map.toString());
+//            while (query.nextSolution()) {
+//                System.out.println(map.toString());
+//            }
+        } else {
+            System.out.println("no (" + queryString +")" );
         }
-
         query.close();
 
     }
@@ -107,6 +112,10 @@ public class MainStand {
         String input = reader.nextLine();
 
         if (input.length() < 2) {
+            return true;
+        }
+        if (input.startsWith("## ")){
+            executePrint(input.substring(2));
             return true;
         }
 
@@ -144,7 +153,7 @@ public class MainStand {
             do {
                 try{
                     b = ms.readFromInput(scanner);
-                }catch(ParseException ex){
+                }catch(ParseException | SPException ex){
                     System.err.println(ex.toString());            
                 }
             } while (b);
@@ -164,7 +173,7 @@ public class MainStand {
         } catch (ParseException pe) {
             System.out.println("Test_erro:" + pe.getMessage());
         }
-        ms.interpExecute("evolucaoIncerto", "proprietario", "a", "incerto");
+        ms.interpExecute("'", "proprietario", "a", "incerto");
         ms.interpExecute("evolucaoInterdito", "proprietario", "a", "interdito");
         ms.interpExecute("evolucaoInterdito", "proprietario", "d", "interdito");
         ms.interpExecute("evolucaoInterdito", "proprietario", "b", "interdito");

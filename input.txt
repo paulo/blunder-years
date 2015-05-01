@@ -114,10 +114,6 @@ evolucaoPos marca  '34-PP-23' 'BMW'
 evolucaoImpreciso  modelo  '34-PP-23' 'Série 5'
 evolucaoPos proprietario  '34-PP-23' 'Ricardo Cunha'
 
-evolucaoPos marca  '22-RO-06' 'Alfa Romeo'
-evolucaoPos modelo  '22-RO-06' '147'
-evolucaoImpreciso  proprietario  '22-RO-06' 'Ricardo Correia'
-
 evolucaoPos marca  '22-JL-71' 'Mitsubishi'
 evolucaoPos modelo  '22-JL-71' 'Lancer'
 evolucaoImpreciso  proprietario  '22-JL-71' 'Paulo Cunha'

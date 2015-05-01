@@ -18,8 +18,10 @@
 :- dynamic marca/2.
 :- dynamic modelo/2.
 :- dynamic proprietario/2.
-:- dynamic excecao/1.
 
+:- dynamic excecao/1.
+:- dynamic interdito/1.
+:- dynamic incerto/1.
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %         Extenção à programação em lógica (disjunção)
@@ -115,6 +117,11 @@ whyrem( T , ER) :-
 
 insere( T ) :- assert(T).
 insere( T ) :- retract(T) , ! , fail. % para backtrack
+
+insercao( Termo ) :-assert( Termo ).
+insercao( Termo ) :-
+retract( Termo ),!,fail.
+
 
 apaga( T ) :- retract(T).
 apaga( T ) :- assert(T) , ! , fail. % para backtrack
@@ -254,7 +261,6 @@ rmIncerto( proprietario(M,P)) :-
   incerto(X),
   retract(execao(proprietario(M,X))),
   retract(incerto(X)).
-
 rmIncerto(Q).
 
 rmImpreciso( proprietario(M,P)) :-
