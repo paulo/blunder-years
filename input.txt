@@ -155,5 +155,8 @@ evolucaoIncerto marca incerto 'Nissan'
 evolucaoIncerto modelo  incerto 'Patrol'
 evolucaoPos proprietario  '55-TU-14' 'Tuco'
 
-$$ teste incerto:
-demo fabricante('Renault','Megane')
+$$ teste01 incerto, output esperado: 1º desconhecido,2º yes,3º falso e 4º verdade 
+demo modelo('80-JM-13','Megane')
+evolucaoPos modelo  '80-JM-13' 'Série 5'
+demo modelo('80-JM-13','Megane')
+demo modelo('80-JM-13','Série 5')
