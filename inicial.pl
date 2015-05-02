@@ -256,21 +256,25 @@ evolucao(Q) :-
   rmImpreciso(Q),
   evolucaoNormal(Q).
 
-rmIncerto( modelo(M,P)) :-
+rmIncerto(-modelo(M,P)) :- rmIncerto(modelo(M,P)).
+rmIncerto(modelo(M,P)) :-
   modelo(M,X),
   incerto(X),
   retract(modelo(M,X)),
   retract(modelo(X)).
+rmIncerto(-fabricante(M,P)) :- rmIncerto(fabricante(M,P)).
 rmIncerto( fabricante(M,P)) :-
   fabricante(M,X),
   incerto(X),
   retract(fabricante(M,X)),
   retract(fabricante(X)).
+rmIncerto(-marca(M,P)) :- rmIncerto(marca(M,P)).
 rmIncerto( marca(M,P)) :-
   marca(M,X),
   incerto(X),
   retract(marca(M,X)),
   retract(marca(X)).
+rmIncerto(-proprietario(M,P)) :- rmIncerto(proprietario(M,P)).
 rmIncerto( proprietario(M,P)) :-
   proprietario(M,X),
   incerto(X),
@@ -278,15 +282,19 @@ rmIncerto( proprietario(M,P)) :-
   retract(proprietario(X)).
 rmIncerto(Q).
 
+rmImpreciso(-modelo(M,P)) :- rmImpreciso(modelo(M,P)).
 rmImpreciso( modelo(M,P)) :-
   execao(modelo(M,P)),
   retract(execao(modelo(M,X))).
+rmImpreciso(-fabricante(M,P)) :- rmImpreciso(fabricante(M,P)).
 rmImpreciso( fabricante(M,P)) :-
   execao(fabricante(M,P)),
   retract(execao(fabricante(M,X))).
+rmImpreciso(-marca(M,P)) :- rmImpreciso(marca(M,P)).
 rmImpreciso( marca(M,P)) :-
   execao(marca(M,P)),
   retract(execao(marca(M,X))).
+rmImpreciso(-proprietario(M,P)) :- rmImpreciso(proprietario(M,P)).
 rmImpreciso( proprietario(M,P)) :-
   execao(proprietario(M,P)),
   retract(execao(proprietario(M,X))).
