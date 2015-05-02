@@ -155,5 +155,5 @@ evolucaoIncerto marca incerto 'Nissan'
 evolucaoIncerto modelo  incerto 'Patrol'
 evolucaoPos proprietario  '55-TU-14' 'Tuco'
 
-
+$$ teste incerto:
 demo fabricante('Renault','Megane')

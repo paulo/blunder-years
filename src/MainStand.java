@@ -58,7 +58,7 @@ public class MainStand {
                 if (i == args.length) {
                     throw new ParseException(cmd + " estava a espera de 'incerto' e nao encontrou", i);
                 }
-                this.executePrint("evolucao(excecao(" + predicade + "(" + String.join(", ", args) + "))).");
+                this.executePrint("assert(" + predicade + "(" + String.join(", ", args) + ")).");
                 this.executePrint("evolucao(incerto(incerto" + numberIncerto + ")).");
                 numberIncerto++;
                 break;
@@ -118,6 +118,11 @@ public class MainStand {
             executePrint(input.substring(2));
             return true;
         }
+        if (input.startsWith("$$ ")){
+            System.out.println(input.substring(2));
+            return true;
+        }
+        
 
         List<String> matchList = new ArrayList<String>();
         Pattern regex = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
