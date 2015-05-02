@@ -22,6 +22,7 @@
 :- dynamic excecao/1.
 :- dynamic interdito/1.
 :- dynamic incerto/1.
+:- dynamic '-'/1.
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %         Extenção à programação em lógica (disjunção)
