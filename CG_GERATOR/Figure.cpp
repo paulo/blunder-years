@@ -26,8 +26,9 @@ void Figure::toFileVBO(string filename){
 	}
 }
 
-void Figure::appendIndice(unsigned int p){
+unsigned int Figure::appendIndice(unsigned int p){
 	indices.push_back(p);
+	return p;
 }
 
 int Figure::appendPoint(Point3D p){
