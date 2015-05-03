@@ -82,6 +82,11 @@ void init(int argc, char **argv){
 	glutAddMenuEntry("DIRECT MODE", 5);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
+	//Luzes
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+
 }
 
 void _start(const char* filename){
@@ -223,17 +228,36 @@ void renderScene(void){
 	// clear buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
 	// pôr instruções de desenho aqui
 	// actualScene.draw();
 	glLoadIdentity();
+
+	GLfloat amb[3] = { 0.2, 0.2, 0.2 }; GLfloat diff[3] = { 1.0, 1.0, 1.0 }; GLfloat pos[4] = { 0.0, 0.0, 1.0, 0.0 };
+	// light position
+	glLightfv(GL_LIGHT0, GL_POSITION, pos);
+	// light colors 
+	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
+
+
 	if (cameraActual == 1){
 		cameraSph.refresh();
 	}
 	else if (cameraActual == 2){
 		cameraFP.refresh();
 	}
+
+	
+	float red[4] = { 0.8f, 0.2f, 0.2f, 1.0f };
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, red);
+
+
 	//point3D p[] = { { 0, 1, 0 }, { 1, 1, 0 }, { 1, -1, 0 }, { 0, -1, 0 } };
 	//genericDraw(p,4,20).draw();
+
+
 	actualScene.draw();
 
 	calcFPS();

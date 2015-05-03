@@ -16,7 +16,7 @@ using namespace std;
 */
 void Figure::fromFile(string filename){
 	ifstream ifs; ifs.open(filename);
-	int nPoints, nIndice, i; Point3D point;
+	int nPoints, nIndice, i; Point3D point,normal;
 	GLuint indice;
 	
 	ifs >> nPoints >> nIndice;
@@ -26,7 +26,7 @@ void Figure::fromFile(string filename){
 	i = 0;
 	while (!ifs.eof()
 		&& i < nPoints
-		&& ifs >> point.x >> point.y >> point.z
+		&& ifs >> point.x >> point.y >> point.z >> normal.x >> normal.y >> normal.z
 		) {
 		triangles1[i * 3 + 0] = point.x;
 		triangles1[i * 3 + 1] = point.y;
@@ -53,7 +53,6 @@ void Figure::draw(){
 	
 	glBegin(GL_TRIANGLES);
 	std::vector<point3D>::iterator d = triangles.begin();
-	glColor3f(0, 0, 255);
 	while (d != triangles.end()){
 		glVertex3f(d->x, d->y, d->z);
 		d++;
@@ -68,21 +67,25 @@ void Figure::draw(){
 
 void FigureVBO::fromFile(string filename) {
 	ifstream ifs; ifs.open(filename);
-	int nPoints, nIndice, i; Point3D point;
+	int nPoints, nIndice, i; Point3D point,normal;
 	
 	ifs >> nPoints >> nIndice;
 	this->nIndices = nIndice;
 	this->indices = new GLuint[nIndice];
 	float *triangles = new float[nPoints * 3];
+	float *normals = new float[nPoints * 3];
 
 	i = 0;
 	while (!ifs.eof()		
 		&& i < nPoints
-		&& ifs >> point.x >> point.y >> point.z
+		&& ifs >> point.x >> point.y >> point.z >> normal.x >> normal.y >> normal.z
 	) {
 		triangles[i * 3 + 0] = point.x;
 		triangles[i * 3 + 1] = point.y;
 		triangles[i * 3 + 2] = point.z;
+		normals[i * 3 + 0] = normal.x;
+		normals[i * 3 + 1] = normal.y;
+		normals[i * 3 + 2] = normal.z;
 		i++;
 	}
 	
@@ -94,17 +97,22 @@ void FigureVBO::fromFile(string filename) {
 		i++;
 	}
 		
-	glGenBuffers(1, &this->index);
+	glGenBuffers(2, this->index);
 
-	glBindBuffer(GL_ARRAY_BUFFER, this->index);
+	glBindBuffer(GL_ARRAY_BUFFER, this->index[0]);
 	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * sizeof(float), triangles, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, this->index[1]);
+	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * sizeof(float), normals, GL_STATIC_DRAW);
+
 	
 	delete(triangles);
 }
 
 void FigureVBO::draw() {
-	glBindBuffer(GL_ARRAY_BUFFER, this->index);
+	glBindBuffer(GL_ARRAY_BUFFER, this->index[0]);
 	glVertexPointer(3, GL_FLOAT, 0, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->index[1]);
+	glNormalPointer(GL_FLOAT, 0, 0);
 	glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, this->indices);
 }
 

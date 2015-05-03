@@ -1,21 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <xml>
     <cena>
-	<modelo ficheiro='teapot.3d'/>
-        <grupo>
-	    <translacao Z='100'/>
-            <grupo>
-                <translacao tempo='5' >
-                    <ponto X='5' Y='0' Z='5' />
-                    <ponto X='-5' Y='0' Z='5' />
-                    <ponto X='-5' Y='1' Z='-5' />
-                    <ponto X='5' Y='0' Z='-5' />
-                </translacao>
-                <grupo>
-                    <escala Y='0.5' X='0.5'/>
-                    <modelo ficheiro='planeta.3d'/><!-- MARTE -->
-                </grupo>
-            </grupo>
-        </grupo>
+       <modelo ficheiro='teapot.3d'/><!-- MARTE -->
     </cena>
 </xml>

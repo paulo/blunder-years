@@ -26,7 +26,7 @@ public:
 
 class FigureVBO : public Drawable {
 protected:
-	GLuint index;
+	GLuint index[2];
 	GLuint *indices;
 	GLuint nIndices;
 public:
