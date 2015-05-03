@@ -18,16 +18,19 @@ void Figure::toFileVBO(string filename){
 	ofstream ofs;
 	ofs.open(filename);
 	ofs << triangles.size() << ' ' << indices.size() << endl;
-	for (std::vector<Point3D>::iterator d = triangles.begin(); d != triangles.end(); ++d){
-		ofs << d->x << ' ' << d->y << ' ' << d->z << endl;
+	std::vector<Point3D>::iterator n = normal.begin();
+	std::vector<Point3D>::iterator d = triangles.begin();
+	for (; d != triangles.end() && n != normal.end(); ++d, n++){
+		ofs << d->x << ' ' << d->y << ' ' << d->z << ' ' << n->x << ' ' << n->y << ' ' << n->z << endl;
 	}
 	for (std::vector<unsigned int>::iterator d = indices.begin(); d != indices.end(); ++d){
 		ofs << *d << endl;
 	}
 }
 
-void Figure::appendIndice(unsigned int p){
+unsigned int Figure::appendIndice(unsigned int p){
 	indices.push_back(p);
+	return p;
 }
 
 int Figure::appendPoint(Point3D p){
@@ -35,6 +38,9 @@ int Figure::appendPoint(Point3D p){
 	return triangles.size() - 1;
 }
 
+void Figure::appendNormal(Point3D p){
+	normal.push_back(p);
+}
 /**
 *Adiciona um ponto ao conjunto de pontos de uma figura.
 *

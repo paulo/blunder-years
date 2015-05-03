@@ -65,7 +65,7 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 
 	for (k = 0; k < in; k++){
 		for (i = 0; i < 16; i++){
-			cpoint = aux.getPoints()->at(aux.getIndexes()[k*16 + i]);
+			cpoint = aux.getPoints()->at(aux.getIndexes()[k*16 + i] - 1);
 			row = (int)i / 4;
 			col = i - 4 * row;
 			cp[row][col].x = cpoint.x;

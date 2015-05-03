@@ -41,47 +41,48 @@ Figure FigureFactory::createSphere(float raio, int camadas, int fatias){
 }
 
 void FigureFactory::createRotate(Figure* f, Point3D points[], int camadas, int fatias){
-	int i, j, ii, in, nPNCperF = 0; // nPoints not Common per Fatia 
+	int i, j, ii, in; // nPoints not Common per Fatia 
 	float angulo_circ = 2 * ((float)M_PI) / fatias; //angulo para calcular o tamanho de cada camada
-	int *auxIndex = new int[camadas];
+	Point3D *normals = new Point3D[camadas];
 
 	// initialize centrall points, and count the "nPoints not Common per Fatia"
 	for (j = 0; j < camadas; j++) {
-		if (points[j].x == 0){ auxIndex[j] = f->appendPoint({ 0, points[j].y, 0 }); }
-		else { nPNCperF++; }
-	}
-	// initialize  other points
-	for (j = 0; j < camadas; j++) {
-		if (points[j].x != 0) { auxIndex[j] = f->appendPoint({ 0, points[j].y, points[j].x }); }
+		normals[j].x = normals[j].y = 0;
+		if (j + 1 < camadas) {
+			normals[j].x += -(points[j + 1].y - points[j].y);
+			normals[j].y += (points[j + 1].x - points[j].x);
+		}
+		if (j - 1 > 0) {
+			normals[j].x += -(points[j].y - points[j-1].y);
+			normals[j].y += (points[j].x - points[j-1].x);
+		}
 	}
 	// Create all other points
-	for (i = 0; i < fatias - 1; i++){
+	for (i = 0; i < fatias; i++){
 		float circ = angulo_circ * (i + 1);
 		for (j = 0; j < camadas; j++) {
-			if (points[j].x != 0) {f->appendPoint({ points[j].x * sin(circ), points[j].y, points[j].x * cos(circ) });}
+			f->appendPoint({ points[j].x * sin(circ), points[j].y, points[j].x * cos(circ) });
+			f->appendNormal({ normals[j].x * sin(circ), normals[j].y, normals[j].x * cos(circ) });
 		}
 	}
 	// create trigangles
-	ii = 0; in = nPNCperF;
+	ii = 0; in = camadas;
 	for (i = 0; i < fatias; i++) {
 		for (j = 0; j < camadas - 1; j++) {
-			if (points[j].x != 0) {
-				f->appendIndice(auxIndex[j] + ii);
-				f->appendIndice((points[j + 1].x == 0) ? auxIndex[j + 1] : auxIndex[j + 1] + ii);
-				f->appendIndice(auxIndex[j] + in);
-			}
-			if (points[j + 1].x != 0) {
-				f->appendIndice((points[j].x == 0) ? auxIndex[j] : auxIndex[j] + in);
-				f->appendIndice(auxIndex[j + 1] + ii);
-				f->appendIndice(auxIndex[j + 1] + in);
-			}
+			f->appendIndice(j + in);
+			f->appendIndice(j + 1 + ii);
+			f->appendIndice(j + ii);
+			
+			f->appendIndice(j + 1 + in);
+			f->appendIndice(j + 1 + ii);
+			f->appendIndice(j + in);
 		}
 
-		ii = in; in += nPNCperF;
+		ii = in; in += camadas;
 		// connect the last fatia to the first
 		if (i + 2 == fatias){
 			in = 0;
 		}
 	}
-	delete(auxIndex);
+	delete(normals);
 }
