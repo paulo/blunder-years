@@ -249,6 +249,50 @@ naoexiste(A,[H|T]) :- A\=H, naoexiste(A,T).
                   N == 0
                   ).
 
+% Invariante ... : não permitir a inserção de informação positiva se já existir informação negativa
+
++modelo( P,M ) :: (solucoes( (P,M), (-modelo( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++fabricante( P,M ) :: (solucoes( (P,M), (-fabricante( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++marca( P,M ) :: (solucoes( (P,M), (-marca( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++proprietario( P,M ) :: (solucoes( (P,M), (-proprietario( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++(-modelo( P,M )) :: (solucoes( (P,M), (modelo( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++(-fabricante( P,M )) :: (solucoes( (P,M), (fabricante( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++(-marca( P,M )) :: (solucoes( (P,M), (marca( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++(-proprietario( P,M )) :: (solucoes( (P,M), (proprietario( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
+
+
 
 % Predicado evolucao: aumentar e/ou corrigir a base de conhecimento
 
