@@ -83,10 +83,6 @@ demo( A, desconhecido ) :- nao( A ), nao( -A ).
     nao(proprietario( Matricula, Proprietario )),
     nao(excecao( proprietario( Matricula, Proprietario ))).
 
-excecao(fabricante(X,Y)) :- fabricante(X,A), incerto(A).
-excecao(marca(X,Y)) :- marca(X,A), incerto(A).
-excecao(modelo(X,Y)) :- modelo(X,A), incerto(A).
-excecao(proprietario(X,Y)) :- proprietario(X,A), incerto(A).
 
 
 
@@ -237,10 +233,14 @@ naoexiste(A,[H|T]) :- A\=H, naoexiste(A,T).
 %                  associada a uma marca que não é a fabricante do respetivo modelo 
 % ver este 
 
-+modelo( P,M ) :: (solucoes( B,(marca( P,B ), fabricante( B,M )), S ),
++modelo( P,M ) :: ((solucoes( B,(marca( P,B ), fabricante( B,M )), S ),
                   comprimento( S,N ), 
                   N == 1
-                  ).
+                  ) ; (
+                  solucoes( B1,(fabricante( B1,M )), S1 ),
+                  comprimento( S1,N1 ), 
+                  N1 == 0
+                  )).
 
 % Invariante ... : não permitir a remoção de um modelo se existirem matriculas daquele modelo registados
 

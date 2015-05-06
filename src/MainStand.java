@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import se.sics.jasper.Query;
 import se.sics.jasper.SICStus;
 import se.sics.jasper.SPException;
@@ -49,17 +51,27 @@ public class MainStand {
                 this.executePrint("evolucao(-" + predicade + "(" + String.join(", ", args) + ")).");
                 break;
             case "evolucaoIncerto":
+                int iIncerto = 0;
                 for (i = 0; i < args.length; i++) {
                     if (args[i].equals("incerto")) {
-                        args[i] = "incerto" + numberIncerto;
+                        iIncerto = i;
+                        args[iIncerto] = "incerto" + numberIncerto;
                         break;
                     }
                 }
                 if (i == args.length) {
                     throw new ParseException(cmd + " estava a espera de 'incerto' e nao encontrou", i);
                 }
-                this.executePrint("assert(" + predicade + "(" + String.join(", ", args) + ")).");
-                this.executePrint("evolucao(incerto(incerto" + numberIncerto + ")).");
+                this.executePrint("evolucao(" + predicade + "(" + String.join(", ", args) + ")).");
+                List<String> argsList = IntStream.range(0, args.length)
+                            .mapToObj(j -> "A" + j)
+                            .collect(Collectors.toList());
+                
+                String argsP1 = String.join(", ", argsList);
+                argsList.set(iIncerto, "incerto" + numberIncerto );
+                String argsP2 = String.join(", ", argsList);
+                
+                this.executePrint("assert((excecao(" + predicade + "("+ argsP1 +")):-"+predicade+"(" + argsP2 + " ))).");
                 numberIncerto++;
                 break;
             case "evolucaoInterdito":
@@ -72,7 +84,7 @@ public class MainStand {
                 if (i == args.length) {
                     throw new ParseException(cmd + " estava a espera de 'interdito' e nao encontrou", i);
                 }
-                this.executePrint("assert(" + predicade + "(" + String.join(", ", args) + ")).");
+                this.executePrint("evolucao(" + predicade + "(" + String.join(", ", args) + ")).");
                 this.executePrint("evolucao(interdito(interdito" + numberIntertito + ")).");
 
                 numberIntertito++;
@@ -93,9 +105,8 @@ public class MainStand {
         Query query = sp.openPrologQuery(queryString, map);
 
         if (query.nextSolution()){
-            System.out.println("yes");
-            System.out.println(map.toString());
-//            while (query.nextSolution()) {
+            System.out.println("yes " + map.toString());
+//while (query.nextSolution()) {
 //                System.out.println(map.toString());
 //            }
         } else {
