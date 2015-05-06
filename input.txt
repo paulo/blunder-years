@@ -155,14 +155,26 @@ evolucaoIncerto marca incerto 'Nissan'
 evolucaoIncerto modelo  incerto 'Patrol'
 evolucaoPos proprietario  '55-TU-14' 'Tuco'
 
-$$ teste01 incerto, output esperado: 1º desconhecido,2º yes,3º falso e 4º verdade 
-demo modelo('80-JM-13','Megane')
-evolucaoPos modelo  '80-JM-13' 'Série 5'
-demo modelo('80-JM-13','Megane')
-demo modelo('80-JM-13','Série 5')
-
 evolucaoNeg modelo '91-FF-32' 'Ducato'
 evolucaoNeg marca '91-FF-32' 'BMW'
+evolucaoNeg proprietario  '91-FF-32' 'Orlando Cunha'
+
+evolucaoNeg marca  '10-PP-23' 'BMW'
+evolucaoNeg modelo  '10-PP-23' 'Série 5'
+evolucaoNeg proprietario  '10-PP-23' 'Orlando Oliveira'
+
+evolucaoNeg marca  '02-JL-71' 'Mitsubishi'
+evolucaoNeg modelo  '02-JL-71' 'Lancer'
+evolucaoNeg proprietario  '02-JL-71' 'Paulo Neves'
+
+evolucaoNeg marca '49-VM-94' 'Nissan'
+evolucaoNeg modelo  '49-VM-94' 'Patrol'
+evolucaoNeg proprietario  '49-VM-94' 'Jose Barros'
+
+evolucaoNeg marca  '62-HH-11' 'Peugeot'
+evolucaoNeg modelo  '62-HH-11' '406'
+evolucaoNeg proprietario  '62-HH-11' 'Ana Costa'
+
 
 
 $$ Resultado: V ou V -> V
@@ -174,10 +186,10 @@ demo (marca('91-FF-32','BMW') ou modelo('43-OF-31','C5'))
 $$ Resultado: F ou F -> F
 demo (marca('91-FF-32','BMW') ou modelo('91-FF-32','Ducato'))
 
-$$ Resultado: F ou D -> D ##aqui devia dar desconhecido
-demo (modelo('91-FF-32','Ducato') ou marca('91-JH-34','BMW'))
-$$ Resultado: D ou F -> D ##aqui devia dar desconhecido
-demo (marca('91-JH-34','BMW') ou modelo('91-FF-32','Ducato'))
+$$ Resultado: F ou D -> D
+demo (modelo('91-FF-32','Ducato') ou modelo('10-WW-99', 'Ferrari'))
+$$ Resultado: D ou F -> D
+demo (modelo('49-VP-94','Patrol') ou modelo('91-FF-32','Ducato'))
 $$ Resultado: V ou D -> V
 demo (marca('22-RO-06','Alfa Romeo') ou marca('91-JH-34','BMW'))
 $$ Resultado: D ou V -> V
@@ -193,12 +205,11 @@ demo (marca('22-RO-06','Alfa Romeo') e marca('91-FF-32','BMW'))
 $$ Resultado: F e V -> F
 demo (marca('91-FF-32','BMW') e marca('22-RO-06','Alfa Romeo'))
 
-$$ Resultado: V e D -> D ##aqui devia dar desconhecido
-demo (marca('40-NT-69','Audi') e marca('91-JH-34','BMW'))
-$$ Resultado: D e V -> D ##aqui devia dar desconhecido
-demo (marca('91-JH-34','BMW') e marca('40-NT-69','Audi'))
+$$ Resultado: V e D -> D
+demo (marca('40-NT-69','Audi') e modelo('34-PP-23','Série 5'))
+$$ Resultado: D e V -> D
+demo (modelo('34-PP-23','Série 5') e marca('40-NT-69','Audi'))
 $$ Resultado: F e D -> F
 demo (modelo('91-FF-32','Ducato') e marca('91-JH-34','BMW'))
 $$ Resultado: D e F -> F
 demo (marca('91-JH-34','BMW') e modelo('91-FF-32','Ducato'))
-
