@@ -98,18 +98,6 @@ evolucaoPos marca  '99-LO-74' 'Mitsubishi'
 evolucaoPos modelo  '99-LO-74' 'Lancer'
 evolucaoInterdito proprietario  '99-LO-74' interdito
 
-evolucaoInterdito marca interdito 'Nissan'
-evolucaoInterdito modelo  interdito 'Patrol'
-evolucaoPos proprietario  '50-LL-64' 'Simao Sabrosa'
-
-evolucaoPos marca  '11-JH-11' 'Peugeot'
-evolucaoInterdito modelo  interdito '406'
-evolucaoPos proprietario  '11-JH-11' 'Argel'
-
-evolucaoPos marca  '71-KM-19' 'Alfa Romeo'
-evolucaoPos modelo  '71-KM-19' '147'
-evolucaoInterdito proprietario  interdito 'Nene'
-
 evolucaoPos marca  '34-PP-23' 'BMW'
 evolucaoImpreciso  modelo  '34-PP-23' 'Série 5'
 evolucaoPos proprietario  '34-PP-23' 'Ricardo Cunha'
@@ -125,11 +113,6 @@ evolucaoPos proprietario  '49-VP-94' 'Vladimir Putin'
 evolucaoPos marca  '02-HH-11' 'Peugeot'
 evolucaoImpreciso modelo  '02-HH-11' '406'
 evolucaoPos proprietario  '02-HH-11' 'The Terminator'
-
-evolucaoPos marca  '03-AA-03' 'Fiat'
-evolucaoPos modelo  '03-AA-03' 'Ducato'
-evolucaoImpreciso  proprietario  incerto 'Daenerys Stormborn of the House Targaryen the First of Her Name the Unburnt Queen of Meereen Queen of the Andals and the Rhoynar and the First Men Khaleesi of the Great Grass Sea Breaker of Chains and Mother of Dragons'
-
 
 evolucaoIncerto marca  '32-JP-22' incerto
 evolucaoIncerto modelo  '32-JP-22' incerto
@@ -150,10 +133,6 @@ evolucaoIncerto proprietario  '11-TT-06' incerto
 evolucaoPos marca  '90-MG-60' 'Mitsubishi'
 evolucaoPos modelo  '90-MG-60' 'Lancer'
 evolucaoIncerto proprietario  '90-MG-60' incerto
-
-evolucaoIncerto marca incerto 'Nissan'
-evolucaoIncerto modelo  incerto 'Patrol'
-evolucaoPos proprietario  '55-TU-14' 'Tuco'
 
 evolucaoNeg modelo '91-FF-32' 'Ducato'
 evolucaoNeg marca '91-FF-32' 'BMW'
@@ -197,7 +176,7 @@ demo (modelo('91-GF-02','Ducato') ou marca('22-RO-06','Alfa Romeo'))
 
 
 $$ Resultado: V e V -> V
-demo (marca('22-RO-06','Alfa Romeo') e proprietario('55-TU-14','Tuco'))
+demo (marca('22-RO-06','Alfa Romeo') e proprietario('43-OF-31','Fernando Gomes'))
 $$ Resultado: F e F -> F
 demo (marca('91-FF-32','BMW') e modelo('91-FF-32','Ducato'))
 $$ Resultado: V e F -> F
