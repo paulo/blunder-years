@@ -283,6 +283,21 @@ rmIncerto( proprietario(M,P)) :-
   retract(proprietario(X)).
 rmIncerto(Q).
 
+% solucoes((excecao(marca('32-JP-22',Q)):-A),clause(excecao(marca('32-JP-22',Q)),A),S).
+ff(Q,S):- solucoes((excecao(Q):-A),clause(excecao(Q),A),S).
+
+rmExcecao(Q) :-
+    nao(interdito(Q)),
+    solucoes((excecao(Q):-A),clause(excecao(Q),A),S),
+    retractAll(S).
+
+retractAll(H:T) :-
+    retract(H),
+    retractAll(T).
+retractAll([]).
+
+% solucoes((filho(X,Y):-A),clause(filho(X,Y),A),S).
+
 rmImpreciso(-modelo(M,P)) :- rmImpreciso(modelo(M,P)).
 rmImpreciso( modelo(M,P)) :-
   execao(modelo(M,P)),

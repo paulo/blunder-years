@@ -192,3 +192,11 @@ $$ Resultado: F e D -> F
 demo (modelo('91-FF-32','Ducato') e marca('91-JH-34','BMW'))
 $$ Resultado: D e F -> F
 demo (marca('91-JH-34','BMW') e modelo('91-FF-32','Ducato'))
+
+$$ testing assert((excecao(marca(A0, A1)):-marca(A0, incerto0 ))).
+## demo(marca('32-JP-22','asd'),R).
+## solucoes((excecao(marca('32-JP-22',Q)):-A),clause(excecao(marca('32-JP-22',Q)),A),S).
+## rmExcecao(marca('88-PA-23',X)).
+$$ Ffffff
+## ff(marca('32-JP-22',X),S).
+## demo(marca('32-JP-22','sd'),R).

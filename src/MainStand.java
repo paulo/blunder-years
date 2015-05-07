@@ -62,15 +62,17 @@ public class MainStand {
                 if (i == args.length) {
                     throw new ParseException(cmd + " estava a espera de 'incerto' e nao encontrou", i);
                 }
-                this.executePrint("evolucao(" + predicade + "(" + String.join(", ", args) + ")).");
+                
                 List<String> argsList = IntStream.range(0, args.length)
                             .mapToObj(j -> "A" + j)
                             .collect(Collectors.toList());
                 
                 String argsP1 = String.join(", ", argsList);
-                argsList.set(iIncerto, "incerto" + numberIncerto );
-                String argsP2 = String.join(", ", argsList);
-                
+                //String argsP1 = String.join(",",args);
+                argsList.set(iIncerto, "incerto" + numberIncerto);
+              //  argsList.set(iIncerto, "incerto" + numberIncerto );
+                String argsP2 = String.join(",",argsList);
+                this.executePrint("evolucao("+ predicade+"(" + String.join(",",args) + " )).");
                 this.executePrint("assert((excecao(" + predicade + "("+ argsP1 +")):-"+predicade+"(" + argsP2 + " ))).");
                 numberIncerto++;
                 break;
