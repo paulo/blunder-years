@@ -18,11 +18,13 @@ typedef struct point3D {
 class Figure{
 	vector<Point3D> triangles;
 	vector<unsigned int> indices;
+	vector<Point3D> normal;
 public:
 	void toFile(string  file);
 	void toFileVBO(string  file);
 	void append(Point3D p);
-	void appendIndice(unsigned int p);
+	unsigned int appendIndice(unsigned int p);
+	void appendNormal(Point3D p);
 	int appendPoint(Point3D p);
 	vector<unsigned int> getIndexes();
 	vector<Point3D>* getPoints();
