@@ -192,3 +192,11 @@ $$ Resultado: F e D -> F
 demo (modelo('91-FF-32','Ducato') e marca('91-JH-34','BMW'))
 $$ Resultado: D e F -> F
 demo (marca('91-JH-34','BMW') e modelo('91-FF-32','Ducato'))
+
+evolucaoPos fabricante 'VW' 'Golf'
+evolucaoPos marca  '69-69-OC' 'VW'
+evolucaoPos modelo  '69-69-OC' 'Golf'
+retrocessoPos fabricante 'VW' 'Golf'
+$$ Não deve deixar
+retrocessoPos modelo '69-69-OC' 'Golf'
+retrocessoPos fabricante 'VW' 'Golf'

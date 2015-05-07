@@ -50,6 +50,12 @@ public class MainStand {
             case "evolucaoNeg":
                 this.executePrint("evolucao(-" + predicade + "(" + String.join(", ", args) + ")).");
                 break;
+            case "retrocessoPos":
+                this.executePrint("retrocesso(" + predicade + "(" + String.join(", ", args) + ")).");
+                break;
+            case "retrocessoNeg":
+                this.executePrint("retrocesso(-" + predicade + "(" + String.join(", ", args) + ")).");
+                break;    
             case "evolucaoIncerto":
                 int iIncerto = 0;
                 for (i = 0; i < args.length; i++) {
