@@ -325,6 +325,7 @@ void TimeTranslation::doTransformation(){
 
 	float res[3];
 	int point_count = pointVector.size();
+	//possible way t = fmod(glutGet(GLUT_ELAPSED_TIME) / (time*1000.0f), 1);
 	float aux = ((elapsedNow / time) - (int)(elapsedNow / time));
 	float aux2 = ((elapsedNow * point_count / time) - (int)(elapsedNow * point_count / time));
 	int index = floor(aux * point_count);

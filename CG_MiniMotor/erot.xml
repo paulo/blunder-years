@@ -13,7 +13,7 @@
                 </translacao>
                 <grupo>
                     <escala Y='0.5' X='0.5'/>
-                    <modelo ficheiro='planeta.3d'/><!-- MARTE -->
+                    <modelo ficheiro='teapot.3d'/><!-- MARTE -->
                 </grupo>
             </grupo>
         </grupo>
