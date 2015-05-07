@@ -95,7 +95,7 @@ evolucaoNormal( T ) :-
     insere(T),
     teste(S).
 
-remove( T ) :-
+retrocesso( T ) :-
     solucoes(I,-T::I,S), %% aka solucoes
     apaga(T),
     teste(S).
@@ -290,8 +290,6 @@ naoexiste(A,[H|T]) :- A\=H, naoexiste(A,T).
                   comprimento( S,N ), 
                   N == 0
                   ).
-
-
 
 
 % Predicado evolucao: aumentar e/ou corrigir a base de conhecimento
