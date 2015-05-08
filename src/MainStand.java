@@ -28,6 +28,7 @@ import se.sics.jasper.SPException;
  */
 public class MainStand {
 
+    private boolean printOutput = false;
     private int numberIncerto = 0;
     private int numberIntertito = 0;
     private final SICStus sp;
@@ -50,6 +51,12 @@ public class MainStand {
             case "evolucaoNeg":
                 this.executePrint("evolucao(-" + predicade + "(" + String.join(", ", args) + ")).");
                 break;
+            case "retrocessoPos":
+                this.executePrint("retrocesso(" + predicade + "(" + String.join(", ", args) + ")).");
+                break;
+            case "retrocessoNeg":
+                this.executePrint("retrocesso(-" + predicade + "(" + String.join(", ", args) + ")).");
+                break;
             case "evolucaoIncerto":
                 int iIncerto = 0;
                 for (i = 0; i < args.length; i++) {
@@ -62,18 +69,18 @@ public class MainStand {
                 if (i == args.length) {
                     throw new ParseException(cmd + " estava a espera de 'incerto' e nao encontrou", i);
                 }
-                
+
                 List<String> argsList = IntStream.range(0, args.length)
-                            .mapToObj(j -> "A" + j)
-                            .collect(Collectors.toList());
-                
+                        .mapToObj(j -> "A" + j)
+                        .collect(Collectors.toList());
+
                 String argsP1 = String.join(", ", argsList);
                 //String argsP1 = String.join(",",args);
                 argsList.set(iIncerto, "incerto" + numberIncerto);
-              //  argsList.set(iIncerto, "incerto" + numberIncerto );
-                String argsP2 = String.join(",",argsList);
-                this.executePrint("evolucao("+ predicade+"(" + String.join(",",args) + " )).");
-                this.executePrint("assert((excecao(" + predicade + "("+ argsP1 +")):-"+predicade+"(" + argsP2 + " ))).");
+                //  argsList.set(iIncerto, "incerto" + numberIncerto );
+                String argsP2 = String.join(",", argsList);
+                this.executePrint("evolucao(" + predicade + "(" + String.join(",", args) + " )).");
+                this.executePrint("assert((excecao(" + predicade + "(" + argsP1 + ")):-" + predicade + "(" + argsP2 + " ))).");
                 numberIncerto++;
                 break;
             case "evolucaoInterdito":
@@ -106,13 +113,13 @@ public class MainStand {
         HashMap map = new HashMap();
         Query query = sp.openPrologQuery(queryString, map);
 
-        if (query.nextSolution()){
+        if (query.nextSolution()) {
             System.out.println("yes " + map.toString());
 //while (query.nextSolution()) {
 //                System.out.println(map.toString());
 //            }
         } else {
-            System.out.println("no (" + queryString +")" );
+            System.out.println("no");
         }
         query.close();
 
@@ -127,16 +134,17 @@ public class MainStand {
         if (input.length() < 2) {
             return true;
         }
-        if (input.startsWith("## ")){
+        if (input.startsWith("## ")) {
             executePrint(input.substring(2));
             return true;
         }
-        if (input.startsWith("$$ ")){
+        if (input.startsWith("$$ ")) {
             System.out.println(input.substring(2));
             return true;
         }
-        
-
+        if (printOutput) {
+            System.out.println("> "+input);
+        }
         List<String> matchList = new ArrayList<String>();
         Pattern regex = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
         Matcher regexMatcher = regex.matcher(input);
@@ -161,18 +169,19 @@ public class MainStand {
             // aqui faz load ao evolução e essas cenas...
             ms = new MainStand("inicial.pl");
             // faz load da base de conhecimento incial
+            ms.printOutput = true;
             InputStream is = new FileInputStream("input.txt");
             Scanner scanner = new Scanner(is);
             while (ms.readFromInput(scanner)) {
             }
-
+            ms.printOutput = false;
             scanner = new Scanner(System.in);
             boolean b = true;
             do {
-                try{
+                try {
                     b = ms.readFromInput(scanner);
-                }catch(ParseException | SPException ex){
-                    System.err.println(ex.toString());            
+                } catch (ParseException | SPException ex) {
+                    System.err.println(ex.toString());
                 }
             } while (b);
 

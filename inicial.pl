@@ -95,7 +95,7 @@ evolucaoNormal( T ) :-
     insere(T),
     teste(S).
 
-remove( T ) :-
+retrocesso( T ) :-
     solucoes(I,-T::I,S), %% aka solucoes
     apaga(T),
     teste(S).
@@ -249,52 +249,80 @@ naoexiste(A,[H|T]) :- A\=H, naoexiste(A,T).
                   N == 0
                   ).
 
+% Invariante ... : não permitir a inserção de informação positiva se já existir informação negativa
+
++modelo( P,M ) :: (solucoes( (P,M), (-modelo( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++fabricante( P,M ) :: (solucoes( (P,M), (-fabricante( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++marca( P,M ) :: (solucoes( (P,M), (-marca( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++proprietario( P,M ) :: (solucoes( (P,M), (-proprietario( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++(-modelo( P,M )) :: (solucoes( (P,M), (modelo( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++(-fabricante( P,M )) :: (solucoes( (P,M), (fabricante( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++(-marca( P,M )) :: (solucoes( (P,M), (marca( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
++(-proprietario( P,M )) :: (solucoes( (P,M), (proprietario( P,M )),S ),
+                  comprimento( S,N ), 
+                  N == 0
+                  ).
+
 
 % Predicado evolucao: aumentar e/ou corrigir a base de conhecimento
 
 evolucao(Q) :-
-  rmIncerto(Q),
-  rmImpreciso(Q),
+  rmExcecao(Q),
   evolucaoNormal(Q).
 
-rmIncerto(-modelo(M,P)) :- rmIncerto(modelo(M,P)).
-rmIncerto(modelo(M,P)) :-
-  modelo(M,X),
-  incerto(X),
-  retract(modelo(M,X)),
-  retract(modelo(X)).
-rmIncerto(-fabricante(M,P)) :- rmIncerto(fabricante(M,P)).
-rmIncerto( fabricante(M,P)) :-
-  fabricante(M,X),
-  incerto(X),
-  retract(fabricante(M,X)),
-  retract(fabricante(X)).
-rmIncerto(-marca(M,P)) :- rmIncerto(marca(M,P)).
-rmIncerto( marca(M,P)) :-
-  marca(M,X),
-  incerto(X),
-  retract(marca(M,X)),
-  retract(marca(X)).
-rmIncerto(-proprietario(M,P)) :- rmIncerto(proprietario(M,P)).
-rmIncerto( proprietario(M,P)) :-
-  proprietario(M,X),
-  incerto(X),
-  retract(proprietario(M,X)),
-  retract(proprietario(X)).
-rmIncerto(Q).
-
 % solucoes((excecao(marca('32-JP-22',Q)):-A),clause(excecao(marca('32-JP-22',Q)),A),S).
-ff(Q,S):- solucoes((excecao(Q):-A),clause(excecao(Q),A),S).
+
+ff(Q,S) :-
+  solucoes((excecao(Q),A),(clause(excecao(Q),A),(A)),S).
 
 rmExcecao(Q) :-
     nao(interdito(Q)),
-    solucoes((excecao(Q):-A),clause(excecao(Q),A),S),
-    retractAll(S).
+    solucoes((excecao(Q),A),(clause(excecao(Q),A),(A)),S),
+    retractExecao(S).
 
-retractAll(H:T) :-
-    retract(H),
-    retractAll(T).
-retractAll([]).
+count( [],0 ).
+count( [X|L],N ) :-
+    count( L,N1 ),
+    N is N1+1.
+
+retractExecao([(P,Q)|T]) :-
+    Q \== true,
+    retract((P:-Q)),
+    retract(Q),
+    retractExecao(T).
+
+retractExecao([(P,Q)|T]) :-
+    retract((P:-Q)),
+    retractExecao(T).
+retractExecao([]).
 
 % solucoes((filho(X,Y):-A),clause(filho(X,Y),A),S).
 

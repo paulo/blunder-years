@@ -11,6 +11,7 @@ evolucaoPos fabricante 'Lexus' 'IS 220d'
 evolucaoPos fabricante 'Mercedes' 'Vito'
 evolucaoPos fabricante 'Mitsubishi' 'Lancer'
 evolucaoPos fabricante 'Nissan' 'Patrol'
+evolucaoPos fabricante 'Nissan' 'Evolution'
 evolucaoPos fabricante 'Peugeot' '406'
 evolucaoPos fabricante 'Renault' 'Megane'
 
@@ -108,6 +109,7 @@ evolucaoImpreciso  proprietario  '22-JL-71' 'Paulo Cunha'
 
 evolucaoImpreciso  marca '49-VP-94' 'Nissan'
 evolucaoImpreciso  modelo  '49-VP-94' 'Patrol'
+evolucaoImpreciso modelo  '49-VP-94' 'Evolution'
 evolucaoPos proprietario  '49-VP-94' 'Vladimir Putin'
 
 evolucaoPos marca  '02-HH-11' 'Peugeot'
@@ -193,10 +195,40 @@ demo (modelo('91-FF-32','Ducato') e marca('91-JH-34','BMW'))
 $$ Resultado: D e F -> F
 demo (marca('91-JH-34','BMW') e modelo('91-FF-32','Ducato'))
 
-$$ testing assert((excecao(marca(A0, A1)):-marca(A0, incerto0 ))).
-## demo(marca('32-JP-22','asd'),R).
-## solucoes((excecao(marca('32-JP-22',Q)):-A),clause(excecao(marca('32-JP-22',Q)),A),S).
-## rmExcecao(marca('88-PA-23',X)).
-$$ Ffffff
-## ff(marca('32-JP-22',X),S).
-## demo(marca('32-JP-22','sd'),R).
+evolucaoPos fabricante 'VW' 'Golf'
+evolucaoPos marca  '69-69-OC' 'VW'
+evolucaoPos modelo  '69-69-OC' 'Golf'
+retrocessoPos fabricante 'VW' 'Golf'
+$$ Não deve deixar
+retrocessoPos modelo '69-69-OC' 'Golf'
+retrocessoPos fabricante 'VW' 'Golf'
+
+$$ ########################## Teste De remocao: ##########################
+$$ 
+$$ 
+demo modelo('10-WW-99', punto)
+demo modelo('10-WW-99', fista)
+## whyevo(modelo('10-WW-99','Megane'),S0).
+evolucaoPos modelo '10-WW-99' 'punto'
+## solucoes(temp1(A),temp1(A),S1).
+demo modelo('10-WW-99', punto)
+demo modelo('10-WW-99', fista)
+$$ 
+$$ 
+demo proprietario('90-MG-60', 'Paulo')
+demo proprietario('90-MG-60', 'Orlando')
+evolucaoPos proprietario '90-MG-60' 'Orlando'
+demo proprietario('90-MG-60', 'Paulo')
+demo proprietario('90-MG-60', 'Orlando')
+$$  
+$$  
+demo modelo('49-VP-94', 'Patrol')
+demo modelo('49-VP-94', 'Evolution')
+demo modelo('49-VP-94', 'Random')
+## ff(modelo('49-VP-94','Evolution'),R1).
+evolucaoPos modelo '49-VP-94' 'Evolution'
+demo modelo('49-VP-94', 'Patrol')
+demo modelo('49-VP-94', 'Evolution')
+demo modelo('49-VP-94', 'Random')
+$$  
+$$  

@@ -1,0 +1,27 @@
+$$  
+$$ testing assert((excecao(marca(A0, A1)):-marca(A0, incerto0 ))).
+## demo(modelo('80-JM-13','asd'),R1).
+## demo(modelo('32-JP-22','asd'),R2).
+## ff(modelo('80-JM-13','asd'),S1).
+## ff(modelo('32-JP-22','asd'),S2).
+## rmExcecao(modelo('80-JM-13','asd')).
+$$ ## rmExcecao(modelo('32-JP-22','asd')).
+## demo(modelo('80-JM-13','asd'),R1).
+## demo(modelo('32-JP-22','asd'),R2).
+$$ ## rmExcecao(marca('88-PA-23',X)).
+$$ ## solucoes(A,modelo(A,'incerto0'),S).
+$$ ## clause(excecao(modelo('80-JM-13',X)),A).
+
+
+
+$$ Ffffff
+$$ ## ff(marca('32-JP-22',X),S).
+$$ ## rmExcecao(marca('32-JP-22',X)).
+$$ ## demo(marca('32-JP-22','sd'),R).
+
+$$ ## retractAll((excecao(marca(32-JP-22,A)),marca(32-JP-22,incerto0)):[]).
+$$ ## (clause(excecao(marca('88-PA-23',X)),A),retract((excecao(marca('32-JP-22',X1)):-A))).
+$$ ## (ff(marca('32-JP-22',X),S),retractAll(S)).
+$$ ## (solucoes((excecao(marca('32-JP-22',Q)):-A),(clause(excecao(marca('32-JP-22',Q)),A)),T),count(T,N)).
+
+
