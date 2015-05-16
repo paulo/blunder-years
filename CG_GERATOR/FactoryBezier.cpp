@@ -90,6 +90,19 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 		}
 	}
 	int offi = 0;
+	for (i = 0; i < in; i++){
+		for (j = 0; j < tess - 1; j++) {
+			for (k = 0; k < tess - 1; k++) {
+				point3D cima = f.getPoints()->at(offi + (k*tess) + j - tess);
+				point3D baixo = f.getPoints()->at(offi + (k*tess) + j + tess);
+				point3D direita = f.getPoints()->at(offi + (k*tess) + j - 1);
+				point3D esquerda = f.getPoints()->at(offi + (k*tess) + j + 1);
+			}
+		}
+		offi += tess * tess;
+	}
+
+	offi = 0;
 
 	for (i = 0; i < in; i++){
 		for (j = 0; j < tess - 1; j++) {

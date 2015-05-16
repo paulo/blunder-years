@@ -15,7 +15,7 @@ typedef struct point3D {
 	float z;
 } Point3D;
 
-class Figure{
+class Figure {
 	vector<Point3D> triangles;
 	vector<unsigned int> indices;
 	vector<Point3D> normal;
