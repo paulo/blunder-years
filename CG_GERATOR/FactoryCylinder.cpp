@@ -25,13 +25,13 @@ Figure FigureFactory::createCylinder(float raiob, float altura, int fatias, int 
 	points[0].x = 0;
 	points[0].y = meio;
 
-	for (i = 0; i <= camadas; i++){
+	for (i = 1; i <= camadas; i++){
 		points[i].x = raiob;
 		points[i].y = meio - i * tam_camadas ;
 	}
 
-	points[i].x = 0;
-	points[i].y = -meio;
+	points[camadas + 1].x = 0;
+	points[camadas + 1].y = -meio;
 	
 	createRotate(&f, points, camadas + 2, fatias);
 
@@ -56,6 +56,6 @@ Figure FigureFactory::createCylinder(float raiob, float altura, int fatias, int 
 	*/
 
 	//baixo
-	createCircleAux(&f, raiob, fatias, meio, 1);
+	//createCircleAux(&f, raiob, fatias, meio, 1);
 	return f;
 }

@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "FigureFactory.h"
 
+float mathSumPointsDistance(Point3D points[], int pointsSize);
+float mathPointsDistance(Point3D p1, Point3D p2);
+
 /*
 *Cria uma figura com a forma esférica
 *
@@ -43,6 +46,7 @@ Figure FigureFactory::createSphere(float raio, int camadas, int fatias){
 void FigureFactory::createRotate(Figure* f, Point3D points[], int camadas, int fatias){
 	int i, j, ii, in; // nPoints not Common per Fatia 
 	float angulo_circ = 2 * ((float)M_PI) / fatias; //angulo para calcular o tamanho de cada camada
+	
 	Point3D *normals = new Point3D[camadas];
 
 	// initialize centrall points, and count the "nPoints not Common per Fatia"
@@ -56,26 +60,45 @@ void FigureFactory::createRotate(Figure* f, Point3D points[], int camadas, int f
 			normals[j].x += -(points[j].y - points[j-1].y);
 			normals[j].y += (points[j].x - points[j-1].x);
 		}
+		float length = sqrt((normals[j].x * normals[j].x) + (normals[j].y * normals[j].y));
+		if (length != 0) {
+			normals[j].x /= length; normals[j].y /= length;
+		}
+		else{
+			normals[j].x = 0; normals[j].y = 1;
+		}
 	}
 	// Create all other points
+	float textureYFactor = 1 / mathSumPointsDistance(points, camadas);
+	float textureYInc = 0.0;
 	for (i = 0; i < fatias; i++){
 		float circ = angulo_circ * (i + 1);
+	
 		for (j = 0; j < camadas; j++) {
+			float perimetro = (2 * M_PI * points[j].x);
+			float textureX = 0;
+			if (perimetro != 0) {
+				textureX = ((perimetro  * i) / fatias) / perimetro;
+			} 
+			textureYInc += (j > 0) ? mathPointsDistance(points[j - 1], points[j]) : 0;
+			
+			float textureY = textureYInc * textureYFactor;
 			f->appendPoint({ points[j].x * sin(circ), points[j].y, points[j].x * cos(circ) });
 			f->appendNormal({ normals[j].x * sin(circ), normals[j].y, normals[j].x * cos(circ) });
+			f->appendPointTexture({ textureX, textureY, 0 });
 		}
 	}
 	// create trigangles
 	ii = 0; in = camadas;
 	for (i = 0; i < fatias; i++) {
 		for (j = 0; j < camadas - 1; j++) {
-			f->appendIndice(j + in);
-			f->appendIndice(j + 1 + ii);
 			f->appendIndice(j + ii);
-			
-			f->appendIndice(j + 1 + in);
 			f->appendIndice(j + 1 + ii);
 			f->appendIndice(j + in);
+
+			f->appendIndice(j + in);
+			f->appendIndice(j + 1 + ii);
+			f->appendIndice(j + 1 + in);
 		}
 
 		ii = in; in += camadas;
@@ -85,4 +108,20 @@ void FigureFactory::createRotate(Figure* f, Point3D points[], int camadas, int f
 		}
 	}
 	delete(normals);
+}
+
+float mathSumPointsDistance(Point3D points[],int pointsSize){
+	float res = 0.0;
+	int i;
+	for (i = 1; i < pointsSize; i++) {
+		res += mathPointsDistance(points[i], points[2]);
+	}
+	return res;
+}
+
+float mathPointsDistance(Point3D p1, Point3D p2){
+	return sqrt(
+		(p1.x - p2.x) * (p1.x - p2.x) + 
+		(p1.y - p2.y) * (p1.y - p2.y)
+	);
 }
