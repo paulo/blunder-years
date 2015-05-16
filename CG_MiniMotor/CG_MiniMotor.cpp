@@ -71,6 +71,8 @@ void init(int argc, char **argv){
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//create MENU
@@ -81,11 +83,6 @@ void init(int argc, char **argv){
 	glutAddMenuEntry("VBO MODE", 4);
 	glutAddMenuEntry("DIRECT MODE", 5);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
-
-	//Luzes
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-
 
 }
 
@@ -234,14 +231,6 @@ void renderScene(void){
 	// actualScene.draw();
 	glLoadIdentity();
 
-	GLfloat amb[3] = { 0.2, 0.2, 0.2 }; GLfloat diff[3] = { 1.0, 1.0, 1.0 }; GLfloat pos[4] = { 0.0, 0.0, 1.0, 0.0 };
-	// light position
-	glLightfv(GL_LIGHT0, GL_POSITION, pos);
-	// light colors 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
-
-
 	if (cameraActual == 1){
 		cameraSph.refresh();
 	}
@@ -249,9 +238,19 @@ void renderScene(void){
 		cameraFP.refresh();
 	}
 
+
+	GLfloat amb[3] = { 0.2, 0.2, 0.2 };
+	GLfloat diff[3] = { 5.0,5.0, 5.0 };
+	GLfloat posL[4] = { 3.0, 3.0, 3.0, 0.0 };
+	// light position
+	glLightfv(GL_LIGHT0, GL_POSITION, posL);
+	// light colors 
+	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
+
 	
 	float red[4] = { 0.8f, 0.2f, 0.2f, 1.0f };
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, red);
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
 
 
 	//point3D p[] = { { 0, 1, 0 }, { 1, 1, 0 }, { 1, -1, 0 }, { 0, -1, 0 } };

@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <xml>
     <cena>
-       <modelo ficheiro='teapot.3d'/><!-- MARTE -->
+    	<grupo>
+	    	<translacao Z='10'/>
+	        <modelo ficheiro='esfera.3d'/><!-- MARTE -->
+        </grupo>
+       	<grupo>
+	    	<translacao Z='-10'/>
+	        <modelo ficheiro='cilindro.3d'/><!-- MARTE -->
+        </grupo>
+
     </cena>
 </xml>

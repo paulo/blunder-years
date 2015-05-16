@@ -16,7 +16,7 @@ using namespace std;
 */
 void Figure::fromFile(string filename){
 	ifstream ifs; ifs.open(filename);
-	int nPoints, nIndice, i; Point3D point,normal;
+	int nPoints, nIndice, i; Point3D point,normal, texture;
 	GLuint indice;
 	
 	ifs >> nPoints >> nIndice;
@@ -26,7 +26,9 @@ void Figure::fromFile(string filename){
 	i = 0;
 	while (!ifs.eof()
 		&& i < nPoints
-		&& ifs >> point.x >> point.y >> point.z >> normal.x >> normal.y >> normal.z
+		&& ifs >> point.x >> point.y >> point.z
+		>> normal.x >> normal.y >> normal.z
+		>> texture.x >> texture.y
 		) {
 		triangles1[i * 3 + 0] = point.x;
 		triangles1[i * 3 + 1] = point.y;
@@ -67,7 +69,7 @@ void Figure::draw(){
 
 void FigureVBO::fromFile(string filename) {
 	ifstream ifs; ifs.open(filename);
-	int nPoints, nIndice, i; Point3D point,normal;
+	int nPoints, nIndice, i; Point3D point,normal,texture;
 	
 	ifs >> nPoints >> nIndice;
 	this->nIndices = nIndice;
@@ -78,7 +80,9 @@ void FigureVBO::fromFile(string filename) {
 	i = 0;
 	while (!ifs.eof()		
 		&& i < nPoints
-		&& ifs >> point.x >> point.y >> point.z >> normal.x >> normal.y >> normal.z
+		&& ifs >> point.x >> point.y >> point.z 
+		>> normal.x >> normal.y >> normal.z
+		>> texture.x >> texture.y
 	) {
 		triangles[i * 3 + 0] = point.x;
 		triangles[i * 3 + 1] = point.y;
@@ -333,6 +337,7 @@ void TimeTranslation::doTransformation(){
 
 	float res[3];
 	int point_count = pointVector.size();
+	//possible way t = fmod(glutGet(GLUT_ELAPSED_TIME) / (time*1000.0f), 1);
 	float aux = ((elapsedNow / time) - (int)(elapsedNow / time));
 	float aux2 = ((elapsedNow * point_count / time) - (int)(elapsedNow * point_count / time));
 	int index = floor(aux * point_count);
