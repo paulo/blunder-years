@@ -238,7 +238,7 @@ void renderScene(void){
 		cameraFP.refresh();
 	}
 
-
+	/*
 	GLfloat amb[3] = { 0.2, 0.2, 0.2 };
 	GLfloat diff[3] = { 5.0,5.0, 5.0 };
 	GLfloat posL[4] = { 3.0, 3.0, 3.0, 0.0 };
@@ -251,7 +251,7 @@ void renderScene(void){
 	
 	float red[4] = { 0.8f, 0.2f, 0.2f, 1.0f };
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
-
+	*/
 
 	//point3D p[] = { { 0, 1, 0 }, { 1, 1, 0 }, { 1, -1, 0 }, { 0, -1, 0 } };
 	//genericDraw(p,4,20).draw();

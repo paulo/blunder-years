@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <xml>
     <cena>
+        <luzes>
+            <luz tipo="point" posX="0.0" posY="0.0" posZ="10.0" />
+                <diffuse r='256' g='256' b='256'/>
+            <luz tipo="point" posX="0.0" posY="0.0" posZ="-10.0" />
+        </luzes>
     	<grupo>
 	    	<translacao Z='10'/>
 	        <modelo ficheiro='esfera.3d'/><!-- MARTE -->

@@ -161,12 +161,15 @@ void Scene::setCameraPosition(float x, float y, float z){
 }
 
 void Scene::draw(){
-	std::vector<Light*>::iterator it; 
+	std::vector<Light>::iterator it; 
 	for (it = lights.begin(); it < lights.end(); it++)
-		glLightfv(GL_LIGHT0 + (*it)->number, (*it)->property, (*it)->posCoords);//WRONG
+		glLightfv(GL_LIGHT0 + it->number, it->property, it->posCoords);
 	Group::draw();
 }
 
+void Scene::appendLight(Light l){
+	lights.push_back(l);
+}
 Point3D Scene::getCameraPosition(){
 	return{ camX, camY, camZ };
 }
@@ -328,7 +331,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 					if (elem->Attribute("posZ")) z = elem->FloatAttribute("posZ");
 
 					Light *light = new Light(x, y, z, type, ln, GL_POSITION);//WRONG
-					lights.push_back(light);
+					appendLight(*light);
 
 					if (elem->FirstChild()){
 						r = g = b = 0.0;
@@ -339,8 +342,8 @@ int Scene::parseXML(XMLNode* root, Group* current){
 								if (elem->Attribute("g")) g = elem->FloatAttribute("g");
 								if (elem->Attribute("b")) b = elem->FloatAttribute("b");
 
-								Light *al = new Light(r, g, b, 1.0, ln, GL_AMBIENT);//1.0 => Por omissão é do tipo point, mas este valor não é usado
-								lights.push_back(al);
+								Light *al = new Light(r, g, b, 1.0, ln, GL_AMBIENT);
+								appendLight(*al);
 							}
 							if (tag.compare("diffuse") == 0){
 								if (elem->Attribute("r")) r = elem->FloatAttribute("r");
@@ -348,7 +351,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 								if (elem->Attribute("b")) b = elem->FloatAttribute("b");
 
 								Light *dl = new Light(r, g, b, 1.0, ln, GL_DIFFUSE);
-								lights.push_back(dl);
+								appendLight(*dl);
 							}
 							if (tag.compare("specular") == 0){
 								if (elem->Attribute("r")) r = elem->FloatAttribute("r");
@@ -356,7 +359,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 								if (elem->Attribute("b")) b = elem->FloatAttribute("b");
 
 								Light *sl = new Light(r, g, b, 1.0, ln, GL_SPECULAR);
-								lights.push_back(sl);
+								appendLight(*sl);
 							}
 						}
 					}	

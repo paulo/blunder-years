@@ -45,8 +45,17 @@ public:
 	void draw();
 };
 
+class Light {
+public:
+	float posCoords[4];
+	int number;
+	int property;
+	Light(float x, float y, float z, float type, int number, int property);
+};
+
+
 class Scene: public Group {
-	vector<Light*> lights;
+	vector<Light> lights;
 	int drawMode;
 	float camX;
 	float camY;
@@ -60,6 +69,7 @@ public:
 	int parseXML(XMLNode* root, Group* current);
 	void setDrawMode(const int mode);
 	void draw();
+	void appendLight(Light);
 };
 
 class Translation : public GTransformation {
@@ -107,12 +117,5 @@ public:
 	void doTransformation();
 };
 
-class Light : public Drawable {
-public:
-	float posCoords[4];
-	int number;
-	int property;
-	Light(float x, float y, float z, float type, int number, int property);
-};
 
 #endif
