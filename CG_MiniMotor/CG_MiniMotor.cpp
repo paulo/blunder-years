@@ -256,7 +256,7 @@ void renderScene(void){
 	//point3D p[] = { { 0, 1, 0 }, { 1, 1, 0 }, { 1, -1, 0 }, { 0, -1, 0 } };
 	//genericDraw(p,4,20).draw();
 
-
+	glEnable(GL_LIGHTING);
 	actualScene.draw();
 
 	calcFPS();

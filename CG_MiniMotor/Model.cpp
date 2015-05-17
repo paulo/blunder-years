@@ -160,6 +160,13 @@ void Scene::setCameraPosition(float x, float y, float z){
 	this->camZ = z;
 }
 
+void Scene::draw(){
+	std::vector<Light*>::iterator it; 
+	for (it = lights.begin(); it < lights.end(); it++)
+		glLightfv(GL_LIGHT0 + (it - lights.begin()), GL_POSITION, (*it)->posCoords);//WRONG
+	Group::draw();
+}
+
 Point3D Scene::getCameraPosition(){
 	return{ camX, camY, camZ };
 }
@@ -174,7 +181,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 	Figure f;
 	float x, y, z;
 	float tempo, angulo, eixoX, eixoY, eixoZ;
-	int rt = 0, timeRt=0, tr = 0, timeTr = 0, sc = 0, mdls = 0, grp = 0;
+	int rt = 0, timeRt = 0, tr = 0, timeTr = 0, sc = 0, mdls = 0, grp = 0, type;
 	int ok = 0;
 
 	for (child = root->FirstChild(); child; child = child->NextSibling()) {
@@ -304,6 +311,25 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				sc = 1;
 			}
 			else return -1;	
+		}
+		else if (tag.compare("luzes") == 0){
+			XMLNode *luz;
+			for (luz = child->FirstChild(); luz; luz = luz->NextSibling()) {
+				if (tag.compare("luz") == 0) {
+					if (elem->Attribute("tipo") == "POINT"){
+						type = 1.0;
+					}
+					else if (elem->Attribute("tipo") == "DIRECTIONAL"){
+						type = 0.0;
+					}
+					if (elem->Attribute("posX")) x = elem->FloatAttribute("posX");
+					if (elem->Attribute("posY")) y = elem->FloatAttribute("posY");
+					if (elem->Attribute("posZ")) z = elem->FloatAttribute("posZ");
+
+					Light *light = new Light(x,y,z,type);//WRONG
+					lights.push_back(light);
+				}
+			}
 		}
 	}
 	return ok;
@@ -435,6 +461,13 @@ Rotation::Rotation(float angle, float x, float y, float z){
 
 void Rotation::doTransformation(){
 	glRotatef(angle, p.x, p.y, p.z);
+}
+
+Light::Light(float x, float y, float z, float type){
+	this->posCoords[0] = x;
+	this->posCoords[1] = y;
+	this->posCoords[2] = z;
+	this->posCoords[3] = type;
 }
 
 TimeRotation::TimeRotation(float angle, float time, float x, float y, float z) 

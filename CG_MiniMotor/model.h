@@ -1,6 +1,7 @@
 #ifndef __MODEL_H__
 #define __MODEL_H__
 #include "stdafx.h"
+#include "glut.h"
 #include <string>
 #include <vector>
 #include <iostream>
@@ -45,6 +46,7 @@ public:
 };
 
 class Scene: public Group {
+	vector<Light*> lights;
 	int drawMode;
 	float camX;
 	float camY;
@@ -57,6 +59,7 @@ public:
 	static const int DRAWMODE_DIRECT;
 	int parseXML(XMLNode* root, Group* current);
 	void setDrawMode(const int mode);
+	void draw();
 };
 
 class Translation : public GTransformation {
@@ -104,5 +107,10 @@ public:
 	void doTransformation();
 };
 
+class Light : public Drawable {
+	float posCoords[4];
+public:
+	Light(float x, float y, float z, float type);
+};
 
 #endif
