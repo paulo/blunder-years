@@ -163,7 +163,7 @@ void Scene::setCameraPosition(float x, float y, float z){
 void Scene::draw(){
 	std::vector<Light*>::iterator it; 
 	for (it = lights.begin(); it < lights.end(); it++)
-		glLightfv(GL_LIGHT0 + (it - lights.begin()), GL_POSITION, (*it)->posCoords);//WRONG
+		glLightfv(GL_LIGHT0 + (*it)->number, (*it)->property, (*it)->posCoords);//WRONG
 	Group::draw();
 }
 
@@ -180,9 +180,10 @@ int Scene::parseXML(XMLNode* root, Group* current){
 	XMLNode* child;
 	Figure f;
 	float x, y, z;
+	float  r, g, b;
 	float tempo, angulo, eixoX, eixoY, eixoZ;
 	int rt = 0, timeRt = 0, tr = 0, timeTr = 0, sc = 0, mdls = 0, grp = 0, type;
-	int ok = 0;
+	int ok = 0, ln = 0;
 
 	for (child = root->FirstChild(); child; child = child->NextSibling()) {
 		XMLElement *elem = child->ToElement();
@@ -314,20 +315,52 @@ int Scene::parseXML(XMLNode* root, Group* current){
 		}
 		else if (tag.compare("luzes") == 0){
 			XMLNode *luz;
-			for (luz = child->FirstChild(); luz; luz = luz->NextSibling()) {
+			for (luz = child->FirstChild(), ln = 0; luz; luz = luz->NextSibling(), ln++) {
 				if (tag.compare("luz") == 0) {
-					if (elem->Attribute("tipo") == "POINT"){
+					if (elem->Attribute("tipo") == "point"){
 						type = 1.0;
 					}
-					else if (elem->Attribute("tipo") == "DIRECTIONAL"){
+					else if (elem->Attribute("tipo") == "directional"){
 						type = 0.0;
 					}
 					if (elem->Attribute("posX")) x = elem->FloatAttribute("posX");
 					if (elem->Attribute("posY")) y = elem->FloatAttribute("posY");
 					if (elem->Attribute("posZ")) z = elem->FloatAttribute("posZ");
 
-					Light *light = new Light(x,y,z,type);//WRONG
+					Light *light = new Light(x, y, z, type, ln, GL_POSITION);//WRONG
 					lights.push_back(light);
+
+					if (elem->FirstChild()){
+						r = g = b = 0.0;
+						XMLNode *lightproperty;
+						for (lightproperty = child->FirstChild(); lightproperty; lightproperty = lightproperty->NextSibling()) {
+							if (tag.compare("ambient") == 0){
+								if (elem->Attribute("r")) r = elem->FloatAttribute("r");
+								if (elem->Attribute("g")) g = elem->FloatAttribute("g");
+								if (elem->Attribute("b")) b = elem->FloatAttribute("b");
+
+								Light *al = new Light(r, g, b, 1.0, ln, GL_AMBIENT);//1.0 => Por omissão é do tipo point, mas este valor não é usado
+								lights.push_back(al);
+							}
+							if (tag.compare("diffuse") == 0){
+								if (elem->Attribute("r")) r = elem->FloatAttribute("r");
+								if (elem->Attribute("g")) g = elem->FloatAttribute("g");
+								if (elem->Attribute("b")) b = elem->FloatAttribute("b");
+
+								Light *dl = new Light(r, g, b, 1.0, ln, GL_DIFFUSE);
+								lights.push_back(dl);
+							}
+							if (tag.compare("specular") == 0){
+								if (elem->Attribute("r")) r = elem->FloatAttribute("r");
+								if (elem->Attribute("g")) g = elem->FloatAttribute("g");
+								if (elem->Attribute("b")) b = elem->FloatAttribute("b");
+
+								Light *sl = new Light(r, g, b, 1.0, ln, GL_SPECULAR);
+								lights.push_back(sl);
+							}
+						}
+					}	
+						
 				}
 			}
 		}
@@ -463,11 +496,13 @@ void Rotation::doTransformation(){
 	glRotatef(angle, p.x, p.y, p.z);
 }
 
-Light::Light(float x, float y, float z, float type){
+Light::Light(float x, float y, float z, float type, int number, int property){
 	this->posCoords[0] = x;
 	this->posCoords[1] = y;
 	this->posCoords[2] = z;
 	this->posCoords[3] = type;
+	this->number = number;
+	this->property = property;
 }
 
 TimeRotation::TimeRotation(float angle, float time, float x, float y, float z) 

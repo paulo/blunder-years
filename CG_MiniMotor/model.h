@@ -108,9 +108,11 @@ public:
 };
 
 class Light : public Drawable {
-	float posCoords[4];
 public:
-	Light(float x, float y, float z, float type);
+	float posCoords[4];
+	int number;
+	int property;
+	Light(float x, float y, float z, float type, int number, int property);
 };
 
 #endif
