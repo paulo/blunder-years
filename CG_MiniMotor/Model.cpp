@@ -16,9 +16,9 @@ using namespace std;
 */
 void Figure::fromFile(string filename){
 	ifstream ifs; ifs.open(filename);
-	int nPoints, nIndice, i; Point3D point,normal, texture;
+	int nPoints, nIndice, i; Point3D point, normal, texture;
 	GLuint indice;
-	
+
 	ifs >> nPoints >> nIndice;
 	float *triangles1 = new float[nPoints * 3];
 
@@ -41,7 +41,7 @@ void Figure::fromFile(string filename){
 		&& i < nIndice
 		&& ifs >> indice
 		) {
-			triangles.push_back({ triangles1[indice*3], triangles1[indice*3 +1], triangles1[indice*3 +2] });
+		triangles.push_back({ triangles1[indice * 3], triangles1[indice * 3 + 1], triangles1[indice * 3 + 2] });
 		i++;
 	}
 
@@ -52,7 +52,7 @@ void Figure::fromFile(string filename){
 * Desenha a figura através das coordenadas dos seus pontos
 */
 void Figure::draw(){
-	
+
 	glBegin(GL_TRIANGLES);
 	std::vector<point3D>::iterator d = triangles.begin();
 	while (d != triangles.end()){
@@ -69,8 +69,8 @@ void Figure::draw(){
 
 void FigureVBO::fromFile(string filename) {
 	ifstream ifs; ifs.open(filename);
-	int nPoints, nIndice, i; Point3D point,normal,texture;
-	
+	int nPoints, nIndice, i; Point3D point, normal, texture;
+
 	ifs >> nPoints >> nIndice;
 	this->nIndices = nIndice;
 	this->indices = new GLuint[nIndice];
@@ -78,12 +78,12 @@ void FigureVBO::fromFile(string filename) {
 	float *normals = new float[nPoints * 3];
 
 	i = 0;
-	while (!ifs.eof()		
+	while (!ifs.eof()
 		&& i < nPoints
-		&& ifs >> point.x >> point.y >> point.z 
+		&& ifs >> point.x >> point.y >> point.z
 		>> normal.x >> normal.y >> normal.z
 		>> texture.x >> texture.y
-	) {
+		) {
 		triangles[i * 3 + 0] = point.x;
 		triangles[i * 3 + 1] = point.y;
 		triangles[i * 3 + 2] = point.z;
@@ -92,7 +92,7 @@ void FigureVBO::fromFile(string filename) {
 		normals[i * 3 + 2] = normal.z;
 		i++;
 	}
-	
+
 	i = 0;
 	while (!ifs.eof()
 		&& i < nIndice
@@ -100,7 +100,7 @@ void FigureVBO::fromFile(string filename) {
 		) {
 		i++;
 	}
-		
+
 	glGenBuffers(2, this->index);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[0]);
@@ -108,7 +108,7 @@ void FigureVBO::fromFile(string filename) {
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[1]);
 	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * sizeof(float), normals, GL_STATIC_DRAW);
 
-	
+
 	delete(triangles);
 }
 
@@ -161,13 +161,15 @@ void Scene::setCameraPosition(float x, float y, float z){
 }
 
 void Scene::draw(){
-	std::vector<Light>::iterator it; 
-	for (it = lights.begin(); it < lights.end(); it++)
+	std::vector<Light>::iterator it;
+	for (it = lights.begin(); it < lights.end(); it++){
 		glLightfv(GL_LIGHT0 + it->number, it->property, it->posCoords);
+	}
 	Group::draw();
 }
 
 void Scene::appendLight(Light l){
+	cout << "Faço append" << endl;
 	lights.push_back(l);
 }
 Point3D Scene::getCameraPosition(){
@@ -186,7 +188,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 	float  r, g, b;
 	float tempo, angulo, eixoX, eixoY, eixoZ;
 	int rt = 0, timeRt = 0, tr = 0, timeTr = 0, sc = 0, mdls = 0, grp = 0, type;
-	int ok = 0, ln = 0;
+	int ok = 0, ln = 0, mn = 0;
 
 	for (child = root->FirstChild(); child; child = child->NextSibling()) {
 		XMLElement *elem = child->ToElement();
@@ -194,7 +196,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 
 		// more than one model
 		if (tag.compare("modelos") == 0 && mdls == 0) {
-			XMLNode* modelo;	
+			XMLNode* modelo;
 			for (modelo = child->FirstChild(); modelo; modelo = modelo->NextSibling()) {
 				if (tag.compare("modelo") == 0) {
 					if (elem->Attribute("ficheiro")){
@@ -212,7 +214,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 						}
 						// be carefull f need to destroyed and recreated, they are doing pushback
 					}
-					
+
 				}
 			}
 		}
@@ -239,137 +241,146 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				}
 			}
 		}
-		else 
+		else
 			if (tag.compare("grupo") == 0) {
-			// glPushMatrix();
-			// guardar, nao desenhar..
-			Group *g = new Group;
-			if (( parseXML(child, g)) == -1){
-				return -1;
-			}
-			current->append(g);
-			grp = true;
-			// glPopMatrix();
-		}
-		else if (tag.compare("rotacao") == 0 ) {
-			if ((rt == 0 || timeRt == 0) && mdls == 0 && grp == 0){
-				eixoX = eixoY = eixoZ = 0.0; angulo = 0.0;
-				tempo = 0.0;
-
-				if (elem->Attribute("angulo")) angulo = elem->FloatAttribute("angulo");
-				if (elem->Attribute("eixoX")) eixoX = elem->FloatAttribute("eixoX");
-				if (elem->Attribute("eixoY")) eixoY = elem->FloatAttribute("eixoY");
-				if (elem->Attribute("eixoZ")) eixoZ = elem->FloatAttribute("eixoZ");
-				if (elem->Attribute("tempo")) tempo = elem->FloatAttribute("tempo");
-
-				if (tempo == 0.0){
-					current->appendTransformation(new Rotation(angulo, eixoX, eixoY, eixoZ));
-					rt = 1;
-				} else {
-					current->appendTransformation(new TimeRotation(angulo, tempo, eixoX, eixoY, eixoZ));
-					timeRt = 1;
+				// glPushMatrix();
+				// guardar, nao desenhar..
+				Group *g = new Group;
+				if ((parseXML(child, g)) == -1){
+					return -1;
 				}
-				
+				current->append(g);
+				grp = true;
+				// glPopMatrix();
 			}
-			else return -1;
-	 	}
-		else if (tag.compare("translacao") == 0){
-			if ((tr == 0 || timeTr == 0) && mdls == 0 && grp == 0){
-				x = y = z = 0.0;
-				tempo = 0.0;
-				XMLNode* pointchild;	
-				if (elem->Attribute("X")) x = elem->FloatAttribute("X");
-				if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
-				if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
-				if (elem->Attribute("tempo")) tempo = elem->FloatAttribute("tempo");
-				if (!elem -> FirstChild()) { 
-					current->appendTransformation(new Translation(x, y, z));				
-					tr = 1;
-				} else {
-					TimeTranslation *tt = new TimeTranslation(tempo);
-					for (pointchild = child->FirstChild(); pointchild; pointchild = pointchild->NextSibling()) {
-						XMLElement *point = pointchild->ToElement();
-						string tag2 = pointchild->Value();
-						x = y = z = 0;
-						if (tag2.compare("ponto") == 0) {
-							if (point->Attribute("X")) x = point->FloatAttribute("X"); 
-							if (point->Attribute("Y")) y = point->FloatAttribute("Y");
-							if (point->Attribute("Z")) z = point->FloatAttribute("Z");
-							tt->appendPoint({x,y,z});
-						}		
+			else if (tag.compare("rotacao") == 0) {
+				if ((rt == 0 || timeRt == 0) && mdls == 0 && grp == 0){
+					eixoX = eixoY = eixoZ = 0.0; angulo = 0.0;
+					tempo = 0.0;
+
+					if (elem->Attribute("angulo")) angulo = elem->FloatAttribute("angulo");
+					if (elem->Attribute("eixoX")) eixoX = elem->FloatAttribute("eixoX");
+					if (elem->Attribute("eixoY")) eixoY = elem->FloatAttribute("eixoY");
+					if (elem->Attribute("eixoZ")) eixoZ = elem->FloatAttribute("eixoZ");
+					if (elem->Attribute("tempo")) tempo = elem->FloatAttribute("tempo");
+
+					if (tempo == 0.0){
+						current->appendTransformation(new Rotation(angulo, eixoX, eixoY, eixoZ));
+						rt = 1;
 					}
-					current->appendTransformation(tt);
-					timeTr = 1;
+					else {
+						current->appendTransformation(new TimeRotation(angulo, tempo, eixoX, eixoY, eixoZ));
+						timeRt = 1;
+					}
+
 				}
+				else return -1;
 			}
-			else return -1;
-		}
-		else if (tag.compare("escala") == 0 ){
-			if (sc == 0 && mdls == 0 && grp == 0){
-				x = y = z = 1.0;
-				if (elem->Attribute("X")) x = elem->FloatAttribute("X");
-				if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
-				if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
-
-				current->appendTransformation(new Scale(x, y, z));
-				sc = 1;
+			else if (tag.compare("translacao") == 0){
+				if ((tr == 0 || timeTr == 0) && mdls == 0 && grp == 0){
+					x = y = z = 0.0;
+					tempo = 0.0;
+					XMLNode* pointchild;
+					if (elem->Attribute("X")) x = elem->FloatAttribute("X");
+					if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
+					if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
+					if (elem->Attribute("tempo")) tempo = elem->FloatAttribute("tempo");
+					if (!elem->FirstChild()) {
+						current->appendTransformation(new Translation(x, y, z));
+						tr = 1;
+					}
+					else {
+						TimeTranslation *tt = new TimeTranslation(tempo);
+						for (pointchild = child->FirstChild(); pointchild; pointchild = pointchild->NextSibling()) {
+							XMLElement *point = pointchild->ToElement();
+							string tag2 = pointchild->Value();
+							x = y = z = 0;
+							if (tag2.compare("ponto") == 0) {
+								if (point->Attribute("X")) x = point->FloatAttribute("X");
+								if (point->Attribute("Y")) y = point->FloatAttribute("Y");
+								if (point->Attribute("Z")) z = point->FloatAttribute("Z");
+								tt->appendPoint({ x, y, z });
+							}
+						}
+						current->appendTransformation(tt);
+						timeTr = 1;
+					}
+				}
+				else return -1;
 			}
-			else return -1;	
-		}
-		else if (tag.compare("luzes") == 0){
-			XMLNode *luz;
-			for (luz = child->FirstChild(), ln = 0; luz; luz = luz->NextSibling(), ln++) {
-				if (tag.compare("luz") == 0) {
-					if (elem->Attribute("tipo") == "point"){
-						type = 1.0;
-					}
-					else if (elem->Attribute("tipo") == "directional"){
-						type = 0.0;
-					}
-					if (elem->Attribute("posX")) x = elem->FloatAttribute("posX");
-					if (elem->Attribute("posY")) y = elem->FloatAttribute("posY");
-					if (elem->Attribute("posZ")) z = elem->FloatAttribute("posZ");
+			else if (tag.compare("escala") == 0){
+				if (sc == 0 && mdls == 0 && grp == 0){
+					x = y = z = 1.0;
+					if (elem->Attribute("X")) x = elem->FloatAttribute("X");
+					if (elem->Attribute("Y")) y = elem->FloatAttribute("Y");
+					if (elem->Attribute("Z")) z = elem->FloatAttribute("Z");
 
-					Light *light = new Light(x, y, z, type, ln, GL_POSITION);//WRONG
-					appendLight(*light);
+					current->appendTransformation(new Scale(x, y, z));
+					sc = 1;
+				}
+				else return -1;
+			}
+			else if (tag.compare("luzes") == 0){
+				XMLNode *light;
+				for (light = child->FirstChild(), ln = 0; light; light = light->NextSibling(), ln++)	{
+					XMLElement *luz = light->ToElement();
+					string tag3 = light->Value();
 
-					if (elem->FirstChild()){
-						r = g = b = 0.0;
+					if (tag3.compare("luz") == 0) {
+
+						if (strcmp(luz->Attribute("tipo"), "POINT") == 0) type = 1.0;
+						else
+							if (strcmp(luz->Attribute("tipo"), "DIRECTIONAL") == 0) type = 0.0;
+
+						if (luz->Attribute("posX")) x = luz->FloatAttribute("posX");
+						if (luz->Attribute("posY")) y = luz->FloatAttribute("posY");
+						if (luz->Attribute("posZ")) z = luz->FloatAttribute("posZ");
+
+						Light *light = new Light(x, y, z, type, ln, GL_POSITION);
+						appendLight(*light);
+
 						XMLNode *lightproperty;
+
 						for (lightproperty = child->FirstChild(); lightproperty; lightproperty = lightproperty->NextSibling()) {
-							if (tag.compare("ambient") == 0){
-								if (elem->Attribute("r")) r = elem->FloatAttribute("r");
-								if (elem->Attribute("g")) g = elem->FloatAttribute("g");
-								if (elem->Attribute("b")) b = elem->FloatAttribute("b");
+							XMLElement *lprop = lightproperty->ToElement();
+							string tag4 = lightproperty->Value();
+
+							if (tag4.compare("ambient") == 0){
+								r = g = b = 0.0;
+								if (lprop->Attribute("r")) r = lprop->FloatAttribute("r");
+								if (lprop->Attribute("g")) g = lprop->FloatAttribute("g");
+								if (lprop->Attribute("b")) b = lprop->FloatAttribute("b");
 
 								Light *al = new Light(r, g, b, 1.0, ln, GL_AMBIENT);
 								appendLight(*al);
 							}
-							if (tag.compare("diffuse") == 0){
-								if (elem->Attribute("r")) r = elem->FloatAttribute("r");
-								if (elem->Attribute("g")) g = elem->FloatAttribute("g");
-								if (elem->Attribute("b")) b = elem->FloatAttribute("b");
+							if (tag4.compare("diffuse") == 0){
+								r = g = b = 0.0;
+								if (lprop->Attribute("r")) r = lprop->FloatAttribute("r");
+								if (lprop->Attribute("g")) g = lprop->FloatAttribute("g");
+								if (lprop->Attribute("b")) b = lprop->FloatAttribute("b");
 
 								Light *dl = new Light(r, g, b, 1.0, ln, GL_DIFFUSE);
 								appendLight(*dl);
 							}
-							if (tag.compare("specular") == 0){
-								if (elem->Attribute("r")) r = elem->FloatAttribute("r");
-								if (elem->Attribute("g")) g = elem->FloatAttribute("g");
-								if (elem->Attribute("b")) b = elem->FloatAttribute("b");
+							if (tag4.compare("specular") == 0){
+								r = g = b = 0.0;
+								if (lprop->Attribute("r")) r = lprop->FloatAttribute("r");
+								if (lprop->Attribute("g")) g = lprop->FloatAttribute("g");
+								if (lprop->Attribute("b")) b = lprop->FloatAttribute("b");
 
 								Light *sl = new Light(r, g, b, 1.0, ln, GL_SPECULAR);
 								appendLight(*sl);
 							}
 						}
-					}	
-						
+
+
+					}
 				}
 			}
-		}
 	}
 	return ok;
- }
+}
 
 Translation::Translation(float x, float y, float z){
 	this->transVector.x = x;
@@ -381,9 +392,9 @@ void Translation::doTransformation(){
 	glTranslatef(this->transVector.x, this->transVector.y, transVector.z);
 }
 
-TimeTranslation::TimeTranslation(float time) 
+TimeTranslation::TimeTranslation(float time)
 	: elapseBefore(0.0) {
-	this->time=time;
+	this->time = time;
 }
 
 void TimeTranslation::appendPoint(Point3D p3d){
@@ -394,7 +405,7 @@ void TimeTranslation::appendPoint(Point3D p3d){
 //talvez depois implementar a contar com a tensao
 void TimeTranslation::doTransformation(){
 	float elapsedNow = glutGet(GLUT_ELAPSED_TIME);
-	
+
 	float time = this->time * 1000;
 
 	float res[3];
@@ -404,7 +415,7 @@ void TimeTranslation::doTransformation(){
 	float aux2 = ((elapsedNow * point_count / time) - (int)(elapsedNow * point_count / time));
 	int index = floor(aux * point_count);
 	float matrix[16];
-	float p[3],d[3],r[3],up[3];
+	float p[3], d[3], r[3], up[3];
 	up[0] = 0;
 	up[1] = 1;
 	up[2] = 0;
@@ -415,13 +426,13 @@ void TimeTranslation::doTransformation(){
 	//t = t - index;
 
 	int indexes[4];
-	indexes[0] = (index + point_count-1) % point_count;	
-	indexes[1] = (indexes[0]+1) % point_count;
-	indexes[2] = (indexes[1]+1) % point_count; 
-	indexes[3] = (indexes[2]+1) % point_count;
+	indexes[0] = (index + point_count - 1) % point_count;
+	indexes[1] = (indexes[0] + 1) % point_count;
+	indexes[2] = (indexes[1] + 1) % point_count;
+	indexes[3] = (indexes[2] + 1) % point_count;
 
 	// do transformation
-	calculateTransformation(aux2, res, indexes,false);
+	calculateTransformation(aux2, res, indexes, false);
 	glTranslatef(res[0], res[1], res[2]);
 	// do rotation matrix
 
@@ -445,23 +456,23 @@ void TimeTranslation::doTransformation(){
 	//matrix[12] = p[0]; matrix[13] = p[1]; matrix[14] = p[2]; matrix[15] = 1.0f;
 	glMultMatrixf(matrix);
 
-    this->elapseBefore = elapsedNow;
+	this->elapseBefore = elapsedNow;
 }
 
 void TimeTranslation::calculateTransformation(float x, float *res, int *indexes, bool derivate){
-	double c1,c2,c3,c4;
+	double c1, c2, c3, c4;
 	int i;
-	float m[4][4] = {{0.0,1.0,0.0,0.0},{-0.5,0.0,0.5,0.0},{1.0,-2.5,2.0,-0.5},{-0.5,1.5,-1.5,0.5}}; 
+	float m[4][4] = { { 0.0, 1.0, 0.0, 0.0 }, { -0.5, 0.0, 0.5, 0.0 }, { 1.0, -2.5, 2.0, -0.5 }, { -0.5, 1.5, -1.5, 0.5 } };
 
 
-	for(i=0;i<3;i++){
-		c1 =  	      							m[0][1]*giveIndex(1, i, indexes);
-		c2 = m[1][0]*giveIndex(0, i, indexes)								     + m[1][2]*giveIndex(2, i, indexes);
-		c3 = m[2][0]*giveIndex(0, i, indexes) + m[2][1]*giveIndex(1, i, indexes) + m[2][2]*giveIndex(2, i, indexes) + m[2][3]*giveIndex(3, i, indexes);
-		c4 = m[3][0]*giveIndex(0, i, indexes) + m[3][1]*giveIndex(1, i, indexes) + m[3][2]*giveIndex(2, i, indexes) + m[3][3]*giveIndex(3, i, indexes);
+	for (i = 0; i < 3; i++){
+		c1 = m[0][1] * giveIndex(1, i, indexes);
+		c2 = m[1][0] * giveIndex(0, i, indexes) + m[1][2] * giveIndex(2, i, indexes);
+		c3 = m[2][0] * giveIndex(0, i, indexes) + m[2][1] * giveIndex(1, i, indexes) + m[2][2] * giveIndex(2, i, indexes) + m[2][3] * giveIndex(3, i, indexes);
+		c4 = m[3][0] * giveIndex(0, i, indexes) + m[3][1] * giveIndex(1, i, indexes) + m[3][2] * giveIndex(2, i, indexes) + m[3][3] * giveIndex(3, i, indexes);
 
 		if (derivate){
-			res[i] = c4*x*x*3 + c3*x*2 + c2;
+			res[i] = c4*x*x * 3 + c3*x * 2 + c2;
 		}
 		else {
 			res[i] = (((c4*x + c3)*x + c2)*x + c1);
@@ -470,15 +481,15 @@ void TimeTranslation::calculateTransformation(float x, float *res, int *indexes,
 }
 
 float TimeTranslation::giveIndex(int index, int point, int*indexes){
-	if(point == 0) return pointVector[indexes[index]].x;
-		else if(point == 1) return pointVector[indexes[index]].y;
-			else return pointVector[indexes[index]].z;
+	if (point == 0) return pointVector[indexes[index]].x;
+	else if (point == 1) return pointVector[indexes[index]].y;
+	else return pointVector[indexes[index]].z;
 }
 
 void TimeTranslation::normalizeVector(float *res){
 	float length = sqrt((res[0] * res[0]) + (res[1] * res[1]) + (res[2] * res[2]));
 
-	for (int i = 0; i<3; i++) res[i] = res[i] / length;
+	for (int i = 0; i < 3; i++) res[i] = res[i] / length;
 }
 
 void TimeTranslation::crossProduct(float *vecR, float *vec1, float *vec2){
@@ -508,21 +519,21 @@ Light::Light(float x, float y, float z, float type, int number, int property){
 	this->property = property;
 }
 
-TimeRotation::TimeRotation(float angle, float time, float x, float y, float z) 
+TimeRotation::TimeRotation(float angle, float time, float x, float y, float z)
 	: elapseBefore(0.0), Rotation(angle, x, y, z) {
 	this->time = time;
 }
 void TimeRotation::doTransformation(){
 	float elapsedNow = glutGet(GLUT_ELAPSED_TIME);
 	float deltaTime = elapsedNow - this->elapseBefore;
-    float anglePerMili = 360 / (this->time * 1000);
+	float anglePerMili = 360 / (this->time * 1000);
 	this->angle = (deltaTime * anglePerMili + this->angle);
-	while(this->angle > 360){
+	while (this->angle > 360){
 		this->angle -= 360;
 	}
 
 	glRotatef(angle, p.x, p.y, p.z);
-    elapseBefore = elapsedNow;
+	elapseBefore = elapsedNow;
 }
 
 Scale::Scale(float x, float y, float z){
@@ -547,20 +558,20 @@ void Scale::doTransformation(){
 	Figure f;
 
 	for (i = 0; i<fatias; i++){
-		circ_aux1 = circ_aux2;
-		circ_aux2 += angulo_circ;
+	circ_aux1 = circ_aux2;
+	circ_aux2 += angulo_circ;
 
-		for (j = 0; j < camadas - 1; j++) {
+	for (j = 0; j < camadas - 1; j++) {
 
-			f.triangles.push_back({ points[j].x * sin(circ_aux1), points[j].y, points[j].x * cos(circ_aux1) });
-			f.triangles.push_back({ points[j + 1].x * sin(circ_aux1), points[j + 1].y, points[j + 1].x * cos(circ_aux1) });
-			f.triangles.push_back({ points[j].x * sin(circ_aux2), points[j].y, points[j].x  * cos(circ_aux2) });
+	f.triangles.push_back({ points[j].x * sin(circ_aux1), points[j].y, points[j].x * cos(circ_aux1) });
+	f.triangles.push_back({ points[j + 1].x * sin(circ_aux1), points[j + 1].y, points[j + 1].x * cos(circ_aux1) });
+	f.triangles.push_back({ points[j].x * sin(circ_aux2), points[j].y, points[j].x  * cos(circ_aux2) });
 
-			f.triangles.push_back({ points[j + 1].x * sin(circ_aux1), points[j + 1].y, points[j + 1].x * cos(circ_aux1) });
-			f.triangles.push_back({ points[j + 1].x * sin(circ_aux2), points[j + 1].y, points[j + 1].x * cos(circ_aux2) });
-			f.triangles.push_back({ points[j].x * sin(circ_aux2), points[j].y, points[j].x * cos(circ_aux2) });
-		}
+	f.triangles.push_back({ points[j + 1].x * sin(circ_aux1), points[j + 1].y, points[j + 1].x * cos(circ_aux1) });
+	f.triangles.push_back({ points[j + 1].x * sin(circ_aux2), points[j + 1].y, points[j + 1].x * cos(circ_aux2) });
+	f.triangles.push_back({ points[j].x * sin(circ_aux2), points[j].y, points[j].x * cos(circ_aux2) });
+	}
 	}
 	return f;
-}
-*/
+	}
+	*/
