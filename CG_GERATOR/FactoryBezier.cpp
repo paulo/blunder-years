@@ -47,6 +47,33 @@ Point3D CalculateSurfacePoint(float t, Point3D* pnts) {
 	return p;
 }
 
+Point3D calcVector(Point3D p1, Point3D p2) {
+	Point3D vector;
+	
+	vector.x = p1.x - p2.x;
+	vector.y = p1.y - p2.y;
+	vector.z = p1.z - p2.z;
+
+	return vector;
+}
+
+Point3D calcNormal(Point3D v1, Point3D v2) {
+	Point3D normal;
+	float mag, x, y, z;
+	
+	x = v1.y * v2.z - v1.z * v2.y;
+	y = v1.z * v2.x - v1.x * v2.z;
+	z = v1.x * v2.y - v1.y * v2.x;
+
+	mag = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+
+	normal.x = x / mag;
+	normal.y = y / mag;
+	normal.z = z / mag;
+
+	return normal;
+}
+
 /*
 * Para cada patch, calcula os pontos da superfície de Bézier a partir dos pontos de controlo
 *@param aux		figura com os índices e os pontos recolhidos do ficheiro
@@ -93,10 +120,39 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 	for (i = 0; i < in; i++){
 		for (j = 0; j < tess - 1; j++) {
 			for (k = 0; k < tess - 1; k++) {
-				point3D cima = f.getPoints()->at(offi + (k*tess) + j - tess);
-				point3D baixo = f.getPoints()->at(offi + (k*tess) + j + tess);
-				point3D direita = f.getPoints()->at(offi + (k*tess) + j - 1);
-				point3D esquerda = f.getPoints()->at(offi + (k*tess) + j + 1);
+				
+				int cimaInd, baixoInd, direitaInd, esquerdaInd, pontoInd, size;
+				size = f.getPoints()->size();
+
+				pontoInd = offi + (k*tess) + j;
+				cimaInd = offi + (k*tess) + j - tess;
+				baixoInd = offi + (k*tess) + j + tess;
+				direitaInd = offi + (k*tess) + j - 1;
+				esquerdaInd = offi + (k*tess) + j + 1;
+
+				if (cimaInd < 0 || cimaInd >= size) {
+					cimaInd = pontoInd;
+				}
+				if (baixoInd < 0 || baixoInd >= size) {
+					baixoInd = pontoInd;
+				}
+				if (direitaInd < 0 || direitaInd >= size) {
+					direitaInd = pontoInd;
+				}
+				if (esquerdaInd < 0 || esquerdaInd >= size) {
+					esquerdaInd = pontoInd;
+				}
+
+				Point3D cima = f.getPoints()->at(cimaInd);
+				Point3D baixo = f.getPoints()->at(baixoInd);
+				Point3D direita = f.getPoints()->at(direitaInd);
+				Point3D esquerda = f.getPoints()->at(esquerdaInd);
+				
+				Point3D v1 = calcVector(baixo, cima);
+				Point3D v2 = calcVector(direita, esquerda);
+
+				Point3D norm = calcNormal(v1, v2);
+				f.appendNormal(norm);
 			}
 		}
 		offi += tess * tess;
