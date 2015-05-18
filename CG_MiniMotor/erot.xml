@@ -1,18 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <xml>
     <cena>        
-        <modelos>
-            <modelo ficheiro='esfera.3d'/>
-            <modelo ficheiro='esfera.3d'/>
-            <modelo ficheiro='esfera.3d'/>
-            <modelo ficheiro='esfera.3d'/>
-            <modelo ficheiro='esfera.3d'/>
-        </modelos>
         <luzes>
-            <luz tipo="POINT" posX="0.0" posY="0.0" posZ="10.0" />
-                <diffuse r='256' g='256' b='256'/>
-                <ambient r='1' g='1'/>
-            <luz tipo="POINT" posX="0.0" posY="0.0" posZ="-10.0" />
+            <luz tipo="POINT" posX="0.0" posY="10.0" posZ="15.0">
+            </luz>
         </luzes>
     	<grupo>
 	    	<translacao Z='10'/>

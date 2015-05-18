@@ -24,7 +24,7 @@ static CameraFP cameraFP = CameraFP();
 static int frame = 0, time, timebase = 0;
 static Scene actualScene;
 static XMLElement* root = NULL;
-Figure f;
+Figure f = Figure(&actualScene);
 
 void calcFPS(){
 	int fps;
@@ -84,6 +84,7 @@ void init(int argc, char **argv){
 	glutAddMenuEntry("DIRECT MODE", 5);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
+	actualScene.setDrawMode(Scene::DRAWMODE_VBO);
 }
 
 void _start(const char* filename){

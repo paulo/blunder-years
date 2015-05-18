@@ -9,6 +9,27 @@
 
 using namespace std;
 
+Component::Component(Scene* a)
+	: actualScene(a) {
+}
+
+void Component::draw(){
+	vector<Light>::iterator itEnd = this->actualScene->getLights()->end();
+	vector<Light>::iterator it = this->actualScene->getLights()->begin();
+	for (; it != itEnd; it++) {
+		
+		glLightfv(GL_LIGHT0 + it->number, GL_DIFFUSE, this->diff);  
+		//glLightfv(GL_LIGHT0 + it->number, GL_AMBIENT, this->);
+		glLightfv(GL_LIGHT0 + it->number, GL_SPECULAR, this->spec);
+		glLightfv(GL_LIGHT0 + it->number, GL_EMISSION, this->emit);
+	}
+}
+
+Figure::Figure(Scene* a)
+	: Component(a) {
+}
+
+
 /**
 * Lê de um ficheiro e guarda os pontos lidos em estruturas Ponto3D.
 *
@@ -52,7 +73,7 @@ void Figure::fromFile(string filename){
 * Desenha a figura através das coordenadas dos seus pontos
 */
 void Figure::draw(){
-
+	Component::draw();
 	glBegin(GL_TRIANGLES);
 	std::vector<point3D>::iterator d = triangles.begin();
 	while (d != triangles.end()){
@@ -66,6 +87,9 @@ void Figure::draw(){
 	glEnd();
 }
 
+FigureVBO::FigureVBO(Scene* a)
+	: Component(a) {
+}
 
 void FigureVBO::fromFile(string filename) {
 	ifstream ifs; ifs.open(filename);
@@ -113,6 +137,7 @@ void FigureVBO::fromFile(string filename) {
 }
 
 void FigureVBO::draw() {
+	Component::draw();
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[0]);
 	glVertexPointer(3, GL_FLOAT, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[1]);
@@ -169,7 +194,6 @@ void Scene::draw(){
 }
 
 void Scene::appendLight(Light l){
-	cout << "Faço append" << endl;
 	lights.push_back(l);
 }
 Point3D Scene::getCameraPosition(){
@@ -183,7 +207,6 @@ Point3D Scene::getCameraPosition(){
 */
 int Scene::parseXML(XMLNode* root, Group* current){
 	XMLNode* child;
-	Figure f;
 	float x, y, z;
 	float  r, g, b;
 	float diff[3], amb[3], spec[3], emit[3];
@@ -201,13 +224,13 @@ int Scene::parseXML(XMLNode* root, Group* current){
 			for (modelo = child->FirstChild(); modelo; modelo = modelo->NextSibling()) {
 				if (tag.compare("modelo") == 0) {
 					if (elem->Attribute("ficheiro")){
-						if (this->drawMode == Scene::DRAWMODE_VBO){
-							FigureVBO* ff = new FigureVBO();
+						if (this->drawMode == Scene::DRAWMODE_VBO) {
+							FigureVBO* ff = new FigureVBO(this);
 							ff->fromFile(elem->Attribute("ficheiro"));
 							current->append(ff);
 						}
 						else{
-							Figure* ff = new Figure();
+							Figure* ff = new Figure(this);
 							ff->fromFile(elem->Attribute("ficheiro"));
 							append(ff);
 							mdls = 1;
@@ -253,7 +276,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				if(elem->Attribute("emitB")) emit[2] = elem->FloatAttribute("emitB"); 
 
 				if (this->drawMode == Scene::DRAWMODE_VBO){
-					Component* ff = new FigureVBO();
+					Component* ff = new FigureVBO(this);
 					ff->fromFile(file);
 					ff->setDiff(diff[0], diff[1], diff[2]);
 					ff->setAmb(amb[0], amb[1], amb[2]);
@@ -263,7 +286,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 					current->append(ff);
 				}
 				else{
-					Component* ff = new Figure();
+					Component* ff = new Figure(this);
 					ff->fromFile(file);
 					ff->setDiff(diff[0], diff[1], diff[2]);
 					ff->setAmb(amb[0], amb[1], amb[2]);
@@ -367,26 +390,32 @@ int Scene::parseXML(XMLNode* root, Group* current){
 			}
 			else if (tag.compare("luzes") == 0){
 				XMLNode *light;
-				for (light = child->FirstChild(), ln = 0; light; light = light->NextSibling(), ln++)	{
+				for (light = child->FirstChild(), ln = 0; light; light = light->NextSibling(), ln++) 	{
 					XMLElement *luz = light->ToElement();
 					string tag3 = light->Value();
 
 					if (tag3.compare("luz") == 0) {
 
-						if (strcmp(luz->Attribute("tipo"), "POINT") == 0) type = 1.0;
-						else
-							if (strcmp(luz->Attribute("tipo"), "DIRECTIONAL") == 0) type = 0.0;
-
+						if (strcmp(luz->Attribute("tipo"), "POINT") == 0){
+							type = 1.0;
+						}
+						else if (strcmp(luz->Attribute("tipo"), "DIRECTIONAL") == 0) {
+							type = 0.0;
+						}
+						else {
+							//error
+						}
+						x = y = z = 0;
 						if (luz->Attribute("posX")) x = luz->FloatAttribute("posX");
 						if (luz->Attribute("posY")) y = luz->FloatAttribute("posY");
 						if (luz->Attribute("posZ")) z = luz->FloatAttribute("posZ");
 
-						Light *light = new Light(x, y, z, type, ln, GL_POSITION);
-						appendLight(*light);
+						Light *mlight = new Light(x, y, z, type, ln, GL_POSITION);
+						appendLight(*mlight);
 
 						XMLNode *lightproperty;
 
-						for (lightproperty = child->FirstChild(); lightproperty; lightproperty = lightproperty->NextSibling()) {
+						for (lightproperty = light->FirstChild(); lightproperty; lightproperty = lightproperty->NextSibling()) {
 							XMLElement *lprop = lightproperty->ToElement();
 							string tag4 = lightproperty->Value();
 

@@ -8,6 +8,8 @@
 
 using namespace std;
 
+class Scene;
+
 class Drawable {
 public:
 	virtual void draw()=0;
@@ -25,19 +27,23 @@ class Component: public Drawable{
 	float spec[3];
 	float emit[3];
 	string texture;
+	Scene* actualScene;
 public:
+	Component(Scene* a);
     void setDiff(float r, float g, float b) { diff[0]=r; diff[1]=g; diff[2]=b; }
     void setAmb(float r, float g, float b) { amb[0]=r; amb[1]=g; amb[2]=b; }
     void setSpec(float r, float g, float b) { spec[0]=r; spec[1]=g; spec[2]=b; }
     void setEmit(float r, float g, float b) { emit[0]=r; emit[1]=g; emit[2]=b; }
     //void loadTexture(string file);
     void setTexture(string file) {texture = file;}
+	void draw();
     virtual void fromFile(string file)=0;
 };
 
 class Figure: public Component {
 	vector<Point3D> triangles;
 public:
+	Figure(Scene* a);
 	void draw();
 	void fromFile(string file);
 };
@@ -48,6 +54,7 @@ protected:
 	GLuint *indices;
 	GLuint nIndices;
 public:
+	FigureVBO(Scene* a);
 	void draw();
 	void fromFile(string file);
 };
@@ -87,6 +94,7 @@ public:
 	void setDrawMode(const int mode);
 	void draw();
 	void appendLight(Light);
+	vector<Light>* getLights(){ return &lights;}
 };
 
 class Translation : public GTransformation {
