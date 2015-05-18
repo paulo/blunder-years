@@ -18,21 +18,38 @@ public:
 	virtual void doTransformation()=0;
 };
 
-class Figure: public Drawable {
+class Component: public Drawable{
+	int lightMode;
+	float diff[3];
+	float amb[3];
+	float spec[3];
+	float emit[3];
+	string texture;
+public:
+    void setDiff(float r, float g, float b) { diff[0]=r; diff[1]=g; diff[2]=b; }
+    void setAmb(float r, float g, float b) { amb[0]=r; amb[1]=g; amb[2]=b; }
+    void setSpec(float r, float g, float b) { spec[0]=r; spec[1]=g; spec[2]=b; }
+    void setEmit(float r, float g, float b) { emit[0]=r; emit[1]=g; emit[2]=b; }
+    //void loadTexture(string file);
+    void setTexture(string file) {texture = file;}
+    virtual void fromFile(string file)=0;
+};
+
+class Figure: public Component {
 	vector<Point3D> triangles;
 public:
 	void draw();
-	void fromFile(string  file);
+	void fromFile(string file);
 };
 
-class FigureVBO : public Drawable {
+class FigureVBO: public Component {
 protected:
 	GLuint index[2];
 	GLuint *indices;
 	GLuint nIndices;
 public:
 	void draw();
-	void fromFile(string  file);
+	void fromFile(string file);
 };
 
 class Group: public Drawable {

@@ -4,48 +4,13 @@
     	<grupo>
     		<grupo>
                 <escala X='10,66' Y='10,66' Z='10,66'/>
-    			<modelo ficheiro='sol.3d'/><!-- SOL -->
+    			<modelo ficheiro='anel.3d' textura="terra.jpg"/><!-- SOL -->
     		</grupo>
     		<grupo>
     			<translacao X= '12,764'/>
-    			<escala X='0,10' Y='0,10' Z='0,10'/>
-                <modelo ficheiro='sol.3d'/><!-- MERCURIO -->
-    		</grupo>
-    		<grupo>
-    			<translacao X= '23,812'/>
-                <escala X='0,26' Y='0,26' Z='0,26'/>
-                <modelo ficheiro='sol.3d'/><!-- VENUS -->
-    		</grupo>
-    		<grupo>
-    			<translacao X= '32,944'/>
-                <escala X='0,28' Y='0,28' Z='0,28'/>
-                <modelo ficheiro='sol.3d'/><!-- TERRA -->
-    		</grupo>
-    		<grupo>
-    			<translacao X= '50,185'/>
-                <escala X='0,15' Y='0,15' Z='0,15'/>
-                <modelo ficheiro='sol.3d'/><!-- MARTE -->
-    		</grupo>
-    		<grupo>
-    			<translacao X= '171,396'/>
-                <escala X='3,15' Y='3,15' Z='3,15'/>
-                <modelo ficheiro='sol.3d'/><!-- JUPITER -->
-    		</grupo>
-    		<grupo>
-    			<translacao X= '314,317'/>
-                <escala X='2,56' Y='2,56' Z='2,56'/>
-                <modelo ficheiro='sol.3d'/><!-- SATURNO -->
-    		</grupo>
-       		<grupo>
-    			<translacao X= '632,224'/>
-                <escala X='1,03' Y='1,03' Z='1,03'/>
-                <modelo ficheiro='sol.3d'/><!-- URANO -->
-    		</grupo>
-    		<grupo>
-    			<translacao X= '991,167'/>
-                <modelo ficheiro='sol.3d'/><!-- NEPTUNO -->
+    			<escala X='4,10' Y='4,10' Z='4,10'/>
+                <modelo ficheiro='anel.3d' diffR='0.8' diffG='0.8' diffB='0.15'/><!-- MERCURIO -->
     		</grupo>
     	</grupo>
     </cena>
 </xml>
-

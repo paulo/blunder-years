@@ -186,6 +186,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 	Figure f;
 	float x, y, z;
 	float  r, g, b;
+	float diff[3], amb[3], spec[3], emit[3];
 	float tempo, angulo, eixoX, eixoY, eixoZ;
 	int rt = 0, timeRt = 0, tr = 0, timeTr = 0, sc = 0, mdls = 0, grp = 0, type;
 	int ok = 0, ln = 0, mn = 0;
@@ -229,7 +230,51 @@ int Scene::parseXML(XMLNode* root, Group* current){
 		// only one model 
 		if (tag.compare("modelo") == 0) {
 			if (elem->Attribute("ficheiro")){
+				////////////////////////
+				string file = elem->Attribute("ficheiro");
+				string textura;
+				diff[0] = diff[1] = diff[2] = 1.0;
+				amb[0] = amb[1] = amb[2] = 0.0;
+				spec[0] = spec[1] = spec[2] = 1.0;
+				emit[0] = emit[1] = emit[2] = 0.0;
+
+				if(elem->Attribute("textura")) textura = elem->Attribute("textura"); 
+				if(elem->Attribute("diffR")) diff[0] = elem->FloatAttribute("diffR");
+				if(elem->Attribute("diffG")) diff[1] = elem->FloatAttribute("diffG"); 
+				if(elem->Attribute("diffB")) diff[2] = elem->FloatAttribute("diffB"); 
+				if(elem->Attribute("ambR")) amb[0] = elem->FloatAttribute("ambR"); 
+				if(elem->Attribute("ambG")) amb[1] = elem->FloatAttribute("ambG"); 
+				if(elem->Attribute("ambB")) amb[2] = elem->FloatAttribute("ambB"); 
+				if(elem->Attribute("specR")) spec[0] = elem->FloatAttribute("specR"); 
+				if(elem->Attribute("specG")) spec[1] = elem->FloatAttribute("specG"); 
+				if(elem->Attribute("specB")) spec[2] = elem->FloatAttribute("specB"); 
+				if(elem->Attribute("emitR")) emit[0] = elem->FloatAttribute("emitR"); 
+				if(elem->Attribute("emitG")) emit[1] = elem->FloatAttribute("emitG"); 
+				if(elem->Attribute("emitB")) emit[2] = elem->FloatAttribute("emitB"); 
+
 				if (this->drawMode == Scene::DRAWMODE_VBO){
+					Component* ff = new FigureVBO();
+					ff->fromFile(file);
+					ff->setDiff(diff[0], diff[1], diff[2]);
+					ff->setAmb(amb[0], amb[1], amb[2]);
+					ff->setSpec(spec[0], spec[1], spec[2]);
+    				ff->setEmit(emit[0], emit[1], emit[2]);
+    				ff->setTexture(textura);
+					current->append(ff);
+				}
+				else{
+					Component* ff = new Figure();
+					ff->fromFile(file);
+					ff->setDiff(diff[0], diff[1], diff[2]);
+					ff->setAmb(amb[0], amb[1], amb[2]);
+					ff->setSpec(spec[0], spec[1], spec[2]);
+    				ff->setEmit(emit[0], emit[1], emit[2]);
+					ff->setTexture(textura);
+					current->append(ff);
+				}
+
+
+				/*if (this->drawMode == Scene::DRAWMODE_VBO){
 					FigureVBO* ff = new FigureVBO();
 					ff->fromFile(elem->Attribute("ficheiro"));
 					current->append(ff);
@@ -238,7 +283,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 					Figure* ff = new Figure();
 					ff->fromFile(elem->Attribute("ficheiro"));
 					current->append(ff);
-				}
+				}*/
 			}
 		}
 		else
