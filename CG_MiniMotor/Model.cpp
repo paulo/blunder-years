@@ -413,42 +413,6 @@ int Scene::parseXML(XMLNode* root, Group* current){
 						Light *mlight = new Light(x, y, z, type, ln, GL_POSITION);
 						appendLight(*mlight);
 
-						XMLNode *lightproperty;
-
-						for (lightproperty = light->FirstChild(); lightproperty; lightproperty = lightproperty->NextSibling()) {
-							XMLElement *lprop = lightproperty->ToElement();
-							string tag4 = lightproperty->Value();
-
-							if (tag4.compare("ambient") == 0){
-								r = g = b = 0.0;
-								if (lprop->Attribute("r")) r = lprop->FloatAttribute("r");
-								if (lprop->Attribute("g")) g = lprop->FloatAttribute("g");
-								if (lprop->Attribute("b")) b = lprop->FloatAttribute("b");
-
-								Light *al = new Light(r, g, b, 1.0, ln, GL_AMBIENT);
-								appendLight(*al);
-							}
-							if (tag4.compare("diffuse") == 0){
-								r = g = b = 0.0;
-								if (lprop->Attribute("r")) r = lprop->FloatAttribute("r");
-								if (lprop->Attribute("g")) g = lprop->FloatAttribute("g");
-								if (lprop->Attribute("b")) b = lprop->FloatAttribute("b");
-
-								Light *dl = new Light(r, g, b, 1.0, ln, GL_DIFFUSE);
-								appendLight(*dl);
-							}
-							if (tag4.compare("specular") == 0){
-								r = g = b = 0.0;
-								if (lprop->Attribute("r")) r = lprop->FloatAttribute("r");
-								if (lprop->Attribute("g")) g = lprop->FloatAttribute("g");
-								if (lprop->Attribute("b")) b = lprop->FloatAttribute("b");
-
-								Light *sl = new Light(r, g, b, 1.0, ln, GL_SPECULAR);
-								appendLight(*sl);
-							}
-						}
-
-
 					}
 				}
 			}
