@@ -1,1 +1,3 @@
 usar diferentes tipos de algoritmos de aprendizagem (algorithm)
+
+ver tipos de clustering e de regressão disponiveis em R
