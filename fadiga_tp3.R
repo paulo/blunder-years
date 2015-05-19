@@ -1,6 +1,7 @@
 ##Nota: Não está a ser tida em conta a váriavel Performance.Task
 #Usar biblioteca "neuralnet" para utilização de Redes Neuronais
 library("neuralnet")
+library("hydroGOF")
 
 #Ler dataset do ficheiro csv e atribuir à variavel dataset
 dataset <- read.csv("/home/paulo/SRCRTP3/Material/exercicio3.csv")
@@ -8,15 +9,15 @@ dataset <- read.csv("/home/paulo/SRCRTP3/Material/exercicio3.csv")
 #Mostrar o head do dataset(primeiros 6 resultados)
 #head(dataset)
 
-#Extrair 800 casos do dataset para um novo dataset que será usado para treinar a Rede Neuronal 
-trainset <- dataset[1:800, ]
+#Extrair 600 casos do dataset para um novo dataset que será usado para treinar a Rede Neuronal 
+trainset <- dataset[1:600, ]
 
 #Extrair as restantes entradas do dataset para um dataset que será usado para testar a Rede Neuronal
-testset <- dataset[801:2000, ]
+testset <- dataset[601:844, ]
 
 #Variaveis sobre as quais a função vai incidir (todas menos "FatigueLevel" e "Performance.Task")
-variables <- c("Performance.KDTMean", "Performance.MAMean", "Performance.MVMean", "Performance.TBCMean", 
-            "Performance.DDCMean", "Performance.DMSMean", "Performance.AEDMean", "Performance.ADMSLMean")
+variables <- c("Performance.KDTMean", "Performance.MAMean", "Performance.MVMean", "Performance.TBCMean",
+               "Performance.DDCMean", "Performance.DMSMean", "Performance.AEDMean", "Performance.ADMSLMean")
 
 #Variável a ser medida
 mVar <- "FatigueLevel"
@@ -25,6 +26,7 @@ mVar <- "FatigueLevel"
 f <- as.formula(paste(mVar, paste(variables, collapse=" + "), sep=" ~ "))
                  
 #hidden -> número de neurónios por camada (é um array)
+#threshold -> limite de erro
 #Threshold is a numeric value specifying the threshold for the partial derivatives of the error function as stopping criteria.
 # Treinar a rede neuronal para usar todas as variáveis como input e produzir a variável "Fadiga" como output
 performancenet <- neuralnet(f, trainset, hidden = c(4), lifesign = "minimal", 
@@ -34,24 +36,39 @@ performancenet <- neuralnet(f, trainset, hidden = c(4), lifesign = "minimal",
 # Desenhar a Rede Neuronal
 plot(performancenet, rep = "best")
 
-## Definir variaveis de input para teste
+## Definir variaveis de input para teste (todas menos FatigueLevel(output) e tipo de task)
 fatigue_test <- subset(testset, select = c("Performance.KDTMean", "Performance.MAMean",
                                            "Performance.MVMean", "Performance.MVMean",
                                            "Performance.DDCMean", "Performance.DMSMean", 
                                            "Performance.AEDMean", "Performance.ADMSLMean"))
 
 #Testar a rede com os novos casos
-performance.results <- compute(performancenet, fatigue_test)
+performancenet.results <- compute(performancenet, fatigue_test)
 
 #Declarar results
-results <- data.frame(actual = testset$FatigueLevel, prediction = performance.results$net.result)
+results <- data.frame(actual = testset$FatigueLevel, prediction = performancenet.results$net.result)
 
 #Imprimir results
 results
 
 #Imprimir resultados arrendondados
 results$prediction <- round(results$prediction)
-results$prediction
+results
 
 #Calcular o "root-mean-square deviation" 
-rmse(c(testset$default10yr),c(results$prediction))
+rmse(c(testset$FatigueLevel),c(results$prediction))
+
+# Resumo das estatisticas básicas do dataset
+summary(dataset)
+
+# Gráfico da Fadiga em função do KDTMean
+plot(testset$Performance.KDTMean, testset$FatigueLevel, xlab="KDTMean", ylab="Fatigue",)
+
+abline(lm(testset$Performance.KDTMean ~ testset$FatigueLevel))
+
+#Correlação linear
+
+cor(testset$Performance.KDTMean + testset$Performance.MAMean +
+    testset$Performance.MVMean + testset$Performance.MVMean +
+    testset$Performance.DDCMean + testset$Performance.DMSMean + 
+    testset$Performance.AEDMean + testset$Performance.ADMSLMean, testset$FatigueLevel)
