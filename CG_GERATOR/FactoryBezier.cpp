@@ -47,6 +47,19 @@ Point3D CalculateSurfacePoint(float t, Point3D* pnts) {
 	return p;
 }
 
+float calcDist(Point3D pA, Point3D pB) {
+	float dist, diffX, diffY, diffZ;
+
+	diffX = pB.x - pA.x; 
+	diffY = pB.y - pA.y; 
+	diffZ = pB.z - pA.z;
+	
+	dist = pow(diffX, 2) + pow(diffY, 2) + pow(diffZ, 2);
+	dist = sqrt(dist);
+
+	return dist;
+}
+
 Point3D calcVector(Point3D p1, Point3D p2) {
 	Point3D vector;
 	
@@ -117,9 +130,22 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 		}
 	}
 	int offi = 0;
+	float sumX, sumY, sumActualX, sumActualY;
+	sumX = sumY = sumActualX = sumActualY = 0;
 	for (i = 0; i < in; i++){
 		for (j = 0; j < tess - 1; j++) {
-			for (k = 0; k < tess - 1; k++) {
+			Point3D pA = f.getPoints()->at(j);
+			Point3D pB = f.getPoints()->at(j + 1);
+
+			Point3D pC = f.getPoints()->at(j*tess);
+			Point3D pD = f.getPoints()->at((j + 1) * tess);
+			
+			sumX += calcDist(pA, pB);
+			sumY += calcDist(pC, pD);
+		}
+		for (j = 0; j < tess; j++) {
+
+			for (k = 0; k < tess; k++) {
 				
 				int cimaInd, baixoInd, direitaInd, esquerdaInd, pontoInd, size;
 				size = f.getPoints()->size();
@@ -153,6 +179,26 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 
 				Point3D norm = calcNormal(v1, v2);
 				f.appendNormal(norm);
+
+				Point3D texPoint;
+				texPoint.x = sumActualX / sumX;
+				texPoint.y = 0;
+				texPoint.z = sumActualY / sumY;
+				f.appendPointTexture(texPoint);
+
+				if (k+1 < tess) {
+					Point3D pA = f.getPoints()->at(k);
+					Point3D pB = f.getPoints()->at(k + 1);
+					sumActualY += calcDist(pA, pB);
+				}				
+			}
+			sumActualY = 0;
+			
+			if (j + 1 < tess) {
+
+				Point3D pC = f.getPoints()->at(j*tess);
+				Point3D pD = f.getPoints()->at((j + 1) * tess);
+				sumActualX += calcDist(pC, pD);
 			}
 		}
 		offi += tess * tess;
