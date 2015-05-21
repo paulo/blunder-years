@@ -27,6 +27,7 @@ class Component: public Drawable{
 	float spec[3];
 	float emit[3];
 	string texture;
+protected:
 	Scene* actualScene;
 public:
 	Component(Scene* a);
@@ -50,7 +51,7 @@ public:
 
 class FigureVBO: public Component {
 protected:
-	GLuint index[2];
+	GLuint index[4];
 	GLuint *indices;
 	GLuint nIndices;
 public:
@@ -81,6 +82,7 @@ public:
 class Scene: public Group {
 	vector<Light> lights;
 	int drawMode;
+	bool drawNormal;
 	float camX;
 	float camY;
 	float camZ;
@@ -92,6 +94,8 @@ public:
 	static const int DRAWMODE_DIRECT;
 	int parseXML(XMLNode* root, Group* current);
 	void setDrawMode(const int mode);
+	void setDrawNormal(bool draw) { drawNormal = draw; };
+	bool geDrawNormal() { return drawNormal; };
 	void draw();
 	void appendLight(Light);
 	vector<Light>* getLights(){ return &lights;}

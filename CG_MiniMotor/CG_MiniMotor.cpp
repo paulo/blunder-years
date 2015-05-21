@@ -82,9 +82,12 @@ void init(int argc, char **argv){
 	glutAddMenuEntry("GL POINT", 3);
 	glutAddMenuEntry("VBO MODE", 4);
 	glutAddMenuEntry("DIRECT MODE", 5);
+	glutAddMenuEntry("DRAW NORMAL", 6);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	actualScene.setDrawMode(Scene::DRAWMODE_VBO);
+	actualScene.setDrawNormal(false);
+
 }
 
 void _start(const char* filename){
@@ -213,6 +216,9 @@ void viewOptions(int x){
 		_start(filename.c_str());
 		glutPostRedisplay();
 		break;
+	case 6:
+		actualScene.setDrawNormal(!actualScene.geDrawNormal());
+		break;
 	default: glPolygonMode(GL_FRONT, GL_LINE);
 	}
 	glutPostRedisplay();
@@ -253,11 +259,13 @@ void renderScene(void){
 	float red[4] = { 0.8f, 0.2f, 0.2f, 1.0f };
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
 	*/
-
+	
 	//point3D p[] = { { 0, 1, 0 }, { 1, 1, 0 }, { 1, -1, 0 }, { 0, -1, 0 } };
 	//genericDraw(p,4,20).draw();
 
 	glEnable(GL_LIGHTING);
+	float a[4] = { 0.9, 0.9, 0.9, 0.9 };
+	glLightfv(GL_LIGHT0, GL_AMBIENT,a);
 	actualScene.draw();
 
 	calcFPS();
