@@ -2,7 +2,73 @@
 #include "FigureFactory.h"
 
 
+
 Point3D cp[4][4]; 
+
+Point3D calcNormal(float* v1,float* v2) {
+	Point3D normal;
+	double mag, x, y, z;
+
+	x = v1[1] * v2[2] - v1[2] * v2[1];
+	y = v1[2] * v2[0] - v1[0] * v2[2];
+	z = v1[0] * v2[1] - v1[1] * v2[0];
+
+	mag = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+	if (mag != 0){
+		normal.x = x / mag;
+		normal.y = y / mag;
+		normal.z = z / mag;
+	}
+	else {
+		// division by zero, this is not corret but?
+		normal.x = normal.z = 0;
+		normal.y = 1;
+	}
+	return normal;
+}
+
+void CalcVM(float* x, float m[], int mSize){
+	float res[4];
+
+	for (int i = 0; i < mSize; i++){
+		res[i] = x[0] * m[i*4] + x[1] * m[i*4+1] + x[2] * m[i*4+2] + x[3] * m[i*4+3];
+	}
+	for (int i = 0; i < mSize; i++){
+		x[i] = res[i];
+	}
+}
+
+Point3D CalcDerivade(float u, float v, float p[]){
+	float m[16] = {
+		-1, 3, -3, 1,
+		3, -6, 3, 0,
+		-3, 3, 0, 0,
+		1, 0, 0, 0 
+	};
+	float uuu[] = { u*u*u, u*u, u, 1 };
+	float uu[] = { 3 * u * u, 2 * u, 1, 0 };
+	float vvv[] = { v * v * v, v * v, v, 1 };
+	float vv[] = { 3 * v * v, 2 * v, 1, 0 };
+	float aux[4];
+	float resA[3], resB[3];
+
+	for (int i = 0; i < 3; i++) {
+		aux[0] = uu[0]; aux[1] = uu[1]; aux[2] = uu[2]; aux[3] = uu[3];
+		CalcVM(aux, m, 4);
+		CalcVM(aux, p + i * 16, 4);
+		CalcVM(aux, m, 4);
+		CalcVM(aux, vvv, 1);
+		resA[i] = aux[0];
+
+		aux[0] = uuu[0]; aux[1] = uuu[1]; aux[2] = uuu[2]; aux[3] = uuu[3];
+		CalcVM(aux, m, 4);
+		CalcVM(aux, p + i * 16, 4);
+		CalcVM(aux, m, 4);
+		CalcVM(aux, vv, 1);
+		resB[i] = aux[0];
+	}
+	return calcNormal(resA, resB);
+}
 
 /*
 * Função auxiliar da função definePatches()
@@ -47,6 +113,8 @@ Point3D CalculateSurfacePoint(float t, Point3D* pnts) {
 	return p;
 }
 
+
+
 float calcDist(Point3D pA, Point3D pB) {
 	float dist, diffX, diffY, diffZ;
 
@@ -70,22 +138,7 @@ Point3D calcVector(Point3D p1, Point3D p2) {
 	return vector;
 }
 
-Point3D calcNormal(Point3D v1, Point3D v2) {
-	Point3D normal;
-	float mag, x, y, z;
-	
-	x = v1.y * v2.z - v1.z * v2.y;
-	y = v1.z * v2.x - v1.x * v2.z;
-	z = v1.x * v2.y - v1.y * v2.x;
 
-	mag = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
-
-	normal.x = x / mag;
-	normal.y = y / mag;
-	normal.z = z / mag;
-
-	return normal;
-}
 
 /*
 * Para cada patch, calcula os pontos da superfície de Bézier a partir dos pontos de controlo
@@ -99,9 +152,11 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 
 	Figure f;
 	int i, j, k, row, col, tm = tess - 1;
+	float m[16 * 3];
 	float u, v;
 	Point3D cpoint;
 	Point3D bzr[4];
+
 
 	for (k = 0; k < in; k++){
 		for (i = 0; i < 16; i++){
@@ -111,6 +166,9 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 			cp[row][col].x = cpoint.x;
 			cp[row][col].y = cpoint.y;
 			cp[row][col].z = cpoint.z;
+			m[i + 00] = cpoint.x;
+			m[i + 16] = cpoint.y;
+			m[i + 32] = cpoint.z;
 		}
 
 		for (i = 0; i < tess; i++) {
@@ -123,88 +181,18 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 				bzr[1] = CalcU(u, 1);
 				bzr[2] = CalcU(u, 2);
 				bzr[3] = CalcU(u, 3);
-
-				Point3D p = CalculateSurfacePoint(v, bzr);
+				Point3D p;
+				p = CalculateSurfacePoint(v, bzr);
 				f.appendPoint(p);
+				f.appendPointTexture({ u, v, v });
+				
+				p = CalcDerivade(u,v,m);
+				f.appendNormal(p);
 			}
 		}
 	}
+	
 	int offi = 0;
-	float sumX, sumY, sumActualX, sumActualY;
-	sumX = sumY = sumActualX = sumActualY = 0;
-	for (i = 0; i < in; i++){
-		for (j = 0; j < tess - 1; j++) {
-			Point3D pA = f.getPoints()->at(j);
-			Point3D pB = f.getPoints()->at(j + 1);
-
-			Point3D pC = f.getPoints()->at(j*tess);
-			Point3D pD = f.getPoints()->at((j + 1) * tess);
-			
-			sumX += calcDist(pA, pB);
-			sumY += calcDist(pC, pD);
-		}
-		for (j = 0; j < tess; j++) {
-
-			for (k = 0; k < tess; k++) {
-				
-				int cimaInd, baixoInd, direitaInd, esquerdaInd, pontoInd, size;
-				size = f.getPoints()->size();
-
-				pontoInd = offi + (k*tess) + j;
-				cimaInd = offi + (k*tess) + j - tess;
-				baixoInd = offi + (k*tess) + j + tess;
-				direitaInd = offi + (k*tess) + j - 1;
-				esquerdaInd = offi + (k*tess) + j + 1;
-
-				if (cimaInd < 0 || cimaInd >= size) {
-					cimaInd = pontoInd;
-				}
-				if (baixoInd < 0 || baixoInd >= size) {
-					baixoInd = pontoInd;
-				}
-				if (direitaInd < 0 || direitaInd >= size) {
-					direitaInd = pontoInd;
-				}
-				if (esquerdaInd < 0 || esquerdaInd >= size) {
-					esquerdaInd = pontoInd;
-				}
-
-				Point3D cima = f.getPoints()->at(cimaInd);
-				Point3D baixo = f.getPoints()->at(baixoInd);
-				Point3D direita = f.getPoints()->at(direitaInd);
-				Point3D esquerda = f.getPoints()->at(esquerdaInd);
-				
-				Point3D v1 = calcVector(baixo, cima);
-				Point3D v2 = calcVector(direita, esquerda);
-
-				Point3D norm = calcNormal(v1, v2);
-				f.appendNormal(norm);
-
-				Point3D texPoint;
-				texPoint.x = sumActualX / sumX;
-				texPoint.y = 0;
-				texPoint.z = sumActualY / sumY;
-				f.appendPointTexture(texPoint);
-
-				if (k+1 < tess) {
-					Point3D pA = f.getPoints()->at(k);
-					Point3D pB = f.getPoints()->at(k + 1);
-					sumActualY += calcDist(pA, pB);
-				}				
-			}
-			sumActualY = 0;
-			
-			if (j + 1 < tess) {
-
-				Point3D pC = f.getPoints()->at(j*tess);
-				Point3D pD = f.getPoints()->at((j + 1) * tess);
-				sumActualX += calcDist(pC, pD);
-			}
-		}
-		offi += tess * tess;
-	}
-
-	offi = 0;
 
 	for (i = 0; i < in; i++){
 		for (j = 0; j < tess - 1; j++) {

@@ -30,6 +30,7 @@ public:
 	void appendPointTexture(Point3D p);
 	vector<unsigned int> getIndexes();
 	vector<Point3D>* getPoints();
+	vector<Point3D>* getNormals();
 };
 
 #endif

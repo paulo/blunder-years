@@ -69,3 +69,7 @@ vector<unsigned int> Figure::getIndexes(){
 vector<Point3D>* Figure::getPoints(){
 	return &triangles;
 }
+
+vector<Point3D>*  Figure::getNormals(){
+	return &normal;
+}

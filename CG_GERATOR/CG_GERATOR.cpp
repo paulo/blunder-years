@@ -220,11 +220,12 @@ int main(int argc, char* argv[]){
 				float aux;
 				std::vector<Point3D>* vec = f.getPoints();
 				std::vector<Point3D>::iterator it = vec->begin();
-				while (it != vec->end()){
-					aux = it->y;
-					it->y = it->z;
-					it->z = -aux;
-					it++;
+				std::vector<Point3D>* vec2 = f.getNormals();
+				std::vector<Point3D>::iterator it2 = vec2->begin();
+				while (it != vec->end() && it2 != vec2->end()){
+					aux = it->y;		it->y = it->z;		it->z = -aux;
+					aux = it2->y;	it2->y = it2->z;		it2->z = -aux;
+					it++;it2++;
 				}
 			}
 			else{
