@@ -1,3 +1,34 @@
-usar diferentes tipos de algoritmos de aprendizagem (algorithm)
+Notas:
 
-ver tipos de clustering e de regressão disponiveis em R
+- usar diferentes tipos de algoritmos de aprendizagem (algorithm)
+
+- ver tipos de clustering e de regressão disponiveis em R
+
+- dá para escolher o algoritmo de aprendizagem:
+algorithm :
+The following types are possible: 
+’backprop’ -> backpropagation
+’rprop+’, -> ’rprop+’ and ’rprop-’ refer to the resilient backpropagation with and without weight backtracking
+’sag’, or ’slr’. -> ’sag’ and ’slr’ induce the usage of the modified globally convergent algorithm (grprop). 
+
+
+
+
+__________________________________________________________________________________________________________
+Capacidades de resposta:
+
+- Identificar os 7 níveis de fadiga, tal como descrito pelos dados presentes no conjunto de dados global.
+-> Regression: is a measure of the relation between the mean value of one variable (e.g. output) and corresponding values of other variables (e.g. time and cost).
+o Dá valores de merda, vou tentar fazer o clustering 1º para ver se dá valores de erro menores na aprendizagem e uma melhor prediction
+
+
+- Identificar, simplesmente, a existência ou ausência de fadiga.
+-> Classification: classify a document into a predefined category.
+-> usar neuralnet e predictions
+
+
+- Encontrar a melhor escala de identificação de fadiga.
+-> Clustering: the task of grouping a set of objects in such a way that objects in the same group (called a cluster) are more similar to each other.
+
+__________________________________________________________________________________________________________
+
