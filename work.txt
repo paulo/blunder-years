@@ -1,0 +1,34 @@
+- Identificar os 7 níveis de fadiga, tal como descrito pelos dados presentes no conjunto de dados global.(treinar a rede com o menor erro possível)
+
+-> Treinar a rede com diferentes algoritmos.
+-> Treinar a rede com diferentes tamanho de input.
+-> Treinar a rede com diferentes neurónios.
+-> Treinar a rede com o input por ordem diferente.
+-> Identificar variáveis mais relevantes/não relevantes na análise dos dados.
+->
+
+
+
+
+
+_____________________________________________________________________________________________________________________________________
+- Identificar, simplesmente, a existência ou ausência de fadiga. (usar neuralnet e prediction)
+
+-> Testar a neuralnet e analisar resultados.(usar rmse)
+-> Fazer gŕafico do rmse
+-> Perguntar se existem mais alguma informação estatística útil.
+-> Testar com diferentes tamanhos de input.
+-> Criar testes novos.
+
+
+
+
+
+_____________________________________________________________________________________________________________________________________
+- Encontrar a melhor escala de identificação de fadiga. (usar biblioteca)
+
+-> Usar biblioteca para analisar os clusters.
+-> Mostrar gŕafico de clusters encontrados.
+-> Fazer análise do tipo: "pensamos em fazer por tentativas, mas seria um processo demasiado moroso e pouco académico".
+-> Repetir passos anteriores e analisar diferenças nos dados.
+-> 

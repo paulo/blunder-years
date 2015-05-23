@@ -1,0 +1,7 @@
+> performancenet <- neuralnet(f, trainset2, hidden = nn1, lifesign = "minimal",
++                             linear.output = TRUE, threshold = 0.01)
+hidden: 10    thresh: 0.01    rep: 1/1    steps:   53044	error: 110.90543	time: 1.41 mins
+
+> performancenet <- neuralnet(f, trainset2, hidden = nn4, lifesign = "minimal",
++                             linear.output = TRUE, threshold = 0.01)
+hidden: 40, 20    thresh: 0.01    rep: 1/1    steps:   24148	error: 0.00598	time: 4.46 mins
