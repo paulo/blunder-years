@@ -1,8 +1,8 @@
-#pragma comment(lib,"glew32.lib")
 
+
+#pragma comment(lib,"glew32.lib")
 #include "stdafx.h"
 #include "model.h"
-#include <iostream>
 #include <fstream>
 #include "stdio.h"
 
@@ -91,6 +91,34 @@ FigureVBO::FigureVBO(Scene* a)
 	: Component(a) {
 }
 
+void Component::loadTexture(string filename){
+	ILuint text, w, h;
+	unsigned char *imageData;
+
+	ilInit();
+	ilEnable(IL_ORIGIN_SET);
+	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+	ilGenImages(1, &text); // unsigned int ima[...]
+	ilBindImage(text);
+	ilLoadImage((ILstring)"filename");
+	w = ilGetInteger(IL_IMAGE_WIDTH);
+	h = ilGetInteger(IL_IMAGE_HEIGHT);
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+	imageData = ilGetData();
+	// create a texture slot
+	glGenTextures(1, &texID);
+	// bind the slot
+	glBindTexture(GL_TEXTURE_2D, texID);
+	// define texture parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,
+		GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// send texture data to OpenGL
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+}
+
 void FigureVBO::fromFile(string filename) {
 	ifstream ifs; ifs.open(filename);
 	int nPoints, nIndice, i; Point3D point, normal, texture;
@@ -100,6 +128,7 @@ void FigureVBO::fromFile(string filename) {
 	this->indices = new GLuint[nIndice];
 	float *triangles = new float[nPoints * 3];
 	float *normals = new float[nPoints * 3];
+	float *textures = new float[nPoints * 2];
 
 	i = 0;
 	while (!ifs.eof()
@@ -114,6 +143,8 @@ void FigureVBO::fromFile(string filename) {
 		normals[i * 3 + 0] = normal.x;
 		normals[i * 3 + 1] = normal.y;
 		normals[i * 3 + 2] = normal.z;
+		textures[i * 3 + 0] = texture.x;
+		textures[i * 3 + 1] = texture.y;
 		i++;
 	}
 
@@ -131,9 +162,12 @@ void FigureVBO::fromFile(string filename) {
 	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * sizeof(float), triangles, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[1]);
 	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * sizeof(float), normals, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, this->index[2]);
+	glBufferData(GL_ARRAY_BUFFER, nPoints * 2 * sizeof(float), textures, GL_STATIC_DRAW);
 
 
 	delete(triangles);
+	Component::loadTexture("oildrum.jpg");
 }
 
 void FigureVBO::draw() {
@@ -142,12 +176,18 @@ void FigureVBO::draw() {
 	glVertexPointer(3, GL_FLOAT, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[1]);
 	glNormalPointer(GL_FLOAT, 0, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->index[2]);
+	glTexCoordPointer(2, GL_FLOAT, 0, 0);
 	glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, this->indices);
+
+
 }
 
 void Group::appendTransformation(GTransformation* element){
 	transformations.push_back(element);
 }
+
+
 
 void Group::append(Drawable* figure) {
 	elements.push_back(figure);
@@ -208,7 +248,6 @@ Point3D Scene::getCameraPosition(){
 int Scene::parseXML(XMLNode* root, Group* current){
 	XMLNode* child;
 	float x, y, z;
-	float  r, g, b;
 	float diff[3], amb[3], spec[3], emit[3];
 	float tempo, angulo, eixoX, eixoY, eixoZ;
 	int rt = 0, timeRt = 0, tr = 0, timeTr = 0, sc = 0, mdls = 0, grp = 0, type;

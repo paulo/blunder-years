@@ -73,6 +73,7 @@ void init(int argc, char **argv){
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	glEnable(GL_TEXTURE_2D);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//create MENU
@@ -238,26 +239,6 @@ void renderScene(void){
 	else if (cameraActual == 2){
 		cameraFP.refresh();
 	}
-
-	/*
-	GLfloat amb[3] = { 0.2, 0.2, 0.2 };
-	GLfloat diff[3] = { 5.0,5.0, 5.0 };
-	GLfloat posL[4] = { 3.0, 3.0, 3.0, 0.0 };
-	// light position
-	glLightfv(GL_LIGHT0, GL_POSITION, posL);
-	// light colors 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
-
-	
-	float red[4] = { 0.8f, 0.2f, 0.2f, 1.0f };
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, red);
-	*/
-
-	//point3D p[] = { { 0, 1, 0 }, { 1, 1, 0 }, { 1, -1, 0 }, { 0, -1, 0 } };
-	//genericDraw(p,4,20).draw();
-
-	glEnable(GL_LIGHTING);
 	actualScene.draw();
 
 	calcFPS();

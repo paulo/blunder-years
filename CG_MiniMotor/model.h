@@ -1,7 +1,8 @@
 #ifndef __MODEL_H__
 #define __MODEL_H__
 #include "stdafx.h"
-#include "glut.h"
+#include "GL\glut.h"
+#include <IL/il.h>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -27,6 +28,7 @@ class Component: public Drawable{
 	float spec[3];
 	float emit[3];
 	string texture;
+	unsigned int texID;
 	Scene* actualScene;
 public:
 	Component(Scene* a);
@@ -38,6 +40,7 @@ public:
     void setTexture(string file) {texture = file;}
 	void draw();
     virtual void fromFile(string file)=0;
+	void loadTexture(string file);
 };
 
 class Figure: public Component {
