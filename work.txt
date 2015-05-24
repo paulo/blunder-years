@@ -16,7 +16,6 @@ ________________________________________________________________________________
 
 -> Testar a neuralnet e analisar resultados.(usar rmse)
 -> Fazer gŕafico do rmse
--> Perguntar se existem mais alguma informação estatística útil.
 -> Testar com diferentes tamanhos de input.
 -> Criar testes novos.
 

@@ -2,37 +2,14 @@ Notas:
 
 - ver tipos de clustering e de regressão disponiveis em R
 
+- fazer testes singulares para existência ou ausência de fadiga
+
 - dá para escolher o algoritmo de aprendizagem:
 algorithm :
 The following types are possible: 
 ’backprop’ -> backpropagation
 ’rprop+’, -> ’rprop+’ and ’rprop-’ refer to the resilient backpropagation with and without weight backtracking
 ’sag’, or ’slr’. -> ’sag’ and ’slr’ induce the usage of the modified globally convergent algorithm (grprop). 
-
-
-________________________________________________________________________________________________________________________________________
-
-Em relação ao numero de nodos intermédios, com hidden=c(40,20) deves conseguir um erro baixo.
-
-Para a importância das variáveis tenta seguir este tutorial (é um pouco complexo e usa a biblioteca nnet para treinar as redes e que não é a pedida no trabalho) na parte que diz "Variable importance in neural networks". -> https://beckmw.wordpress.com/tag/neural-network/
-
-Para clusters usa NBClust que serve para escolher o melhor numero de clusters. Podes encontrar alguma documentação sobre esse pacote, tens aqui um exemplo de utilização -> http://www.r-bloggers.com/k-means-clustering-from-r-in-action/
-
-Qualquer dúvida estás à vontade.
-
-
-Dúvidas a perguntar:
-
--> diferença no algoritmo de neuralnet entre linear.output = TRUE/FALSE
--> outras componentes estatísticas úteis
--> erro que dá ao fazer clustering
--> onde é para ver quais as váriaveis que mais peso têm, é necessário algum tipo de normalização dos dados de output?
-->
-->
-
-________________________________________________________________________________________________________________________________________
-
-
 
 
 

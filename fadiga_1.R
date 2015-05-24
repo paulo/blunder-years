@@ -6,6 +6,8 @@
 library("neuralnet")
 library("hydroGOF")
 
+set.seed(1234567890)
+
 #Ler dataset do ficheiro csv e atribuir à variavel dataset
 dataset <- read.csv("/home/paulo/SRCRTP3/Material/exercicio3n.csv")
 
@@ -24,10 +26,10 @@ trainset2 <- dataset[1:500, ] #extrair 500 casos
 trainset3 <- dataset[1:600, ] #extrair 600 casos
 trainset4 <- dataset[1:750, ] #extrair 750 casos
 
-trainset5 <- dataseti[1:400, ] #extrair 400 casos invertido
-trainset6 <- dataseti[1:500, ] #extrair 500 casos invertido
-trainset7 <- dataseti[1:600, ] #extrair 600 casos invertido
-trainset8 <- dataseti[1:750, ] #extrair 750 casos invertido
+trainset1i <- dataseti[1:400, ] #extrair 400 casos invertido
+trainset2i <- dataseti[1:500, ] #extrair 500 casos invertido
+trainset3i <- dataseti[1:600, ] #extrair 600 casos invertido
+trainset4i <- dataseti[1:750, ] #extrair 750 casos invertido
 
 
 #Extrair as restantes entradas do dataset para um dataset que será usado para testar a Rede Neuronal
@@ -36,19 +38,18 @@ testset2 <- dataset[501:844, ]
 testset3 <- dataset[601:844, ]
 testset4 <- dataset[751:844, ]
 
-testset5 <- dataset[401:844, ] # invertido
-testset6 <- dataset[501:844, ] # invertido
-testset7 <- dataset[601:844, ] # invertido
-testset8 <- dataset[751:844, ] # invertido
+testset1i <- dataseti[401:844, ] # invertido
+testset2i <- dataseti[501:844, ] # invertido
+testset3i <- dataseti[601:844, ] # invertido
+testset4i <- dataseti[751:844, ] # invertido
 
 
 #Tipos d"e algoritmos de aprendizagem a usar
-alg1 <- "backprop"
-alg2 <- "rprop+"
-alg3 <- "rprop-"
-alg4 <- "sag"
+alg1 <- "backprop" #dá erro
+alg2 <- "rprop+" #por defeito
+alg3 <- "rprop-" #funciona
+alg4 <- "sag" #funciona
 alg5 <- "slr"
-
 
 #Variáveis sobre as quais a função vai incidir (todas menos "FatigueLevel" que é a variável output)
 variables <- c("Performance.KDTMean", "Performance.MAMean", "Performance.MVMean", "Performance.TBCMean",
@@ -64,7 +65,7 @@ mVar <- "FatigueLevel"
 
 #Criar fórmula de treino neuronal (soma das váriaveis)
 f <- as.formula(paste(mVar, paste(variables, collapse=" + "), sep=" ~ "))
-f <- as.formula(paste(mVar, paste(variablesR, collapse=" + "), sep=" ~ "))
+fr <- as.formula(paste(mVar, paste(variablesR, collapse=" + "), sep=" ~ "))
 
 
 #Disposição dos neurónios na rede neuronal
@@ -76,8 +77,15 @@ nn6 <- c(60, 40, 20)
 
 
 # Treinar a rede neuronal para usar todas as variáveis como input e produzir a variável "Fadiga" como output
-performancenet <- neuralnet(f, trainset2, hidden = nn3, lifesign = "minimal",
+performancenet <- neuralnet(f, trainset1, hidden = nn4, lifesign = "minimal", algorithm = "sag",
                             linear.output = TRUE, threshold = 0.01)
+
+performancenet2 <- neuralnet(f, trainset1, hidden = nn3, lifesign = "minimal",
+                            linear.output = TRUE, threshold = 0.01)
+
+performancenet3 <- neuralnet(f, trainset1, hidden = nn4, lifesign = "minimal",
+                            linear.output = TRUE, threshold = 0.01)
+
 
 
 # Desenhar a Rede Neuronal
@@ -125,7 +133,7 @@ require(nnet)
 set.seed(2)
 
 num.vars <- 9
-num.obs <- 600
+num.obs <- 844
 
 #define correlation matrix for explanatory variables 
 #define actual parameter values
