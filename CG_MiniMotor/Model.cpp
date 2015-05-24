@@ -129,6 +129,7 @@ void FigureVBO::fromFile(string filename) {
 	float *triangles = new float[nPoints * 3];
 	float *normals = new float[nPoints * 3];
 	float *textures = new float[nPoints * 2];
+	float *normalsLines = new float[nPoints * 3 * 2];
 
 	i = 0;
 	while (!ifs.eof()
@@ -140,11 +141,21 @@ void FigureVBO::fromFile(string filename) {
 		triangles[i * 3 + 0] = point.x;
 		triangles[i * 3 + 1] = point.y;
 		triangles[i * 3 + 2] = point.z;
+
 		normals[i * 3 + 0] = normal.x;
 		normals[i * 3 + 1] = normal.y;
 		normals[i * 3 + 2] = normal.z;
+
 		textures[i * 3 + 0] = texture.x;
 		textures[i * 3 + 1] = texture.y;
+
+		normalsLines[i * 3 * 2 + 0] = point.x;
+		normalsLines[i * 3 * 2 + 1] = point.y;
+		normalsLines[i * 3 * 2 + 2] = point.z;
+		normalsLines[i * 3 * 2 + 3] = point.x + normal.x;
+		normalsLines[i * 3 * 2 + 4] = point.y + normal.y;
+		normalsLines[i * 3 * 2 + 5] = point.z + normal.z;
+
 		i++;
 	}
 
@@ -153,10 +164,11 @@ void FigureVBO::fromFile(string filename) {
 		&& i < nIndice
 		&& ifs >> this->indices[i]
 		) {
+
 		i++;
 	}
 
-	glGenBuffers(2, this->index);
+	glGenBuffers(3, this->index);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[0]);
 	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * sizeof(float), triangles, GL_STATIC_DRAW);
@@ -168,6 +180,12 @@ void FigureVBO::fromFile(string filename) {
 
 	delete(triangles);
 	Component::loadTexture("oildrum.jpg");
+	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * 2 * sizeof(float), normalsLines, GL_STATIC_DRAW);
+
+
+	delete(triangles);
+	delete(normalsLines);
+
 }
 
 void FigureVBO::draw() {
@@ -179,8 +197,12 @@ void FigureVBO::draw() {
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[2]);
 	glTexCoordPointer(2, GL_FLOAT, 0, 0);
 	glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, this->indices);
-
-
+	
+	if (this->actualScene->geDrawNormal()) {
+		glBindBuffer(GL_ARRAY_BUFFER, this->index[2]);
+		glVertexPointer(3, GL_FLOAT, 0, 0);
+		glDrawArrays(GL_LINES, 0, this->nIndices);
+	}
 }
 
 void Group::appendTransformation(GTransformation* element){

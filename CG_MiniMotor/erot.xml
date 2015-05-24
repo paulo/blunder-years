@@ -2,16 +2,12 @@
 <xml>
     <cena>        
         <luzes>
-            <luz tipo="POINT" posX="0.0" posY="10.0" posZ="15.0">
+            <luz tipo="POINT" posX="0.0" posY="-10.0" posZ="25.0">
             </luz>
         </luzes>
     	<grupo>
-	    	<translacao Z='10'/>
-	        <modelo ficheiro='esfera.3d'/><!-- MARTE -->
-        </grupo>
-       	<grupo>
-	    	<translacao Z='-10'/>
-	        <modelo ficheiro='cilindro.3d'/><!-- MARTE -->
+            <escala X='5' Z='5' Y='5'/>
+            <modelo ficheiro='a.3d'/><!-- MARTE -->
         </grupo>
 
     </cena>
