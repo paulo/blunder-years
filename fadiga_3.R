@@ -65,7 +65,8 @@ table(dataset$FatigueLevel, fit$cluster)
 
 # K-Means Cluster Analysis
 fit <- kmeans(fatigueclust, 3)
-# get cluster means 
+
+# get cluster means
 aggregate(fatigueclust,by=list(fit$cluster),FUN=mean)
 # Juntar novos valores de fadiga aos dados
 mydata <- data.frame(fatigueclust, fit$cluster)

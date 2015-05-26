@@ -24,28 +24,22 @@ head(dataseti)
 trainset1 <- dataset[1:400, ] #extrair 400 casos
 trainset2 <- dataset[1:500, ] #extrair 500 casos
 trainset3 <- dataset[1:600, ] #extrair 600 casos
-trainset4 <- dataset[1:750, ] #extrair 750 casos
 
 trainset1i <- dataseti[1:400, ] #extrair 400 casos invertido
 trainset2i <- dataseti[1:500, ] #extrair 500 casos invertido
 trainset3i <- dataseti[1:600, ] #extrair 600 casos invertido
-trainset4i <- dataseti[1:750, ] #extrair 750 casos invertido
 
 
 #Extrair as restantes entradas do dataset para um dataset que será usado para testar a Rede Neuronal
 testset1 <- dataset[401:844, ]
 testset2 <- dataset[501:844, ]
 testset3 <- dataset[601:844, ]
-testset4 <- dataset[751:844, ]
 
 testset1i <- dataseti[401:844, ] # invertido
 testset2i <- dataseti[501:844, ] # invertido
 testset3i <- dataseti[601:844, ] # invertido
-testset4i <- dataseti[751:844, ] # invertido
-
 
 #Tipos d"e algoritmos de aprendizagem a usar
-alg1 <- "backprop" #dá erro
 alg2 <- "rprop+" #por defeito
 alg3 <- "rprop-" #funciona
 alg4 <- "sag" #funciona
@@ -59,7 +53,6 @@ variables <- c("Performance.KDTMean", "Performance.MAMean", "Performance.MVMean"
 variablesR <- c("Performance.KDTMean", "Performance.Task")
 
 
-
 #Variável a ser medida
 mVar <- "FatigueLevel"
 
@@ -70,21 +63,20 @@ fr <- as.formula(paste(mVar, paste(variablesR, collapse=" + "), sep=" ~ "))
 
 #Disposição dos neurónios na rede neuronal
 nn1 <- c(10)
-nn2 <- c(10, 5)
-nn3 <- c(20, 10)
-nn4 <- c(40, 20)
-nn6 <- c(60, 40, 20)
+nn2 <- c(20, 10)
+nn3 <- c(40, 20)
 
 
 # Treinar a rede neuronal para usar todas as variáveis como input e produzir a variável "Fadiga" como output
-performancenet <- neuralnet(f, trainset1, hidden = nn4, lifesign = "minimal", algorithm = "sag",
+performancenet <- neuralnet(f, trainset1, hidden = nn1, lifesign = "minimal",
                             linear.output = TRUE, threshold = 0.01)
 
-performancenet2 <- neuralnet(f, trainset1, hidden = nn3, lifesign = "minimal",
+performancenet2 <- neuralnet(f, trainset1, hidden = nn2, lifesign = "minimal",
                             linear.output = TRUE, threshold = 0.01)
 
-performancenet3 <- neuralnet(f, trainset1, hidden = nn4, lifesign = "minimal",
+performancenet3 <- neuralnet(f, trainset1, hidden = nn3, lifesign = "minimal",
                             linear.output = TRUE, threshold = 0.01)
+
 
 
 
@@ -93,7 +85,7 @@ plot(performancenet, rep = "best")
 
 
 ## Definir variaveis de input para teste (todas menos "FatigueLevel" que é a variável de output)
-fatigue_test <- subset(testset2, select = c("Performance.KDTMean", "Performance.MAMean",
+fatigue_test <- subset(testset1, select = c("Performance.KDTMean", "Performance.MAMean",
                                            "Performance.MVMean", "Performance.MVMean",
                                            "Performance.DDCMean", "Performance.DMSMean", 
                                            "Performance.AEDMean", "Performance.ADMSLMean",
@@ -104,7 +96,7 @@ fatigue_test <- subset(testset2, select = c("Performance.KDTMean", "Performance.
 performancenet.results <- compute(performancenet, fatigue_test)
 
 #Declarar results
-results <- data.frame(actual = testset2$FatigueLevel, prediction = performancenet.results$net.result)
+results <- data.frame(actual = testset1$FatigueLevel, prediction = performancenet.results$net.result)
 
 #Imprimir results
 results
@@ -115,7 +107,10 @@ results
 
 
 #Calcular o "root-mean-square deviation" 
-rmse(c(testset2$FatigueLevel),c(results$prediction))
+rmse(c(testset1$FatigueLevel),c(results$prediction))
+
+#Calcular o "percentage-bias" (tendência média que os valores testados têm em ser maiores ou menores que os originais)
+pbias(results$prediction, testset1$FatigueLevel)
 
 
 
@@ -128,9 +123,9 @@ rmse(c(testset2$FatigueLevel),c(results$prediction))
 require(clusterGeneration)
 require(nnet)
 
+set.seed(1234567890)
 
 #define number of variables and observations
-set.seed(2)
 
 num.vars <- 9
 num.obs <- 844
@@ -138,31 +133,34 @@ num.obs <- 844
 #define correlation matrix for explanatory variables 
 #define actual parameter values
 
-cov.mat <- genPositiveDefMat(num.vars,covMethod=c("unifcorrmat"))$Sigma
-rand.vars <- mvrnorm(num.obs,rep(0,num.vars),Sigma=cov.mat)
-parms <- runif(num.vars,-10,10)
-y <- rand.vars %*% matrix(parms) + rnorm(num.obs,sd=20)
-
+#cov.mat <- genPositiveDefMat(num.vars,covMethod=c("unifcorrmat"))$Sigma
+#rand.vars <- mvrnorm(num.obs,rep(0,num.vars),Sigma=cov.mat)
+#parms <- runif(num.vars,-10,10)
+#y <- rand.vars %*% matrix(parms) + rnorm(num.obs,sd=20)
 
 
 #prep data and create neural network
 y<-data.frame((y-min(y))/(max(y)-min(y)))
 names(y)<-'y'
+names(trainset1) <- 'tset'
 rand.vars<-data.frame(rand.vars)
 
-subtraini <- subset(testset3, select = c("Performance.KDTMean", "Performance.MAMean",
+subtraini <- subset(testset1, select = c("Performance.KDTMean", "Performance.MAMean",
                                          "Performance.MVMean", "Performance.MVMean",
                                          "Performance.DDCMean", "Performance.DMSMean", 
                                          "Performance.AEDMean", "Performance.ADMSLMean",
                                          "Performance.Task"))  
   
-subtraino <- subset(testset3, select = c("FatigueLevel"))  
+subtraino <- subset(testset1, select = c("FatigueLevel"))  
   
 names(subtraino)<-'y'
+
 
 #talvez seja preciso normalizar fatigue level
 
 mod1<-nnet(subtraini,subtraino,size=10,linout=T)
+
+
 
 
 #create a pretty color vector for the bar plot
@@ -170,7 +168,7 @@ cols<-colorRampPalette(c('lightgreen','lightblue'))(num.vars)
 
 #use the function on the model created above
 par(mar=c(3,4,1,1),family='serif')
-gar.fun('y',mod1)
+gar.fun('tset',mod1)
 
 
 

@@ -1,26 +1,3 @@
-<Introdução>
-	<Breve explicação de biométricas comportamentais>
-	<Breve explicação sobre redes neuronais e ambiente R>
-
-
-In machine learning and cognitive science, artificial neural networks (ANNs) are a family of statistical learning models inspired by biological neural networks (the central nervous systems of animals, in particular the brain) and are used to estimate or approximate functions that can depend on a large number of inputs and are generally unknown. Artificial neural networks are generally presented as systems of interconnected "neurons" which send messages to each other. The connections have numeric weights that can be tuned based on experience, making neural nets adaptive to inputs and capable of learning.
-
-For example, a neural network for handwriting recognition is defined by a set of input neurons which may be activated by the pixels of an input image. After being weighted and transformed by a function (determined by the network's designer), the activations of these neurons are then passed on to other neurons. This process is repeated until finally, an output neuron is activated. This determines which character was read.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -247,7 +224,8 @@ For example, a neural network for handwriting recognition is defined by a set of
 
 
 	<Comparação e análise de resultados>
-
+ 
+<como o output agora é entre 1 e 3, as duas primeiras passam a ser sem fatiga dado que correspondem aos niveis mais baixos, ou entao considera-se um estado intermédio de fatiga>
 
 
 
@@ -272,6 +250,21 @@ For example, a neural network for handwriting recognition is defined by a set of
 
 <Conclusões e Sugestões>
 
+Durante a realização do trabalho foi analisado o impacto que os diversos componentes presentes no treino de uma rede neuronal possuem no resultado produzido por esta e nos teste efetuados.
+
+<explicaçao dos resultados>
+<evitar usar tentativa e erro>
+<resultados do clustering e porque fazem sentido>
+<adequabilidade do dataset e dos neurónios necessários para treinar a rede neuronal com pouco erro>
+
+
+
+
+
+
+
+
+Em forma de crítica final, apesar dos problemas encontrados, o grupo sente-se confiante na sua habilidade de cumprir os desafios propostos e crê ter atingido o objetivo subjacente na realização do trabalho, tendo realizado uma análise completa <completar com ref a conhecimento subsimbolico e biometrias comportamentais>
 
 
 
@@ -324,8 +317,14 @@ Após configurada a rede, é efetuada sobre esta diferentes testes com o íntuit
 Finalmente, são realizadas diversas tentativas de clustering de forma a encontrar uma escala de fadiga adequada ao problema e aos dados em causa, que diminua a percentagem de erro entre os resultados obtidos e os resultados reais nos testes efetuados à rede neuronal. 
 A trabalho é desenvolvido sob a plataforma "R Studio", que permite facilmente a utilização da linguagem R para análise de datasets e a inclusão de diversas bibliotecas que enriquecem a forma como os dados são apresentados e obtidos.
 O relatório termina com a apresentação dos resultados gerais obtidos e conclusões retiradas, sendo abordados os problemas que emergiram durante o desenvolvimento 
+<acabar>
 
 
 
 
-
+<Introdução>
+	Redes Neuronais Artificias(RNA) constituem uma família de modelos de aprendizagem estatísticos baseados em redes neuronais biológicas (tais como o sistema nervoso humano), e são usados para estimar ou aproximar funções que dependem de um grande número de inputs. RNA's são geralmente apresentadas como sistemas de neurónios interligados, capaz de trocar "mensagens" entre si. Estas conexões possuem pesos númericos que podem ser modificados com base na "experiência" da rede, permitindo que as RNA's sejam capaz de se adaptar e aprender com os inputs. 
+	Neste contexto, são analisados o impacto e peso que um conjunto de biométricas comportamentais possui na detecção de fadiga mental de um dado índividuo. Como suporte é utilizado um conjunto de dados globais com experiências anteriores que permitem classificar um comportamento, por recurso a RNA's e ao ambiente de análise de dados R.
+	É estudada a identificação dos 7 níveis de fadiga predefinidos através do treino de uma RNA utilizando como input os dados fornecidos, com o íntuito de classificar o nível de fadiga através de um conjunto valores correspondentes às variáveis fornecidas (métricas captadas). O objetivo consiste então na estimação do nível de fadiga de um índividuo, assim como a existência ou não desta, com base na forma como opera o seu computador. As váriaveis das quais depende o treino possuem então um papel importante na determinação no nível de fatiga, e o peso que cada uma destas variáveis tem na resposta final deve ser testado.
+	Análogamente à importância que as variáveis possuem, o intervalo no qual a fadiga é classificável é também relevante na obtenção de resultados aceitáveis, sendo que este intervalo deve ser estudado com a intenção de produzir clusters de dados similares entre sí, e que por isso, são dívisiveis e capazes de ser agrupados conforme. 
+	O objetivo final do trabalho é então apresentar uma análise detalhada do impacto que os componentes presentes no treino da rede neuronal possuem no resultado final desta e no erro produzido, assim como a capacidade que a rede tem na previsão de níveis de fadiga apropriados.  
