@@ -54,11 +54,14 @@ void init(int argc, char **argv){
 	glutInitWindowSize(800, 800);
 	glutCreateWindow("Motor");
 
-
 	glewInit();
 
 	glPolygonMode(GL_FRONT, GL_LINE); // GL_FILL, GL_LINE, GL_POINT
 	glEnableClientState(GL_VERTEX_ARRAY);
+
+	ilInit();
+	ilEnable(IL_ORIGIN_SET);
+	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
 
 	//function listening
 	glutDisplayFunc(renderScene);
@@ -71,9 +74,8 @@ void init(int argc, char **argv){
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
 	glEnable(GL_TEXTURE_2D);
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//create MENU
@@ -94,11 +96,22 @@ void init(int argc, char **argv){
 void _start(const char* filename){
 	XMLDocument doc;
 
+	glDisable(GL_LIGHT0);
+	glDisable(GL_LIGHT1);
+	glDisable(GL_LIGHT2);
+	glDisable(GL_LIGHT3);
+	glDisable(GL_LIGHT4);
+	glDisable(GL_LIGHT5);
+	glDisable(GL_LIGHT6);
+	glDisable(GL_LIGHT7);
+	glDisable(GL_LIGHTING);
+
 	int loadOk = doc.LoadFile(filename);
 	if (loadOk != 0){
 		printf("Erro!! Falha ao ler o ficheiro!\n");
 	}
 	else {
+		//actualScene.getLights();
 		actualScene.reset();
 		actualScene.setCameraPosition(25, 25, 25);
 		root = doc.RootElement();
@@ -235,6 +248,7 @@ void renderScene(void){
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	// pôr instruções de desenho aqui
 	// actualScene.draw();
 	glLoadIdentity();
@@ -264,9 +278,9 @@ void renderScene(void){
 	//point3D p[] = { { 0, 1, 0 }, { 1, 1, 0 }, { 1, -1, 0 }, { 0, -1, 0 } };
 	//genericDraw(p,4,20).draw();
 
-	glEnable(GL_LIGHTING);
-	float a[4] = { 0.9, 0.9, 0.9, 0.9 };
-	glLightfv(GL_LIGHT0, GL_AMBIENT,a);
+	//glEnable(GL_LIGHTING);
+	//float a[4] = { 0.9, 0.9, 0.9, 0.9 };
+	//glLightfv(GL_LIGHT0, GL_AMBIENT,a);
 	actualScene.draw();
 
 	calcFPS();

@@ -10,7 +10,8 @@
 using namespace std;
 
 Component::Component(Scene* a)
-	: actualScene(a) {
+	: actualScene(a), texID(-1){
+
 }
 
 void Component::draw(){
@@ -19,10 +20,35 @@ void Component::draw(){
 	for (; it != itEnd; it++) {
 		
 		glLightfv(GL_LIGHT0 + it->number, GL_DIFFUSE, this->diff);  
-		//glLightfv(GL_LIGHT0 + it->number, GL_AMBIENT, this->);
+		glLightfv(GL_LIGHT0 + it->number, GL_AMBIENT, this->amb);
 		glLightfv(GL_LIGHT0 + it->number, GL_SPECULAR, this->spec);
 		glLightfv(GL_LIGHT0 + it->number, GL_EMISSION, this->emit);
 	}
+}
+
+void Component::loadTexture(string filename){
+	ILuint text, w, h;
+	unsigned char *imageData;
+
+	ilGenImages(1, &text); // unsigned int ima[...]
+	ilBindImage(text);
+	ilLoadImage((ILstring)filename.c_str());
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+	w = ilGetInteger(IL_IMAGE_WIDTH);
+	h = ilGetInteger(IL_IMAGE_HEIGHT);
+
+	imageData = ilGetData();
+	// create a texture slot
+	glGenTextures(1, &texID);
+	// bind the slot
+	glBindTexture(GL_TEXTURE_2D, texID);
+	// define texture parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// send texture data to OpenGL
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
 }
 
 Figure::Figure(Scene* a)
@@ -42,6 +68,8 @@ void Figure::fromFile(string filename){
 
 	ifs >> nPoints >> nIndice;
 	float *triangles1 = new float[nPoints * 3];
+	float *normals1 = new float[nPoints * 3];
+	float *textures1 = new float[nPoints * 2];
 
 
 	i = 0;
@@ -54,6 +82,16 @@ void Figure::fromFile(string filename){
 		triangles1[i * 3 + 0] = point.x;
 		triangles1[i * 3 + 1] = point.y;
 		triangles1[i * 3 + 2] = point.z;
+		
+		normals1[i * 3 + 0] = normal.x;
+		normals1[i * 3 + 1] = normal.y;
+		normals1[i * 3 + 2] = normal.z;
+
+		textures1[i * 2 + 0] = texture.x;
+		textures1[i * 2 + 1] = texture.y;
+
+		
+		
 		i++;
 	}
 
@@ -63,9 +101,13 @@ void Figure::fromFile(string filename){
 		&& ifs >> indice
 		) {
 		triangles.push_back({ triangles1[indice * 3], triangles1[indice * 3 + 1], triangles1[indice * 3 + 2] });
+		normals.push_back({ normals1[indice * 3], normals1[indice * 3 + 1], normals1[indice * 3 + 2] });
+		textures.push_back({ textures1[indice * 2], textures1[indice * 2 + 1], 0 });
 		i++;
 	}
 
+	delete(normals1);
+	delete(textures1);
 	delete(triangles1);
 }
 
@@ -76,47 +118,27 @@ void Figure::draw(){
 	Component::draw();
 	glBegin(GL_TRIANGLES);
 	std::vector<point3D>::iterator d = triangles.begin();
+	std::vector<point3D>::iterator n = normals.begin();
+	std::vector<point3D>::iterator t = textures.begin();
+
 	while (d != triangles.end()){
-		glVertex3f(d->x, d->y, d->z);
-		d++;
-		glVertex3f(d->x, d->y, d->z);
-		d++;
-		glVertex3f(d->x, d->y, d->z);
-		d++;
+		glNormal3f(n->x, n->y, n->z); n++;
+		glTexCoord2f(t->x, t->y); t++;
+		glVertex3f(d->x, d->y, d->z); d++;
+		
+		glNormal3f(n->x, n->y, n->z); n++;
+		glTexCoord2f(t->x, t->y); t++;
+		glVertex3f(d->x, d->y, d->z); d++;
+		
+		glNormal3f(n->x, n->y, n->z); n++;
+		glTexCoord2f(t->x, t->y); t++;
+		glVertex3f(d->x, d->y, d->z); d++;
 	}
 	glEnd();
 }
 
 FigureVBO::FigureVBO(Scene* a)
 	: Component(a) {
-}
-
-void Component::loadTexture(string filename){
-	ILuint text, w, h;
-	unsigned char *imageData;
-
-	ilInit();
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
-	ilGenImages(1, &text); // unsigned int ima[...]
-	ilBindImage(text);
-	ilLoadImage((ILstring)"filename");
-	w = ilGetInteger(IL_IMAGE_WIDTH);
-	h = ilGetInteger(IL_IMAGE_HEIGHT);
-	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-	imageData = ilGetData();
-	// create a texture slot
-	glGenTextures(1, &texID);
-	// bind the slot
-	glBindTexture(GL_TEXTURE_2D, texID);
-	// define texture parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,
-		GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	// send texture data to OpenGL
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
 }
 
 void FigureVBO::fromFile(string filename) {
@@ -146,8 +168,8 @@ void FigureVBO::fromFile(string filename) {
 		normals[i * 3 + 1] = normal.y;
 		normals[i * 3 + 2] = normal.z;
 
-		textures[i * 3 + 0] = texture.x;
-		textures[i * 3 + 1] = texture.y;
+		textures[i * 2 + 0] = texture.x;
+		textures[i * 2 + 1] = texture.y;
 
 		normalsLines[i * 3 * 2 + 0] = point.x;
 		normalsLines[i * 3 * 2 + 1] = point.y;
@@ -168,40 +190,47 @@ void FigureVBO::fromFile(string filename) {
 		i++;
 	}
 
-	glGenBuffers(3, this->index);
+	glGenBuffers(4, this->index);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[0]);
 	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * sizeof(float), triangles, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[1]);
 	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * sizeof(float), normals, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[2]);
+	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * 2 * sizeof(float), normalsLines, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, this->index[3]);
 	glBufferData(GL_ARRAY_BUFFER, nPoints * 2 * sizeof(float), textures, GL_STATIC_DRAW);
 
-
 	delete(triangles);
-	Component::loadTexture("oildrum.jpg");
-	glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * 2 * sizeof(float), normalsLines, GL_STATIC_DRAW);
-
-
-	delete(triangles);
+	delete(normals);
+	delete(textures);
 	delete(normalsLines);
-
 }
 
 void FigureVBO::draw() {
 	Component::draw();
+	if (texID > 0){
+		glBindTexture(GL_TEXTURE_2D, texID);
+	}
+
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[0]);
 	glVertexPointer(3, GL_FLOAT, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->index[1]);
 	glNormalPointer(GL_FLOAT, 0, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, this->index[2]);
-	glTexCoordPointer(2, GL_FLOAT, 0, 0);
-	glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, this->indices);
-	
+	if (texID > 0){
+		glBindBuffer(GL_ARRAY_BUFFER, this->index[3]);
+		glTexCoordPointer(2, GL_FLOAT, 0, 0);
+		glDrawElements(GL_TRIANGLES, this->nIndices, GL_UNSIGNED_INT, this->indices);
+	}
+
 	if (this->actualScene->geDrawNormal()) {
 		glBindBuffer(GL_ARRAY_BUFFER, this->index[2]);
 		glVertexPointer(3, GL_FLOAT, 0, 0);
 		glDrawArrays(GL_LINES, 0, this->nIndices);
+	}
+
+	if (texID > 0){
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }
 
@@ -215,9 +244,10 @@ void Group::append(Drawable* figure) {
 	elements.push_back(figure);
 }
 
-void Group::reset() {
+void Scene::reset() {
 	elements.clear();
 	transformations.clear();
+	lights.clear();
 }
 
 void Group::draw(){
@@ -316,7 +346,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 			if (elem->Attribute("ficheiro")){
 				////////////////////////
 				string file = elem->Attribute("ficheiro");
-				string textura;
+				string textura = "";
 				diff[0] = diff[1] = diff[2] = 1.0;
 				amb[0] = amb[1] = amb[2] = 0.0;
 				spec[0] = spec[1] = spec[2] = 1.0;
@@ -336,27 +366,23 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				if(elem->Attribute("emitG")) emit[1] = elem->FloatAttribute("emitG"); 
 				if(elem->Attribute("emitB")) emit[2] = elem->FloatAttribute("emitB"); 
 
+				Component* ff;
 				if (this->drawMode == Scene::DRAWMODE_VBO){
-					Component* ff = new FigureVBO(this);
-					ff->fromFile(file);
-					ff->setDiff(diff[0], diff[1], diff[2]);
-					ff->setAmb(amb[0], amb[1], amb[2]);
-					ff->setSpec(spec[0], spec[1], spec[2]);
-    				ff->setEmit(emit[0], emit[1], emit[2]);
-    				ff->setTexture(textura);
-					current->append(ff);
+					ff = new FigureVBO(this);
 				}
 				else{
-					Component* ff = new Figure(this);
-					ff->fromFile(file);
-					ff->setDiff(diff[0], diff[1], diff[2]);
-					ff->setAmb(amb[0], amb[1], amb[2]);
-					ff->setSpec(spec[0], spec[1], spec[2]);
-    				ff->setEmit(emit[0], emit[1], emit[2]);
-					ff->setTexture(textura);
-					current->append(ff);
+					ff = new Figure(this);
 				}
 
+				ff->fromFile(file);
+				ff->setDiff(diff[0], diff[1], diff[2]);
+				ff->setAmb(amb[0], amb[1], amb[2]);
+				ff->setSpec(spec[0], spec[1], spec[2]);
+				ff->setEmit(emit[0], emit[1], emit[2]);
+				if (textura != ""){
+					ff->loadTexture(textura);
+				}
+				current->append(ff);
 
 				/*if (this->drawMode == Scene::DRAWMODE_VBO){
 					FigureVBO* ff = new FigureVBO();
@@ -450,6 +476,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				else return -1;
 			}
 			else if (tag.compare("luzes") == 0){
+				glEnable(GL_LIGHTING);
 				XMLNode *light;
 				for (light = child->FirstChild(), ln = 0; light; light = light->NextSibling(), ln++) 	{
 					XMLElement *luz = light->ToElement();
@@ -473,7 +500,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 
 						Light *mlight = new Light(x, y, z, type, ln, GL_POSITION);
 						appendLight(*mlight);
-
+						glEnable(GL_LIGHT0 + mlight->number);
 					}
 				}
 			}

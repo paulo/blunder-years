@@ -14,6 +14,7 @@
 #include <math.h>
 #include <glew.h>
 #include <GL/glut.h>
+#include <IL/il.h>
 
 typedef struct point3D {
 	float x;

@@ -2,7 +2,6 @@
 #define __MODEL_H__
 #include "stdafx.h"
 #include "GL\glut.h"
-#include <IL/il.h>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -28,10 +27,9 @@ class Component: public Drawable{
 	float spec[3];
 	float emit[3];
 	string texture;
-	unsigned int texID;
-=======
 protected:
 	Scene* actualScene;
+	unsigned int texID;
 public:
 	Component(Scene* a);
     void setDiff(float r, float g, float b) { diff[0]=r; diff[1]=g; diff[2]=b; }
@@ -47,6 +45,8 @@ public:
 
 class Figure: public Component {
 	vector<Point3D> triangles;
+	vector<Point3D> normals;
+	vector<Point3D> textures;
 public:
 	Figure(Scene* a);
 	void draw();
@@ -65,6 +65,7 @@ public:
 };
 
 class Group: public Drawable {
+protected:
 	vector<Drawable*> elements;
 	vector<GTransformation*> transformations;
 public:
@@ -100,6 +101,7 @@ public:
 	void setDrawMode(const int mode);
 	void setDrawNormal(bool draw) { drawNormal = draw; };
 	bool geDrawNormal() { return drawNormal; };
+	void reset();
 	void draw();
 	void appendLight(Light);
 	vector<Light>* getLights(){ return &lights;}
