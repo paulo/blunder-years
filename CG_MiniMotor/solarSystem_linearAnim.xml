@@ -5,7 +5,8 @@
 	<grupo>
             <grupo>
                 <escala X='13.92' Y='13.92' Z='13.92'/>
-                <modelo ficheiro='solarSystem/planeta.3d'/><!-- SOL -->
+                <rotacao angulo='360' eixoX='0' eixoY='1' eixoZ='0' tempo='70'/>
+                <modelo ficheiro='solarSystem/planeta.3d' textura='ss_textures/texture_sun.jpg'/><!-- SOL -->
             </grupo>
             <grupo>
                 <translacao tempo='10'>
@@ -18,9 +19,9 @@
                     <ponto X='0' Y='0' Z='-20'/>
                     <ponto X='14' Y='0' Z='-14'/>
                 </translacao>
-                <rotacao angulo='360' eixoX='0' eixoY='0' eixoZ='1' tempo='7'/>
+                <rotacao angulo='360' eixoX='0' eixoY='1' eixoZ='0' tempo='35'/>
                 <escala X='0.48' Y='0.48' Z='0.48'/>
-                <modelo ficheiro='solarSystem/planeta.3d'/><!-- MERCURIO -->
+                <modelo ficheiro='solarSystem/planeta.3d' textura='ss_textures/texture_mercury.jpg'/><!-- MERCURIO -->
             </grupo>
             <grupo>
                 <translacao tempo='25.5'>
@@ -33,9 +34,9 @@
                     <ponto X='0' Y='0' Z='-30'/>
                     <ponto X='21' Y='0' Z='-21'/>
                 </translacao>
-                <rotacao angulo='360' eixoX='0' eixoY='0' eixoZ='1' tempo='27'/>
+                <rotacao angulo='360' eixoX='0' eixoY='1' eixoZ='0' tempo='135'/>
                 <escala X='1.21' Y='1.21' Z='1.21'/>
-                <modelo ficheiro='solarSystem/planeta.3d'/><!-- VENUS -->
+                <modelo ficheiro='solarSystem/planeta.3d' textura='ss_textures/texture_venus_surface.jpg'/><!-- VENUS -->
             </grupo>
             <grupo>
                 <translacao tempo='41.4'>
@@ -48,9 +49,9 @@
                     <ponto X='0' Y='0' Z='-40'/>
                     <ponto X='28' Y='0' Z='-28'/>
                 </translacao>
-                <rotacao angulo='360' eixoX='0' eixoY='0' eixoZ='1' tempo='3'/>
+                <rotacao angulo='360' eixoX='0' eixoY='1' eixoZ='0' tempo='15'/>
                 <escala X='1.27' Y='1.27' Z='1.27'/>
-                <modelo ficheiro='solarSystem/planeta.3d'/><!-- TERRA -->
+                <modelo ficheiro='solarSystem/planeta.3d' textura='ss_textures/texture_earth_clouds.jpg'/><!-- TERRA -->
                 <grupo>
                     <translacao tempo='3.3'>
                     <ponto X='2' Z='0' Y='0'/>
@@ -63,7 +64,8 @@
                     <ponto X='1.4' Z='0' Y='-1.4'/>
                 </translacao>
                     <escala X='0.27' Y='0.27' Z='0.27'/>
-                    <modelo ficheiro='solarSystem/planeta.3d'/><!-- LUA -->
+                    <rotacao angulo='360' eixoX='0' eixoY='1' eixoZ='0' tempo='15'/>
+                    <modelo ficheiro='solarSystem/planeta.3d' textura='ss_textures/texture_moon.jpg'/><!-- LUA -->
                 </grupo>
             </grupo>
             <grupo>
@@ -77,9 +79,9 @@
                     <ponto X='0' Y='0' Z='-50'/>
                     <ponto X='35' Y='0' Z='-35'/>
                 </translacao>
-                <rotacao angulo='360' eixoX='0' eixoY='0' eixoZ='1' tempo='3'/>
+                <rotacao angulo='360' eixoX='0' eixoY='1' eixoZ='0' tempo='15'/>
                 <escala X='0.67' Y='0.67' Z='0.67'/>
-                <modelo ficheiro='solarSystem/planeta.3d'/><!-- MARTE -->
+                <modelo ficheiro='solarSystem/planeta.3d' textura='ss_textures/texture_mars.jpg'/><!-- MARTE -->
             </grupo>
             <grupo>
                 <translacao tempo='492'>
@@ -92,9 +94,9 @@
                     <ponto X='0' Y='0' Z='-80'/>
                     <ponto X='56' Y='0' Z='-56'/>
                 </translacao>
-                <rotacao angulo='360' eixoX='0' eixoY='0' eixoZ='1' tempo='3'/>
+                <rotacao angulo='360' eixoX='0' eixoY='1' eixoZ='0' tempo='15'/>
                 <escala X='14.29' Y='14.29' Z='14.29'/>
-                <modelo ficheiro='solarSystem/planeta.3d'/><!-- JUPITER -->
+                <modelo ficheiro='solarSystem/planeta.3d' textura='ss_textures/texture_jupiter.jpg'/><!-- JUPITER -->
             </grupo>
             <grupo>
                 <translacao tempo='1202'>
@@ -108,10 +110,11 @@
                     <ponto X='119' Y='0' Z='-119'/>
                 </translacao>
                 <escala X='11.64' Y='11.64' Z='11.64'/>
-                <modelo ficheiro='solarSystem/planeta.3d'/><!-- SATURNO -->
+                <rotacao angulo='360' eixoX='0' eixoY='1' eixoZ='0' tempo='40'/>
+                <modelo ficheiro='solarSystem/planeta.3d' textura='ss_textures/texture_saturn.jpg'/><!-- SATURNO -->
                 <grupo>
                     <escala X='0.7' Y='0.1' Z='0.7' />
-                    <modelo ficheiro='solarSystem/anel.3d'/><!-- ANEL DE SATURNO -->
+                    <modelo ficheiro='solarSystem/anel.3d' textura='ss_textures/texture_saturn_ring2.png'/><!-- ANEL DE SATURNO -->
                 </grupo>  
             </grupo>
             <grupo>
@@ -125,9 +128,9 @@
                     <ponto X='0' Y='0' Z='-240'/>
                     <ponto X='168' Y='0' Z='-168'/>
                 </translacao>
-                <rotacao angulo='360' eixoX='0' eixoY='0' eixoZ='1' tempo='3'/>
+                <rotacao angulo='360' eixoX='0' eixoY='1' eixoZ='0' tempo='15'/>
                 <escala X='4.69' Y='4.69' Z='4.69'/>
-                <modelo ficheiro='solarSystem/planeta.3d'/><!-- URANO -->
+                <modelo ficheiro='solarSystem/planeta.3d' textura='ss_textures/texture_uranus.jpg'/><!-- URANO -->
             </grupo>
             <grupo>
                 <translacao tempo='6843'>
@@ -140,9 +143,9 @@
                     <ponto X='0' Y='0' Z='-280'/>
                     <ponto X='196' Y='0' Z='-196'/>
                 </translacao>
-                <rotacao angulo='360' eixoX='0' eixoY='0' eixoZ='1' tempo='3'/>
+                <rotacao angulo='360' eixoX='0' eixoY='1' eixoZ='0' tempo='15'/>
                 <escala X='4.54' Y='4.54' Z='4.54'/>
-                <modelo ficheiro='solarSystem/planeta.3d'/><!-- NEPTUNO -->
+                <modelo ficheiro='solarSystem/planeta.3d' textura='ss_textures/texture_neptune.jpg'/><!-- NEPTUNO -->
             </grupo>
             <grupo>
                 <translacao X='160' Z='145'/>
