@@ -69,18 +69,15 @@ void FigureFactory::createRotate(Figure* f, Point3D points[], int camadas, int f
 		}
 	}
 	// Create all other points
-	float textureYFactor = 1 / mathSumPointsDistance(points, camadas);
-	float textureYInc = 0.0;
-	for (i = 0; i < fatias; i++){
+	float textureYInit = mathSumPointsDistance(points, camadas);
+	float textureYFactor = 1 / textureYInit;
+	for (i = 0; i <= fatias; i++){
 		float circ = angulo_circ * (i + 1);
-	
+		float textureX = ((float)i) / ((float) fatias);
+		float textureYInc = textureYInit;
 		for (j = 0; j < camadas; j++) {
 			float perimetro = (2 * M_PI * points[j].x);
-			float textureX = 0;
-			if (perimetro != 0) {
-				textureX = ((perimetro  * i) / fatias) / perimetro;
-			} 
-			textureYInc += (j > 0) ? mathPointsDistance(points[j - 1], points[j]) : 0;
+			textureYInc -= (j > 0) ? mathPointsDistance(points[j - 1], points[j]) : 0;
 			
 			float textureY = textureYInc * textureYFactor;
 			f->appendPoint({ points[j].x * sin(circ), points[j].y, points[j].x * cos(circ) });
@@ -103,9 +100,9 @@ void FigureFactory::createRotate(Figure* f, Point3D points[], int camadas, int f
 
 		ii = in; in += camadas;
 		// connect the last fatia to the first
-		if (i + 2 == fatias){
-			in = 0;
-		}
+		//if (i + 2 == fatias){
+		//	in = 0;
+		//}
 	}
 	delete(normals);
 }
@@ -114,7 +111,7 @@ float mathSumPointsDistance(Point3D points[],int pointsSize){
 	float res = 0.0;
 	int i;
 	for (i = 1; i < pointsSize; i++) {
-		res += mathPointsDistance(points[i], points[2]);
+		res += mathPointsDistance(points[i - 1], points[i]);
 	}
 	return res;
 }

@@ -184,7 +184,7 @@ Figure definePatches(Figure aux, int tess, int in, int pn){
 				Point3D p;
 				p = CalculateSurfacePoint(v, bzr);
 				f.appendPoint(p);
-				f.appendPointTexture({ u, v, v });
+				f.appendPointTexture({ (u -1) * -1, (v -1)*-1, 0 });
 				
 				p = CalcDerivade(u,v,m);
 				f.appendNormal(p);
@@ -244,7 +244,6 @@ Figure FigureFactory::createBezierSurface(Figure* f, std::string patchfile, int 
 				ind = 0;
 				fs >> ind;
 				aux.appendIndice(ind);
-
 			}
 		}
 

@@ -31,10 +31,13 @@ Figure FigureFactory::createCone(float raiob, float altura, int fatias, int cama
 		points[i].x = points[i -1].x + (raiob / camadas);
 		points[i].y = points[i-1].y - (altura / camadas);
 	}
+	points[i].x = points[i-1].x;
+	points[i].y = points[i-1].y;
+	i++;
 	points[i].x = 0;
 	points[i].y = -meio;
 
-	createRotate(&f, points, camadas + 2, fatias);
+	createRotate(&f, points, camadas + 3, fatias);
 
 	//createCircleAux(&f, raiob, fatias, altura_aux2, 1);
 
