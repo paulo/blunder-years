@@ -10,7 +10,9 @@
             <modelo ficheiro='a.3d' specR='1' specG='1' specB='1' ambR='0.2' ambG='0.2' ambB='0.2' textura='test.jpg'/>
         </grupo> -->
         <grupo>
-            <modelo ficheiro='esf.3d' specR='1' specG='1' specB='1' ambR='0.2' ambG='0.2' ambB='0.2' textura='earth.jpg'/><!-- MARTE -->
+            <!--<modelo ficheiro='esf.3d' specR='1' specG='1' specB='1' ambR='0.2' ambG='0.2' ambB='0.2' textura='earth.jpg'/>-->
+            <modelo ficheiro='cone.3d' specR='1' specG='1' specB='1' ambR='0.2' ambG='0.2' ambB='0.2' textura='test2.jpg'/><!-- MARTE -->
+
         </grupo>
     </cena>
 </xml>
