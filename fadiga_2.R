@@ -81,12 +81,17 @@ results
 rmse(c(testset$FatigueLevel),c(results$prediction))
 
 
+#Calcular o "percentage-bias" (tendência média que os valores testados têm em ser maiores ou menores que os originais)
+pbias(results$prediction, testset1$FatigueLevel)
+
+
+
+
 #Normalizar dados
 normalized = (dataset-min(dataset))/(max(dataset)-min(dataset))
 
 
 # Talvez apenas normalizar o output após obter os resultados
-
 plot(dataset$FatigueLevel ~ dataset$Performance.KDTMean, data = dataset)
 
 abline(dataset)

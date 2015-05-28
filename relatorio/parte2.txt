@@ -1,0 +1,9 @@
+<Identificação de existência ou ausência de fadiga>
+	<Lógica e trabalho realizado>
+		Com o intuíto de identificar a existência ou ausência de fadiga dado um determinado input, são feitas algumas considerações acerca dos níveis de fadiga mental apresentados. Através da análise da descrição de cada nível, é possivel extrair 2 grupos de estados mentais. O 1ºgrupo refere-se a estados onde um dado índividuo tem ainda a capacidade de funcionar e raciocinar dentro da normalidade, e é constituido pelos estados de 1 a 3 (inclusive). Quando um dado output estiver entre estes valores, considera-se a ausência de fadiga. De forma análoga, o 2ºgrupo refere-se a estados nos quais o índividuo perdeu certa capacidade de concentração e apresenta sinais de cansaço, e é constituido pelos estados de 4 a 7. Quando um dado output estiver entre estes valores, considera-se a existência de fadiga. Para facilitar a compreensão, os valores dos datasets foram normalizados para apresentar respostas lógicas, e então, testes cujo resultado pertença ao 1ºgrupo apresentarão um output de 0, e testes cujo resultado pertença ao 2ºgrupo apresentarão um output de 1. Os testes consistem num conjunto de registos obtidos do ficheiro fornecido e de registos criados também especificamente para este propósito, e são aplicados nas 3 redes cujas configurações obtiveram os melhores resultados anteriormente (com o conjunto original de variáveis e com o novo conjunto de variáveis relevantes). Os testes são realizados recorrendo às redes neuronais artificiais disponíveis através da utilização da biblioteca 'neuralnet' na plataforma 'R Studio'.
+
+	<Resultados>
+
+
+
+	<Conclusões>

@@ -11,6 +11,7 @@ set.seed(1234567890)
 #Ler dataset do ficheiro csv e atribuir à variavel dataset
 dataset <- read.csv("/home/paulo/SRCRTP3/Material/exercicio3n.csv")
 
+#Dataset invertido
 dataseti <- dataset[nrow(dataset):1, ]
 
 # Resumo das estatisticas básicas do dataset
@@ -68,14 +69,15 @@ nn3 <- c(40, 20)
 
 
 # Treinar a rede neuronal para usar todas as variáveis como input e produzir a variável "Fadiga" como output
-performancenet <- neuralnet(f, trainset1, hidden = nn1, lifesign = "minimal",
+performancenet <- neuralnet(f, trainset1, hidden = nn1, lifesign = "minimal", algorithm = alg2,
                             linear.output = TRUE, threshold = 0.01)
 
-performancenet2 <- neuralnet(f, trainset1, hidden = nn2, lifesign = "minimal",
+performancenet2 <- neuralnet(f, trainset1, hidden = nn2, lifesign = "minimal", algorithm = alg2,
                             linear.output = TRUE, threshold = 0.01)
 
-performancenet3 <- neuralnet(f, trainset1, hidden = nn3, lifesign = "minimal",
+performancenet3 <- neuralnet(f, trainset1, hidden = nn3, lifesign = "minimal", algorithm = alg2,
                             linear.output = TRUE, threshold = 0.01)
+
 
 
 
@@ -85,18 +87,14 @@ plot(performancenet, rep = "best")
 
 
 ## Definir variaveis de input para teste (todas menos "FatigueLevel" que é a variável de output)
-fatigue_test <- subset(testset1, select = c("Performance.KDTMean", "Performance.MAMean",
-                                           "Performance.MVMean", "Performance.MVMean",
-                                           "Performance.DDCMean", "Performance.DMSMean", 
-                                           "Performance.AEDMean", "Performance.ADMSLMean",
-                                           "Performance.Task"))
+fatigue_test <- subset(testset1, select = variables)
 
 
 #Testar a rede com os casos de teste
-performancenet.results <- compute(performancenet, fatigue_test)
+performancenet3.results <- compute(performancenet3, fatigue_test)
 
 #Declarar results
-results <- data.frame(actual = testset1$FatigueLevel, prediction = performancenet.results$net.result)
+results <- data.frame(actual = testset1$FatigueLevel, prediction = performancenet3.results$net.result)
 
 #Imprimir results
 results

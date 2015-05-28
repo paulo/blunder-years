@@ -1,0 +1,20 @@
+<Conclusões e Sugestões>
+
+Durante a realização do trabalho foi analisado o impacto que os diversos componentes presentes no treino de uma rede neuronal possuem no resultado produzido por esta e nos teste efetuados.
+
+<explicaçao dos resultados>
+<evitar usar tentativa e erro>
+<resultados do clustering e porque fazem sentido>
+<adequabilidade do dataset e dos neurónios necessários para treinar a rede neuronal com pouco erro>
+<diferenças nos resultados consoante a configuração da nn>
+<facilidade das ferramentas>
+
+
+
+
+Backpropagational neural networks (and many other types of networks) are in a sense the ultimate 'black boxes'. Apart from defining the general archetecture of a network and perhaps initially seeding it with a random numbers, the user has no other role than to feed it input and watch it train and await the output. In fact, it has been said that with backpropagation, "you almost don't know what you're doing". Some software freely available software packages (NevProp, bp, Mactivation) do allow the user to sample the networks 'progress' at regular time intervals, but the learning itself progresses on its own. The final product of this activity is a trained network that provides no equations or coefficients defining a relationship (as in regression) beyond it's own internal mathematics. The network 'IS' the final equation of the relationship.
+Backpropagational networks also tend to be slower to train than other types of networks and sometimes require thousands of epochs. If run on a truly parallel computer system this issue is not really a problem, but if the BPNN is being simulated on a standard serial machine (i.e. a single SPARC, Mac or PC) training can take some time. This is because the machines CPU must compute the function of each node and connection separately, which can be problematic in very large networks with a large amount of data. However, the speed of most current machines is such that this is typically not much of an issue.
+
+
+
+Em forma de crítica final, apesar dos problemas encontrados, o grupo sente-se confiante na sua habilidade de cumprir os desafios propostos e crê ter atingido o objetivo subjacente na realização do trabalho, tendo realizado uma análise completa <completar com ref a conhecimento subsimbolico e biometrias comportamentais>
