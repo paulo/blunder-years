@@ -25,7 +25,7 @@ class Component: public Drawable{
 	float diff[3];
 	float amb[3];
 	float spec[3];
-	float emit[3];
+	float emit[4];
 	string texture;
 protected:
 	Scene* actualScene;
@@ -35,7 +35,7 @@ public:
     void setDiff(float r, float g, float b) { diff[0]=r; diff[1]=g; diff[2]=b; }
     void setAmb(float r, float g, float b) { amb[0]=r; amb[1]=g; amb[2]=b; }
     void setSpec(float r, float g, float b) { spec[0]=r; spec[1]=g; spec[2]=b; }
-    void setEmit(float r, float g, float b) { emit[0]=r; emit[1]=g; emit[2]=b; }
+	void setEmit(float r, float g, float b, float a) { emit[0] = r; emit[1] = g; emit[2] = b; emit[3] = a; }
     //void loadTexture(string file);
     void setTexture(string file) {texture = file;}
 	void draw();

@@ -17,12 +17,13 @@ Component::Component(Scene* a)
 void Component::draw(){
 	vector<Light>::iterator itEnd = this->actualScene->getLights()->end();
 	vector<Light>::iterator it = this->actualScene->getLights()->begin();
+	
 	for (; it != itEnd; it++) {
 		
 		glLightfv(GL_LIGHT0 + it->number, GL_DIFFUSE, this->diff);  
 		glLightfv(GL_LIGHT0 + it->number, GL_AMBIENT, this->amb);
 		glLightfv(GL_LIGHT0 + it->number, GL_SPECULAR, this->spec);
-		glLightfv(GL_LIGHT0 + it->number, GL_EMISSION, this->emit);
+		glMaterialfv(GL_FRONT, GL_EMISSION, this->emit);
 	}
 }
 
@@ -300,7 +301,7 @@ Point3D Scene::getCameraPosition(){
 int Scene::parseXML(XMLNode* root, Group* current){
 	XMLNode* child;
 	float x, y, z;
-	float diff[3], amb[3], spec[3], emit[3];
+	float diff[3], amb[3], spec[3], emit[4];
 	float tempo, angulo, eixoX, eixoY, eixoZ;
 	int rt = 0, timeRt = 0, tr = 0, timeTr = 0, sc = 0, mdls = 0, grp = 0, type;
 	int ok = 0, ln = 0, mn = 0;
@@ -350,7 +351,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				diff[0] = diff[1] = diff[2] = 1.0;
 				amb[0] = amb[1] = amb[2] = 0.0;
 				spec[0] = spec[1] = spec[2] = 1.0;
-				emit[0] = emit[1] = emit[2] = 0.0;
+				emit[0] = emit[1] = emit[2] = emit[3] = 0.0;
 
 				if(elem->Attribute("textura")) textura = elem->Attribute("textura"); 
 				if(elem->Attribute("diffR")) diff[0] = elem->FloatAttribute("diffR");
@@ -365,6 +366,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				if(elem->Attribute("emitR")) emit[0] = elem->FloatAttribute("emitR"); 
 				if(elem->Attribute("emitG")) emit[1] = elem->FloatAttribute("emitG"); 
 				if(elem->Attribute("emitB")) emit[2] = elem->FloatAttribute("emitB"); 
+				if (elem->Attribute("emitA")) emit[3] = elem->FloatAttribute("emitA");
 
 				Component* ff;
 				if (this->drawMode == Scene::DRAWMODE_VBO){
@@ -378,7 +380,7 @@ int Scene::parseXML(XMLNode* root, Group* current){
 				ff->setDiff(diff[0], diff[1], diff[2]);
 				ff->setAmb(amb[0], amb[1], amb[2]);
 				ff->setSpec(spec[0], spec[1], spec[2]);
-				ff->setEmit(emit[0], emit[1], emit[2]);
+				ff->setEmit(emit[0], emit[1], emit[2], emit[3]);
 				if (textura != ""){
 					ff->loadTexture(textura);
 				}
@@ -571,7 +573,7 @@ void TimeTranslation::doTransformation(){
 	normalizeVector(r);
 
 	//obter vector up
-	crossProduct(up, r, d);
+	crossProduct(up, d, r);
 	normalizeVector(up);
 
 	//calcular matriz a multiplicar(ja transposta)

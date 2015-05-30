@@ -4,8 +4,8 @@
     <luzes>
        <luz tipo="POINT" posX="0" posY="0" posZ="0"/>
     </luzes>
-    <camera X='-10' Y='5.5' Z='0.3'/>
-    <grupo>
+	<camera X='-10' Y='5.5' Z='0.3'/>
+	<grupo>
             <escala X='0.1' Y='0.1' Z='0.1'/>
             <grupo>
                 <escala X='13.92' Y='13.92' Z='13.92'/>
