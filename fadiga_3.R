@@ -4,7 +4,7 @@
 
 library("neuralnet")
 library("hydroGOF")
-
+library("fpc")
 set.seed(1234567890)
 
 #Ler dataset do ficheiro csv e atribuir à variavel dataset
@@ -16,23 +16,11 @@ summary(dataset)
 #Mostrar o head dos datasets(primeiros 6 resultados)
 head(dataset)
 
-
-
-
-
-head(normalized)
-
 fatigueclust <- subset(dataset, select = c("Performance.KDTMean", "Performance.MAMean",
                                             "Performance.MVMean", "Performance.MVMean",
                                             "Performance.DDCMean", "Performance.DMSMean", 
                                             "Performance.AEDMean", "Performance.ADMSLMean",
                                             "Performance.Task"))
-
-fatigueclust2 <- subset(dset, select = c("Performance.KDTMean", "Performance.MAMean",
-                                           "Performance.MVMean", "Performance.MVMean",
-                                           "Performance.DDCMean", "Performance.DMSMean", 
-                                           "Performance.AEDMean", "Performance.ADMSLMean",
-                                           "Performance.Task"))
 
 
 #############################################################################

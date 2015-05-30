@@ -22,6 +22,8 @@ head(dataset)
 head(dataseti)
 
 #Extrair n casos do dataset para um novo dataset que será usado para treinar a Rede Neuronal 
+poser<- dataset[1:100, ]
+
 trainset1 <- dataset[1:400, ] #extrair 400 casos
 trainset2 <- dataset[1:500, ] #extrair 500 casos
 trainset3 <- dataset[1:600, ] #extrair 600 casos
@@ -51,7 +53,8 @@ variables <- c("Performance.KDTMean", "Performance.MAMean", "Performance.MVMean"
                "Performance.DDCMean", "Performance.DMSMean", "Performance.AEDMean", "Performance.ADMSLMean",
                "Performance.Task")
 
-variablesR <- c("Performance.KDTMean", "Performance.Task")
+variablesR <- c("Performance.KDTMean", "Performance.MAMean", "Performance.DDCMean", "Performance.Task") #arranjar com novas variaveis descobertas
+
 
 
 #Variável a ser medida
@@ -63,13 +66,14 @@ fr <- as.formula(paste(mVar, paste(variablesR, collapse=" + "), sep=" ~ "))
 
 
 #Disposição dos neurónios na rede neuronal
+nn0 <- c(3)
 nn1 <- c(10)
 nn2 <- c(20, 10)
 nn3 <- c(40, 20)
 
 
 # Treinar a rede neuronal para usar todas as variáveis como input e produzir a variável "Fadiga" como output
-performancenet <- neuralnet(f, trainset1, hidden = nn1, lifesign = "minimal", algorithm = alg2,
+performancenet <- neuralnet(f, poser, hidden = nn3, lifesign = "minimal", algorithm = alg2,
                             linear.output = TRUE, threshold = 0.01)
 
 performancenet2 <- neuralnet(f, trainset1, hidden = nn2, lifesign = "minimal", algorithm = alg2,
@@ -87,14 +91,14 @@ plot(performancenet, rep = "best")
 
 
 ## Definir variaveis de input para teste (todas menos "FatigueLevel" que é a variável de output)
-fatigue_test <- subset(testset1, select = variables)
+fatigue_test <- subset(testset3, select = variables)
 
 
 #Testar a rede com os casos de teste
-performancenet3.results <- compute(performancenet3, fatigue_test)
+performancenet.results <- compute(performancenet, fatigue_test)
 
 #Declarar results
-results <- data.frame(actual = testset1$FatigueLevel, prediction = performancenet3.results$net.result)
+results <- data.frame(actual = testset3$FatigueLevel, prediction = performancenet.results$net.result)
 
 #Imprimir results
 results
@@ -105,10 +109,10 @@ results
 
 
 #Calcular o "root-mean-square deviation" 
-rmse(c(testset1$FatigueLevel),c(results$prediction))
+rmse(c(testset3$FatigueLevel),c(results$prediction))
 
 #Calcular o "percentage-bias" (tendência média que os valores testados têm em ser maiores ou menores que os originais)
-pbias(results$prediction, testset1$FatigueLevel)
+pbias(results$prediction, testset3$FatigueLevel)
 
 
 

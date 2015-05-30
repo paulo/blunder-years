@@ -42,25 +42,36 @@
 
 			Após uma aprofundada pesquisa, foi encontrada uma biblioteca que possui vários métodos de clustering e cluster validation, denominada "fpc".Em particular, esta biblioteca possui uma função denominada "pamk", capaz de estimar o número de clusters ótimo baseando-se em primitivas de k-means clustering (basicamente efetua a tentativa e erro).
 
-			Assim, dado um intervalo aceitável de número de clusters:
+------------			Assim, dado um intervalo aceitável de número de clusters, é utilizada uma função denominada wssplot que através de sucessivas utilizações da função kmeans, gera um gráfico representativo do número apropriado de clusters relativos ao dataset:
 
-				<meter output de função>
+				<meter clusters1>
 
-			O output reforça a teoria de que o número de clusters mais adequando é formado por 3 clusters.
+			O decréscimo na curva da função indica a tendência que estes dados possuem em formarem 3 grupos de registos com semelhanças. Assim, o output reforça a teoria de que o número de clusters mais adequando é formado por 3 clusters. Através da função pamk podemos reforçar esta teoria, dado que o output indica também a preferência por 3 clusters.
 
-				
+				<meter clustplotR>
 
-				<meter gráficos e descrever>
-				<fazer output da função kmeans>
-				
-			<Análise de Resultados>
+			Através da função kmeans podemos também atribuir aos registos o atributo numérico do cluster no qual estes se inserem e obter um novo dataset com o qual podemos reavaliar os testes realizados anteriormente. 
 
-			Não obstante os resultados obtidos, estes foram reforçados com a utilização da ferramenta WEKA, cuja solução final consiste também na utilização de 3 clusters. 
+			Não obstante os resultados obtidos, estes foram validados com a utilização da ferramenta WEKA, cuja solução final consiste também na utilização de 3 clusters (o output total pode ser encontrado em anexo). 
 
-			<Solução WEKA>
+			=== Model and evaluation on training set ===
+
+Clustered Instances
+
+0      116 ( 14%)
+1       84 ( 10%)
+2       35 (  4%)
+3      458 ( 54%)
+4      151 ( 18%)
+
+
+			
 
 		<Comparação e análise de resultados>
  			Os resultados obtidos anteriormente são agora revalidados de acordo com o novo conjunto de clustering, sendo considerada a existência de fadiga apenas no nível 3 (dado o baixo volume de registos originais com um nível de fadiga elevado). 
 
+ 			<fazer testes com as melhores configurações>
 
  			<Conclusões>
+
+ 			

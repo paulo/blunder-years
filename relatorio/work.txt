@@ -7,7 +7,7 @@
 -> Identificar variáveis mais relevantes/não relevantes na análise dos dados.
 ->
 
-
+	
 
 _____________________________________________________________________________________________________________________________________
 - Identificar, simplesmente, a existência ou ausência de fadiga. (usar neuralnet e prediction)
@@ -26,3 +26,9 @@ ________________________________________________________________________________
 -> Fazer análise do tipo: "pensamos em fazer por tentativas, mas seria um processo demasiado moroso e pouco académico".
 -> Repetir passos anteriores e analisar diferenças nos dados.
 -> 
+
+
+
+
+- reunir desenhos dos plots
+- fazer parte da clusterização
