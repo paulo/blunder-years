@@ -569,7 +569,7 @@ void TimeTranslation::doTransformation(){
 	normalizeVector(d);
 
 	//obter vector r
-	crossProduct(r, d, up);
+	crossProduct(r, up, d);
 	normalizeVector(r);
 
 	//obter vector up
