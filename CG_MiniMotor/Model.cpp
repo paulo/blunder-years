@@ -121,6 +121,10 @@ void Figure::draw(){
 	std::vector<point3D>::iterator d = triangles.begin();
 	std::vector<point3D>::iterator n = normals.begin();
 	std::vector<point3D>::iterator t = textures.begin();
+	if (texID > 0){
+		glBindTexture(GL_TEXTURE_2D, texID);
+	}
+
 
 	while (d != triangles.end()){
 		glNormal3f(n->x, n->y, n->z); n++;
@@ -135,6 +139,10 @@ void Figure::draw(){
 		glTexCoord2f(t->x, t->y); t++;
 		glVertex3f(d->x, d->y, d->z); d++;
 	}
+	if (texID > 0){
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 	glEnd();
 }
 
