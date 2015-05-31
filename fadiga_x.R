@@ -42,11 +42,16 @@ alg5 <- "slr"
 #Variáveis sobre as quais a função vai incidir (mais relevantes)
 variablesR <- c("Performance.KDTMean", "Performance.MAMean", "Performance.DDCMean", "Performance.Task") #arranjar com novas variaveis descobertas
 
+#Variáveis menos relevantes
+variablesN <- c("Performance.MVMean", "Performance.TBCMean", "Performance.AEDMean", "Performance.ADMSLMean")
+
+
 #Variável a ser medida
 mVar <- "FatigueLevel"
 
 #Criar fórmula de treino neuronal (soma das váriaveis)
 f <- as.formula(paste(mVar, paste(variablesR, collapse=" + "), sep=" ~ "))
+fn <- as.formula(paste(mVar, paste(variablesN, collapse=" + "), sep=" ~ "))
 
 #Disposição dos neurónios na rede neuronal
 nn0 <- c(3)
@@ -55,24 +60,24 @@ nn2 <- c(20, 10)
 nn3 <- c(40, 20)
 
 # Treinar a rede neuronal para usar todas as variáveis como input e produzir a variável "Fadiga" como output
-performancenet1 <- neuralnet(fr, trainset1i, hidden = nn3, lifesign = "minimal", algorithm = alg2,
+performancenet1 <- neuralnet(fn, trainset1i, hidden = nn3, lifesign = "minimal", algorithm = alg2,
                             linear.output = TRUE, threshold = 0.01)
 
-performancenet2 <- neuralnet(fr, trainset2, hidden = nn3, lifesign = "minimal", algorithm = alg3,
+performancenet2 <- neuralnet(fn, trainset2, hidden = nn3, lifesign = "minimal", algorithm = alg3,
                              linear.output = TRUE, threshold = 0.01)
 
-performancenet3 <- neuralnet(fr, trainset3, hidden = nn0, lifesign = "minimal", algorithm = alg4,
+performancenet3 <- neuralnet(fn, trainset3, hidden = nn0, lifesign = "minimal", algorithm = alg4,
                              linear.output = TRUE, threshold = 0.01)
 
-performancenet4 <- neuralnet(fr, trainset1, hidden = nn0, lifesign = "minimal", algorithm = alg5,
+performancenet4 <- neuralnet(fn, trainset1, hidden = nn0, lifesign = "minimal", algorithm = alg5,
                              linear.output = TRUE, threshold = 0.01)
 
 
 ## Definir variaveis de input para teste (todas menos "FatigueLevel" que é a variável de output)
-fatigue_test1 <- subset(testset1i, select = variablesR)
-fatigue_test2 <- subset(testset2, select = variablesR)
-fatigue_test3 <- subset(testset3, select = variablesR)
-fatigue_test4 <- subset(testset1, select = variablesR)
+fatigue_test1 <- subset(testset1i, select = variablesN)
+fatigue_test2 <- subset(testset2, select = variablesN)
+fatigue_test3 <- subset(testset3, select = variablesN)
+fatigue_test4 <- subset(testset1, select = variablesN)
 
 
 #Testar a rede com os casos de teste

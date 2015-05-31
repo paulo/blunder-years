@@ -22,8 +22,6 @@ head(dataset)
 head(dataseti)
 
 #Extrair n casos do dataset para um novo dataset que será usado para treinar a Rede Neuronal 
-poser<- dataset[1:100, ]
-
 trainset1 <- dataset[1:400, ] #extrair 400 casos
 trainset2 <- dataset[1:500, ] #extrair 500 casos
 trainset3 <- dataset[1:600, ] #extrair 600 casos
@@ -56,7 +54,6 @@ variables <- c("Performance.KDTMean", "Performance.MAMean", "Performance.MVMean"
 variablesR <- c("Performance.KDTMean", "Performance.MAMean", "Performance.DDCMean", "Performance.Task") #arranjar com novas variaveis descobertas
 
 
-
 #Variável a ser medida
 mVar <- "FatigueLevel"
 
@@ -73,17 +70,8 @@ nn3 <- c(40, 20)
 
 
 # Treinar a rede neuronal para usar todas as variáveis como input e produzir a variável "Fadiga" como output
-performancenet <- neuralnet(f, poser, hidden = nn3, lifesign = "minimal", algorithm = alg2,
+performancenet <- neuralnet(f, trainset1, hidden = nn3, lifesign = "minimal", algorithm = alg2,
                             linear.output = TRUE, threshold = 0.01)
-
-performancenet2 <- neuralnet(f, trainset1, hidden = nn2, lifesign = "minimal", algorithm = alg2,
-                            linear.output = TRUE, threshold = 0.01)
-
-performancenet3 <- neuralnet(f, trainset1, hidden = nn3, lifesign = "minimal", algorithm = alg2,
-                            linear.output = TRUE, threshold = 0.01)
-
-
-
 
 
 # Desenhar a Rede Neuronal
@@ -171,23 +159,6 @@ cols<-colorRampPalette(c('lightgreen','lightblue'))(num.vars)
 #use the function on the model created above
 par(mar=c(3,4,1,1),family='serif')
 gar.fun('tset',mod1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

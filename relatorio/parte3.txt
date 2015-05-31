@@ -50,28 +50,34 @@
 
 				<meter clustplotR>
 
-			Através da função kmeans podemos também atribuir aos registos o atributo numérico do cluster no qual estes se inserem e obter um novo dataset com o qual podemos reavaliar os testes realizados anteriormente. 
+----------			Finalmente através da função kmeans podemos também atribuir aos registos o atributo numérico do cluster no qual estes se inserem e obter um novo dataset com o qual podemos reavaliar os testes realizados anteriormente. 
 
 			Não obstante os resultados obtidos, estes foram validados com a utilização da ferramenta WEKA, cuja solução final consiste também na utilização de 3 clusters (o output total pode ser encontrado em anexo). 
 
 			=== Model and evaluation on training set ===
 
-Clustered Instances
+				Clustered Instances
+				
+				0      116 ( 14%)
+				1       84 ( 10%)
+				2       35 (  4%)
+				3      458 ( 54%)
+				4      151 ( 18%)
 
-0      116 ( 14%)
-1       84 ( 10%)
-2       35 (  4%)
-3      458 ( 54%)
-4      151 ( 18%)
 
-
-			
 
 		<Comparação e análise de resultados>
- 			Os resultados obtidos anteriormente são agora revalidados de acordo com o novo conjunto de clustering, sendo considerada a existência de fadiga apenas no nível 3 (dado o baixo volume de registos originais com um nível de fadiga elevado). 
+ 			Os resultados obtidos anteriormente são agora revalidados de acordo com o novo conjunto de clustering, sendo considerada a existência de fadiga apenas no nível 3 (dado o baixo volume de registos originais com um nível de fadiga elevado). Analisando os resultados obtidos (presentes em anexo), podemos derivar as seguintes conclusões:
 
- 			<fazer testes com as melhores configurações>
+ 			- Para todas as configurações, os resultados melhoraram imensamente, obtendo inclusive estimativas completamente corretas (rmse a 0). Estes testes forma repetidos de forma a assegurar a sua validade, e confirma a importância da divisão correta em grupos de um dado conjunto de registos.
+ 			- A estimação da presença ou ausência de fadiga produziu valores pouco corretos. Isto pode ser explicado por uma má classificação dos níveis nos quais se denota fadiga ou não.
+
 
  			<Conclusões>
 
- 			
+
+
+
+
+
+<meter output de weka em anexo> 			

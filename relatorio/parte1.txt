@@ -59,7 +59,7 @@
 
 
 
-Variation Clustering looks for a good subset of attributes in order to improve the classification accuracy of supervised learning techniques in classification problems with a huge number of attributes involved. It first creates a ranking of attributes based on the Variation value, then divide into two groups, last using Verification method to select the best group.
+
 
 
 
@@ -114,7 +114,6 @@ Variation Clustering looks for a good subset of attributes in order to improve t
 
 
 					<meter tabela das médias>
-					<meter os desenhos das diferentes redes neuronais>
 
 
 				Desta forma são selecionadas as melhores configurações de treino de RNA produzidas por cada algoritmo, que servirão de base para comparações e otimizações futuras:
@@ -186,17 +185,6 @@ Variation Clustering looks for a good subset of attributes in order to improve t
 			<Resultados obtidos>
 				Com o íntuito de avaliar então o mérito que cada variável possui na determinação da fadiga, seleciona-se o atributo 'FatigueLevel' como variável de output a analisar, e obtêm-se os seguintes resultados:
 
-
-
-			<Comparação de resultados>
-				De forma a avaliar o impacto que o novo conjunto de variáveis possui relativamente ao conjunto original, são testadas as redes cuja configuração obteve melhor resultado nos testes realizados anteriormente, mas agora com o novo conjunto, e comparam-se os valores obtidos, tirando-se seguintes conclusões:
-
-
-
-
-				<Conclusões>
-
-
 				Search Method:
 	Best first.
 	Start set: no attributes
@@ -214,3 +202,21 @@ Selected attributes: 1,2,5,10 : 4
                      Performance.MAMean
                      Performance.DDCMean
                      Performance.Task
+
+               	Assim, os resultados indicam que o subconjunto de váriaveis que possui maior peso na determinação da variável FatigueLevel consiste nos atributos Performance.KDTMean, Performance.MAMean, Performance.DDCMean, Performance.Task. 
+
+
+			<Comparação de resultados>
+				De forma a avaliar o impacto que o novo conjunto de variáveis possui relativamente ao conjunto original, são testadas as redes cuja configuração obteve melhor resultado nos testes realizados anteriormente, sendo a sua função de aprendizagem consituida agora pelas variáveis do novo conjunto, e comparam-se os valores obtidos. O mesmo teste é efetuado com as variáveis restantes, tirando-se seguintes conclusões:
+
+
+					- Apenas o treino correspondente à RNA com o algoritmo slr convergiu. Isto pode ser devido a diversos factores, tal como a possibilidade de que a existência de menos variáveis de input obrigue a RNA a efetuar um maior número de passos de forma a convergir e produzir um resultado aceitável. 
+					- Os resultados obtidos na configuração que obteve sucesso com as variáveis relevantes são ligeiramente piores que os resultados originais, no entanto a diferença não é significativa, pelo que o único que se pode concluir é que com apenas 4 das 9 variáveis originais é possível obter os mesmos resultados, confirmando o peso que estas variáveis possuem.
+					- Como esperado, as RNAs relativas às variáveis consideradas menos relevantes produzem resultados bastante inferiores aos obtidos com todas as variáveis, nos casos em que convergem.
+
+
+				Os valores obtidos podem ser consultados na tabela em anexo.
+
+				<Conclusões>
+
+					Como é possível observar, os resultados produzidos por cada RNA dependem totalmente das suas diversas configurações. Não existe uma configuração ideal para cada dataset/situação, pelo que estas devem ser sujeitas a testes de forma a encontrar a que melhor resultados obtêm. 
