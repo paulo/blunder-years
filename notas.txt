@@ -1,0 +1,22 @@
+Grupos de 3.
+Entrega: 4 de Dezembro de 2015.
+Relatório até 6 páginas.
+Necessário entregar source code.
+Actors e message-orientation, através de Quasar e ZeroMQ.
+---
+
+Chat server com:
+    - Registo/removal e autenticação/logout de utilizadores (name e password).
+    - Escolha/mudança de sala (partindo de salas existentes). 
+    - Envio de mensagens privadas para outros utilizadores conectados.
+    - Protocolo de texto simples para ser possivel usar telnet.
+    - API para gestão e descrição (criação/remoção/listagem de salas, listagem de utilizadores, etc)
+    - API de notificações que permite subscrever a eventos relevantes (criação/remoção de sala, login/logout de utilizador na sala, etc)
+
+    .deve ser escalável no número de utilizadores conectados.
+    .deve permitir subscrição de eventos notáveis.
+
+Clientes (3 clientes)
+    - cliente chat para utilizadores (permite listagem de salas, escolha de salas e listagem de utilizadores)
+    - cliente admin para gerir (criar/remover/listar) salas
+    - consola de notificação (permite observar o sistema subscrevendo a eventos relevantes)
