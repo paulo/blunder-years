@@ -1,0 +1,39 @@
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+//mainClassName = "Hello"
+//mainClassName = "Ring"
+//mainClassName = "Ring2"
+//mainClassName = "ActorChat.ChatServer"
+mainClassName = "CodeExamples.Hello"
+//mainClassName = "ActorChat.Lock"
+//mainClassName = "ActorChat.LockJ8"
+//mainClassName = "ActorChat.RWLock"
+//mainClassName = "ActorChat.RWLockJ8"
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    quasar
+}
+
+dependencies {
+    
+    testCompile 'junit:junit:4.11'
+    compile 'org.slf4j:slf4j-api:1.7.5'
+
+    compile "co.paralleluniverse:quasar-core:0.7.3:jdk8"
+    compile "co.paralleluniverse:quasar-actors:0.7.3"
+    compile "co.paralleluniverse:quasar-galaxy:0.7.3"
+    compile "co.paralleluniverse:quasar-reactive-streams:0.7.3"
+    compile "co.paralleluniverse:quasar-kotlin:0.7.3"
+    quasar  "co.paralleluniverse:quasar-core:0.7.3:jdk8"
+    
+}
+
+run {
+    jvmArgs "-javaagent:${configurations.quasar.iterator().next()}"
+}

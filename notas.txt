@@ -3,10 +3,11 @@ Entrega: 4 de Dezembro de 2015.
 Relatório até 6 páginas.
 Necessário entregar source code.
 Actors e message-orientation, através de Quasar e ZeroMQ.
+
 ---
 
 Chat server com:
-    - Registo/removal e autenticação/logout de utilizadores (name e password).
+    - Registo/remoção e login/logout de utilizadores (name e password).
     - Escolha/mudança de sala (partindo de salas existentes). 
     - Envio de mensagens privadas para outros utilizadores conectados.
     - Protocolo de texto simples para ser possivel usar telnet.
@@ -20,3 +21,20 @@ Clientes (3 clientes)
     - cliente chat para utilizadores (permite listagem de salas, escolha de salas e listagem de utilizadores)
     - cliente admin para gerir (criar/remover/listar) salas
     - consola de notificação (permite observar o sistema subscrevendo a eventos relevantes)
+
+
+ver quasar advanced - channels (forma de controlar a quantidade de mensagens que podem estar na queue?)
+
+ver channel selection para permitir receber mensagens de vários channels
+
+ver dataflow reactive programming -> interessante forma de recalcular variaveis quando ocorre um evento
+
+ver exemplos de actors distribuidos/clustering
+
+ver registering actors para os tornar acessiveis em toda a rede
+
+ver proxy server em quasar, é capaz de se tornar muito util no servidor 
+
+rever behaviours, tem la muitas coisas uteis
+
+usar supervisors
