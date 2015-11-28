@@ -19,6 +19,8 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
 
     @SuppressWarnings("empty-statement")
     @Override
+    //opções: entrar sala, sair de sala (neste momento está change, mas a logica pertence ao manager,
+    //portanto se calhar é melhor meter para sair), enviar mensagem para sala
     protected Void doRun() throws InterruptedException, SuspendExecution {
 
         while (receive(msg -> {

@@ -7,9 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 //ao fazer logout estou a colocar uma entrada para null na userRoom -> pode dar problemas
-//opções: entrar num quarto por utilizador
+//opções: entrar num sala(user), mudar de sala(user), sair de sala/logout(user), 
+//apagar sala (admin), listar sala(user e admin), adicionar sala(admin) 
+//talvez: apagar user?
 
-//mensagens privadas atraves do subscribe do zeromq?
+//mensagens privadas atraves do subscribe do zeromq? ou processar no linereader? ou deixar a logica para a sala?
+//criar um canal geral onde vao ser enviadas as mensagens privadas?
 public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
 
     //nome da sala -> actorref da sala

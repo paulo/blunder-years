@@ -8,6 +8,7 @@ public class Message {
         DATA,
         EOF,
         IOE,
+        LEAVE,
         ROOM_ENTER,
         ROOM_CHANGE,
         LINE,
