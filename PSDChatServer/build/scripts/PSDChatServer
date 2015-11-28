@@ -161,4 +161,4 @@ function splitJvmOpts() {
 eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $PSD_CHAT_SERVER_OPTS
 
 
-exec "$JAVACMD" "${JVM_OPTS[@]}" -classpath "$CLASSPATH" ActorChat.ChatServerV2 "$@"
+exec "$JAVACMD" "${JVM_OPTS[@]}" -classpath "$CLASSPATH" CodeExamples.ChatServerV2 "$@"

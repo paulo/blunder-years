@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import co.paralleluniverse.actors.*;
 import co.paralleluniverse.fibers.SuspendExecution;
+import co.paralleluniverse.fibers.Suspendable;
 import co.paralleluniverse.fibers.io.*;
 import java.io.UnsupportedEncodingException;
 
@@ -62,6 +63,7 @@ public class ChatServerV2 {
                 case "enterroom":
                     return new RetrievableMessage(Type.ROOM_ENTER, inst[1]);
                 default:
+                    System.out.println("Recebido: "+ input);
                     return new RetrievableMessage(Type.DATA, input);
             }
         }
@@ -118,13 +120,15 @@ public class ChatServerV2 {
             this.socket = socket;
         }
 
-        @SuppressWarnings("empty-statement")
         protected Void doRun() throws InterruptedException, SuspendExecution {
 
             new LineReader(self(), socket).spawn();
             roomManager.send(new RetrievableMessage(Type.ROOM_ENTER, "default", self()));
             room = (ActorRef) receive().o;
-
+            if(room != null) System.out.println("recebido");
+                    else System.out.println("nao recebido");
+            //room = new Room(roomManager).spawn();
+            
             while (receive((RetrievableMessage msg) -> {
                 try {
                     switch (msg.type) {
@@ -152,6 +156,8 @@ public class ChatServerV2 {
             return null;
         }
     }
+    
+    
 
     //ao fazer logout estou a colocar uma entrada para null na userRoom -> pode dar problemas
     static class RoomManager extends BasicActor<RetrievableMessage, Void> {
@@ -162,7 +168,6 @@ public class ChatServerV2 {
         Map<ActorRef, ActorRef> userRoom = new HashMap<>();
 
         @Override
-        @SuppressWarnings("empty-statement")
         protected Void doRun() throws InterruptedException, SuspendExecution {
 
             while (receive((RetrievableMessage msg) -> {
@@ -170,13 +175,15 @@ public class ChatServerV2 {
                     case ROOM_ENTER:
                         if (roomPool.containsKey((String) msg.o)) {
                             //reenviar ao user o room com o qual se deve conectar
-                            msg.sender.send(roomPool.get((String) msg.o));
+                            msg.sender.send(new RetrievableMessage(Type.DATA, roomPool.get((String) msg.o)));
                             userRoom.put(msg.sender, roomPool.get((String) msg.o));
+                            roomPool.get((String) msg.o).send(new RetrievableMessage(Type.ROOM_ENTER, msg.sender));
                         } else {
                             ActorRef new_room = new Room(self()).spawn();
                             roomPool.put((String) msg.o, new_room);
                             userRoom.put(msg.sender, new_room);
-                            msg.sender.send(new_room);
+                            msg.sender.send(new RetrievableMessage(Type.DATA, new_room));
+                            new_room.send(new RetrievableMessage(Type.ROOM_ENTER, msg.sender));
                         }
                         return true;
                     case ROOM_CHANGE:
@@ -193,7 +200,8 @@ public class ChatServerV2 {
             return null;
         }
     }
-
+    
+    
     //Pode receber 3 tipos de mensagens: Entrada de utilizador, Saída de Utilizador, Escrita de Mensagem para todos os utilizadores
     static class Room extends BasicActor<RetrievableMessage, Void> {
 
@@ -205,7 +213,6 @@ public class ChatServerV2 {
             this.manager = room_manager;
         }
 
-        @SuppressWarnings("empty-statement")
         protected Void doRun() throws InterruptedException, SuspendExecution {
 
             while (receive(msg -> {
@@ -229,8 +236,10 @@ public class ChatServerV2 {
         }
     }
 
+ 
+    
     //Ciclo while para aceitar conexões e criar novos users
-    static class Acceptor extends BasicActor {
+    static class Acceptor extends BasicActor<RetrievableMessage, Void> {
 
         final int port;
         final ActorRef roomManager;
@@ -240,6 +249,7 @@ public class ChatServerV2 {
             this.roomManager = roomManager;
         }
 
+        @Override
         protected Void doRun() throws InterruptedException, SuspendExecution {
             try {
                 FiberServerSocketChannel ss = FiberServerSocketChannel.open();
@@ -254,6 +264,9 @@ public class ChatServerV2 {
         }
     }
 
+    
+    
+    
     public static void main(String[] args) throws Exception {
         int port = 12345; //Integer.parseInt(args[0]);
 

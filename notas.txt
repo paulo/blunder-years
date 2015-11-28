@@ -23,18 +23,44 @@ Clientes (3 clientes)
     - consola de notificação (permite observar o sistema subscrevendo a eventos relevantes)
 
 
-ver quasar advanced - channels (forma de controlar a quantidade de mensagens que podem estar na queue?)
 
-ver channel selection para permitir receber mensagens de vários channels
 
-ver dataflow reactive programming -> interessante forma de recalcular variaveis quando ocorre um evento
 
-ver exemplos de actors distribuidos/clustering
 
-ver registering actors para os tornar acessiveis em toda a rede
 
-ver proxy server em quasar, é capaz de se tornar muito util no servidor 
 
-rever behaviours, tem la muitas coisas uteis
+Notas:
+    - Channels
+        - Selectors para esperar dois canais ao mesmo tempo
+        - Map, Reduce para aplicar operações ás mensagens recibidas
+        - BufferSize para definir o máximo de mensagens que podem estar no buffer
+    - Clustering (meter roomManagers em diferentes computadores)?
+    - Register actors (torná-los acessiveis em toda a rede, talvez dê jeito)
+    - Dataflow reactive programming (recalcular variáveis quando ocorre um evento)
+    - Supervisors
+        - Talvez fazer meter o user a fazer watch do seu line reader e vice-versa
+    - Behaviors
+        - RequestReplyHelper
+        - BehaviorActor
+        - Server
+        - Proxy Server (capaz de se tornar útil no servidor)
+        - Event Source 
+        - FiniteStateMachineActor (talvez usar isto para depois fazer refactoring do código)
 
-usar supervisors
+Ver exemplos de testes de código
+
+
+
+
+
+1º - Aplicação com acceptor, linereader, user, LoginWorker (template), enums, Usermanager, RoomManager, Room
+
+gradle run -Dmyargs="12344"
+    -> Usar isto para depois criar vários servidores ao mesmo tempo.
+
+
+
+
+Perguntas:
+    - Pode haver algum bottleneck na criação de ligações por apenas haver um acceptor?
+    - É boa ideia meter o user a fazer watch do line-reader?

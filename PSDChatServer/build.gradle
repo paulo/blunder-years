@@ -2,15 +2,14 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-//mainClassName = "Hello"
-//mainClassName = "Ring"
-//mainClassName = "Ring2"
-//mainClassName = "ActorChat.ChatServer"
-mainClassName = "CodeExamples.Hello"
-//mainClassName = "ActorChat.Lock"
-//mainClassName = "ActorChat.LockJ8"
-//mainClassName = "ActorChat.RWLock"
-//mainClassName = "ActorChat.RWLockJ8"
+mainClassName = "ServerActors.Main"
+//mainClassName = "CodeExamples.ChatServerV2"
+
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'ServerActors.Main'
+    //ext.mainClass = "CodeExamples.ChatServerV2"
+}
 
 repositories {
     mavenCentral()
@@ -35,5 +34,7 @@ dependencies {
 }
 
 run {
+    args System.getProperty("myargs").split(' ') 
+    
     jvmArgs "-javaagent:${configurations.quasar.iterator().next()}"
 }

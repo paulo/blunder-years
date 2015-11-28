@@ -1,4 +1,4 @@
-package ActorChat;
+package CodeExamples;
 
 import java.nio.ByteBuffer;
 import java.io.IOException;
@@ -13,14 +13,13 @@ public class ChatServer {
 
     static int MAXLEN = 1024;
 
-    //enum com os diferentes tipos de mensagens (facilita um bocado no selective receiving)
     static enum Type {
+
         DATA, EOF, IOE, ENTER, LEAVE, LINE
     }
 
-    //classe da mensagem, com o tipo e o conteudo (basicamente um object)
     static class Msg {
-        
+
         final Type type;
         final Object o;  // careful with mutable objects, such as the byte array
 
@@ -30,10 +29,8 @@ public class ChatServer {
         }
     }
 
-    //actor responsavel por ler as mensagens dos sockets, processar, e enviar para o actor do utilizador
     static class LineReader extends BasicActor<Msg, Void> {
 
-        //user actor com o qual esta associado, assim como socket e respectivos bytebuffers
         final ActorRef<Msg> dest;
         final FiberSocketChannel socket;
         ByteBuffer in = ByteBuffer.allocate(MAXLEN);
@@ -95,12 +92,8 @@ public class ChatServer {
         }
 
         protected Void doRun() throws InterruptedException, SuspendExecution {
-            //criar um novo actor responsavel por processar a info vinda do socket
             new LineReader(self(), socket).spawn();
-            //regista-se no grupo
             room.send(new Msg(Type.ENTER, self()));
-            //criar um novo messageprocessor para fazer o selective receive das mensagens que recebe (em loop) do actor linereader
-            //ou mesmo do actor room
             while (receive(msg -> {
                 try {
                     switch (msg.type) {
@@ -127,11 +120,8 @@ public class ChatServer {
 
     static class Room extends BasicActor<Msg, Void> {
 
-        //Set dos useres conectados, que basicamente sao actores
         private Set<ActorRef> users = new HashSet();
 
-        //Utiliza o método receive de basicActor que recebe um messageprocessor. Basicamente isto serve para implementar um
-        //selective receive. 
         protected Void doRun() throws InterruptedException, SuspendExecution {
             while (receive(msg -> {
                 switch (msg.type) {
@@ -153,8 +143,6 @@ public class ChatServer {
         }
     }
 
-    //este é o actor encarregado de aceitar as conecções por socket dos clientes. A cada conecção cria um novo actor cliente
-    //(e portanto, uma nova fiber) e associa-o ao room criado anteriormente
     static class Acceptor extends BasicActor {
 
         final int port;
@@ -186,4 +174,5 @@ public class ChatServer {
         acceptor.spawn();
         acceptor.join();
     }
+
 }
