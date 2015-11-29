@@ -51,15 +51,15 @@ Ver exemplos de testes de código
 
 
 
+comandos de registo, mudança de sala, login, logout, etc...
+organizar código
 
 
-1º - Aplicação com acceptor, linereader, user, LoginWorker (template), enums, Usermanager, RoomManager, Room
 
 gradle run -Dmyargs="12344"
     -> Usar isto para depois criar vários servidores ao mesmo tempo.
 
-
-
+ter em conta a mailbox e mailbox policy
 
 Perguntas:
     - Pode haver algum bottleneck na criação de ligações por apenas haver um acceptor?

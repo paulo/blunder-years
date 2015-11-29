@@ -3,8 +3,12 @@ package ServerActors;
 import static ServerActors.User.MAXLEN;
 import co.paralleluniverse.actors.ActorRef;
 import co.paralleluniverse.actors.BasicActor;
+import co.paralleluniverse.actors.MailboxConfig;
+import co.paralleluniverse.actors.behaviors.EventHandler;
+import co.paralleluniverse.actors.behaviors.EventSource;
 import co.paralleluniverse.fibers.SuspendExecution;
 import co.paralleluniverse.fibers.io.FiberSocketChannel;
+import co.paralleluniverse.strands.channels.Channels;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -12,14 +16,19 @@ import java.nio.ByteBuffer;
 //o objetivo era criar uma abstraçao do user ao manager, mas tornou-se bastante complicado e mudei de ideias
 public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
-    static int MAXLEN = 1024;
+    static int MAXLEN = 1024, USER_BOX_LIMIT=100;
+    static Channels.OverflowPolicy box_policy = Channels.OverflowPolicy.DROP;
+    
     private ActorRef roomManager;
     final FiberSocketChannel socket;
     private ActorRef room;
+    private EventSource eventsource;
 
-    User(ActorRef room, FiberSocketChannel socket) {
+    User(String actor_id, ActorRef room, FiberSocketChannel socket, EventSource es) {
+        super(actor_id, new MailboxConfig(USER_BOX_LIMIT, box_policy));
         this.roomManager = room;
         this.socket = socket;
+        this.eventsource = es;
     }
 
     @SuppressWarnings("empty-statement")
@@ -28,11 +37,15 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         new LineReader(self(), socket).spawn();
         roomManager.send(new Message.RetrievableMessage(Message.MessageType.ROOM_ENTER, "default", self()));
         room = (ActorRef) receive().o;
-
+        eventsource.notify("Adicionado novo user");
+                        
+        
         while (receive((Message.RetrievableMessage msg) -> {
             try {
                 switch (msg.type) {
                     case DATA:
+                        eventsource.notify("Enviada linha");
+                        
                         room.send(new Message.RetrievableMessage(Message.MessageType.LINE, msg.o));
                         return true;
                     case ROOM_CHANGE:
