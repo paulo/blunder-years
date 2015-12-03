@@ -4,7 +4,7 @@ import co.paralleluniverse.actors.BasicActor;
 import co.paralleluniverse.fibers.SuspendExecution;
 import java.util.*;
 
-
+//falta meter o user actor no userinfo sempre que o utilizador faz login
 public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
 
     private Map<String, UserInfo> userPool;
@@ -33,6 +33,30 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         if(userPool.containsKey(username))
             userPool.get(username).setIsLoggedIn(false);
     }
+        
+    //fazer controlo de erros para casos em que nao tem users na frase
+    //talvez mudar este tipo de metodos para usar string builder ou algo mais rapido
+    @SuppressWarnings("empty-statement")
+    private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
+        String[] args = (String[]) msg.o;
+        List<String> dest_users = new ArrayList<>();
+        String data = args[0]+": ";
+        int i=1;
+        while(i<args.length){
+            if(args[i].startsWith("@")){
+                dest_users.add(args[i]);
+                i++;
+            } else break;
+        }
+        while(i<args.length) {
+            data = data.concat(args[i]);
+        }
+            data = data.concat("\n");
+            
+        for(String s : dest_users){
+            userPool.get(s).getUser_actor().send(new Message.RetrievableMessage(Message.MessageType.DATA, data));
+        }
+    }
     
     @Override
     @SuppressWarnings("empty-statement")
@@ -58,9 +82,10 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
                         data.sender.send(new Message.NonRetrivableMessage(Message.MessageType.KO, "Login information incorrect!"));
                     }
                     return true;
-                case USER_PRIVATE_MESSAGE: //implementar
+                case USER_PRIVATE_MESSAGE: //falta testar
+                    sendPrivateMessage(msg);
                     return true;
-                case ADMIN_LIST_ONLINE_USERS: //implementar (talvez necessite de lock no map)
+                case USER_LIST_USERS: //implementar (talvez necessite de lock no map)
                     return true;
                 case USER_LOGOUT:
                     logOutUser((String) msg.o);
@@ -79,4 +104,5 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         }));
         return null;
     }
+
 }

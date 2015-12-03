@@ -21,7 +21,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
     //talvez ao criar o room dar-lhe o nome como atributo
     @SuppressWarnings("empty-statement")
     private void createPublicRoom(String room_name) {
-        ActorRef new_room = new Room(self(), false).spawn();
+        ActorRef new_room = new Room(self(), false, room_name).spawn();
         publicRoomPool.put(room_name, new_room);
     }
 
@@ -29,7 +29,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
     private void createPrivateRoom(Message.RetrievableMessage msg) throws SuspendExecution {
         String room_name = (String) msg.o;
         
-        ActorRef new_room = new Room(self(), true).spawn();
+        ActorRef new_room = new Room(self(), true, room_name).spawn();
         publicRoomPool.put(room_name, new_room);
         //tem de ser meter controlo de erros caso a sala já exista
         //talvez meter aqui para adicionar também o user, o problema é se o user for admin

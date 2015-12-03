@@ -35,6 +35,14 @@ public class UserInfo {
         return password;
     }
 
+    public boolean isIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }

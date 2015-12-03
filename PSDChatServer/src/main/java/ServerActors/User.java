@@ -12,14 +12,14 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
-//o objetivo era criar uma abstraçao do user ao manager, mas tornou-se bastante complicado e mudei de ideias
+//talvez passar isto para nonRetrivableMessage
+//falta fazer os checks sobre se está loggedIn ou não
 public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
     static int MAXLEN = 1024, USER_BOX_LIMIT = 100;
     static Channels.OverflowPolicy box_policy = Channels.OverflowPolicy.DROP;
 
-    private String username;
-    private String password;
+    private UserInfo user_info;
 
     private ActorRef room_manager;
     final FiberSocketChannel socket;
@@ -39,7 +39,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
     private void userLogout() throws SuspendExecution {
         if (isLoggedIn) {
-            user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT, username));
+            user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT, user_info.getUsername()));
             room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT, self()));
         }
     }
@@ -50,6 +50,25 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
     private void userRegister(Message.RetrievableMessage msg) throws SuspendExecution {
         user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER, new Message.LoginMessage(Message.MessageType.OK, ((Message.LoginMessage) msg.o).username, ((Message.LoginMessage) msg.o).password, self())));
+    }
+
+    private void listRoom() throws SuspendExecution {
+        if (user_info.isIsAdmin()) {
+            room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LIST_ROOM, null, self()));
+        } else {
+            room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, null, self()));
+        }
+    }
+
+    private void listRoomUsers() throws SuspendExecution {
+        room.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null, self()));
+    }
+    
+    private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
+        String[] args = (String[]) msg.o;
+        args[0] = user_info.getUsername();
+        
+        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, args, self()));
     }
 
     @SuppressWarnings("empty-statement")
@@ -63,6 +82,15 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         while (receive((Message.RetrievableMessage msg) -> {
             try {
                 switch (msg.type) {
+                    case USER_LIST_ROOM:
+                        listRoom();
+                        return true;
+                    case USER_LIST_ROOM_USERS:
+                        listRoomUsers();
+                        return true;
+                    case USER_PRIVATE_MESSAGE:
+                        sendPrivateMessage(msg);
+                        return true;
                     case DATA:
                         //eventsource.notify("Enviada linha");
                         room.send(new Message.RetrievableMessage(Message.MessageType.LINE, msg.o));
@@ -89,9 +117,9 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         socket.write(ByteBuffer.wrap((byte[]) msg.o));
                         return true;
                     /*case REMOVE:
-                        login.send(new Message.RetrievableMessage(Message.MessageType.REMOVE, new Message.LoginMessage(Message.MessageType.OK, ((Message.LoginMessage) msg.o).username, ((Message.LoginMessage) msg.o).password, self())));
-                        return true;
-                        */
+                     login.send(new Message.RetrievableMessage(Message.MessageType.REMOVE, new Message.LoginMessage(Message.MessageType.OK, ((Message.LoginMessage) msg.o).username, ((Message.LoginMessage) msg.o).password, self())));
+                     return true;
+                     */
                 }
             } catch (IOException e) {
                 room.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, self()));
@@ -122,13 +150,15 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
         switch (inst[0]) {
             //listar quartos disponiveis a user (se for admin, lista todos)
             case "!listrooms":
-                return null;
+                return new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, null);
             //listar users online
             case "!listusers":
                 return null;
+            case "!listroomusers":
+                return new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null);
             //enviar mensagem privada para utilizador(es)
-            case "!sendpm":
-                return null;
+            case "!sendpm":                
+                return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, inst);
             //criar quarto privado com a lista de utilizadores que estão à frente
             case "!createprivateroom":
                 return null;
