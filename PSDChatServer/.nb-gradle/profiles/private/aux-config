@@ -5,30 +5,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
       <group>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Message.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/CodeExamples/ChatServerV2.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/CodeExamples/ChatServer.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/RoomManager.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Room.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/ChatServer.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/UserManager.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/User.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Main.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/build.gradle</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/User.java</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Message.java</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/ChatServer.java</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/RoomManager.java</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Room.java</file>
       </group>
     </open-files>
+    <editor-bookmarks lastBookmarkId="0" xmlns="http://www.netbeans.org/ns/editor-bookmarks/2"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
       <group>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Message.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/CodeExamples/ChatServerV2.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/CodeExamples/ChatServer.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/RoomManager.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Room.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/ChatServer.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/UserManager.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/User.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Main.java</file>
-        <file>file:/Users/paulo/Dropbox/MIEI/Paradigmas%20de%20Sistemas%20Distribuidos/TP1/PSDChatServer/build.gradle</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/User.java</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Login.java</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Message.java</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/ChatServer.java</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Main.java</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/RoomManager.java</file>
+        <file>file:/Users/paulo/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP1/PSDChatServer/src/main/java/ServerActors/Room.java</file>
       </group>
     </open-files>
   </auxiliary>

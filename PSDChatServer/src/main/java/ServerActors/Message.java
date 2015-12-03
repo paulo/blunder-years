@@ -8,9 +8,33 @@ public class Message {
         DATA,
         EOF,
         IOE,
-        LEAVE,
-        ROOM_ENTER,
-        ROOM_CHANGE,
+        
+        //User actions
+        USER_LOGIN,
+        USER_LOGOUT,
+        USER_REGISTER,
+        USER_ENTER_ROOM,
+        USER_LEAVE_ROOM,
+        USER_CHANGE_ROOM,
+        USER_LIST_ROOM,
+        USER_CREATE_PUBLIC_ROOM,
+        USER_CREATE_PRIVATE_ROOM,
+        USER_PRIVATE_ROOM_ADD,
+        USER_PRIVATE_MESSAGE,
+        USER_LIST_USERS,
+        USER_LIST_ROOM_USERS,
+        
+        //Admin actions
+        ADMIN_REMOVE_ROOM,
+        ADMIN_LIST_ROOM,
+        
+        
+        
+        //Simao
+        OK,
+        KO,
+        LOGINCOMMAND,
+        
         LINE,
         LOG_OUT
     }
@@ -48,11 +72,20 @@ public class Message {
         MessageType type;
         String username;
         String password;
+        ActorRef sender;
+        
+        LoginMessage(MessageType t, String un, String pw, ActorRef sender) {
+            this.type = t;
+            this.username = un;
+            this.password = pw;
+            this.sender = sender;
+        }  
         
         LoginMessage(MessageType t, String un, String pw) {
             this.type = t;
             this.username = un;
             this.password = pw;
-        }  
+            this.sender = null;
+        } 
     }
 }

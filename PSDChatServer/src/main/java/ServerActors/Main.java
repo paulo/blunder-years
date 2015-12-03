@@ -3,7 +3,7 @@ package ServerActors;
 public class Main {
 
     //adicionar alguma lógica de correção de erros, para casos tipo quando 
-    //os argumentos nao sao portas viaveis ou sao letras
+    //os argumentos nao sao portas viáveis ou sao letras
     public static void main(String[] args) throws Exception {
         int default_port = 12345, port;
         

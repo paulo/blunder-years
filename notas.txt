@@ -51,6 +51,8 @@ Ver exemplos de testes de código
 
 
 
+
+
 comandos de registo, mudança de sala, login, logout, etc...
 organizar código
 
@@ -61,6 +63,14 @@ gradle run -Dmyargs="12344"
 
 ter em conta a mailbox e mailbox policy
 
-Perguntas:
-    - Pode haver algum bottleneck na criação de ligações por apenas haver um acceptor?
-    - É boa ideia meter o user a fazer watch do line-reader?
+
+
+
+Perguntar ao prof até que ponto o roomManager está a ser demasiado carregado... talvez criar um actor proprio para tratar das mensagens privadas
+
+
+
+
+Simão:
+    - fazer error control na main
+    - no linereader, é preciso controlar os erros de quando nao ha argumentos suficientes para construir a mensagem

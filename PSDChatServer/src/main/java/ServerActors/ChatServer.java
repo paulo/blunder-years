@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 public class ChatServer {
 
-    ActorRef acceptor, room_manager;
+    ActorRef acceptor, room_manager, user_manager;
     Supervisor user_supervisor;
     int port;
     EventSource es;
@@ -31,13 +31,32 @@ public class ChatServer {
         this.port = port_nmr;
     }
 
+    private ActorRef createUserSupervisor() {
+        return new SupervisorActor(RestartStrategy.ONE_FOR_ONE).spawn();
+    }
+
+    private ActorRef createRoomManager() {
+        return new RoomManager().spawn();
+    }
+
+    private Acceptor createAcceptor(ActorRef room_manager, ActorRef user_supervisor, ActorRef user_manager) {
+        return new Acceptor(this.port, room_manager, (Supervisor) user_supervisor, user_manager);
+    }
+
+    private ActorRef createEventSource(String source_type) {
+        return new EventSourceActor<String>(source_type).spawn();
+    }
+
+    private ActorRef createUserManager(){
+        return new UserManager().spawn();
+    }
+    
     public void init() {
-        this.room_manager = new RoomManager().spawn();
-        user_supervisor = new SupervisorActor(RestartStrategy.ONE_FOR_ONE).spawn();
-
-        Acceptor ac = new Acceptor(port, this.room_manager, this.user_supervisor);
-
-        es = new EventSourceActor<String>("user_event_actor").spawn();
+        room_manager = createRoomManager();
+        //user_supervisor = (Supervisor) createUserSupervisor();
+        /*es = (EventSource) createEventSource("user_event_actor");*/   
+        user_manager = createUserManager();
+        Acceptor ac = createAcceptor(room_manager, user_supervisor, user_manager);
         this.acceptor = ac.spawn();
 
         try {
@@ -52,14 +71,16 @@ public class ChatServer {
 
         final int port;
         int user_count;
+        final ActorRef user_manager;
         final ActorRef room_manager;
         final Supervisor user_supervisor;
 
-        Acceptor(int port, ActorRef rm, Supervisor us) {
+        Acceptor(int port, ActorRef rm, Supervisor us, ActorRef um) {
             this.port = port;
             this.room_manager = rm;
             this.user_supervisor = us;
             this.user_count = 1;
+            this.user_manager = um;
         }
 
         @Override
@@ -74,16 +95,15 @@ public class ChatServer {
                 while (true) {
                     String actor_id = "actor" + user_count++;
                     FiberSocketChannel socket = ss.accept();
-                    ActorRef new_actor = new User(actor_id, room_manager, socket, es).spawn();
-                    
-                    es.addHandler((EventHandler) (Object event) -> {
-                        System.out.println(event.toString());
-                    });
-                    
-                    this.user_supervisor.addChild(new ChildSpec(
-                            actor_id, ChildMode.TRANSIENT, 10, 1, TimeUnit.SECONDS, 3,
-                            new_actor));
+                    ActorRef new_actor = new User(actor_id, room_manager, user_manager, socket, es).spawn();
 
+                    /*es.addHandler((EventHandler) (Object event) -> {
+                     System.out.println(event.toString());
+                     });
+                    
+                     this.user_supervisor.addChild(new ChildSpec(
+                     actor_id, ChildMode.TRANSIENT, 10, 1, TimeUnit.SECONDS, 3,
+                     new_actor));*/
                 }
             } catch (IOException e) {
             }
