@@ -36,6 +36,7 @@ public class Message {
         USER_ENTER_ROOM_ACK,
         KO,
         LOGINCOMMAND,
+        SUBSCRIBE,
         
         LINE,
         LOG_OUT
