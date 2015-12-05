@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 
 public class ChatServer {
 
-    ActorRef acceptor, room_manager, user_manager;
+    ActorRef acceptor, room_manager, user_manager, event_publisher;
     Supervisor user_supervisor;
     int port;
     EventSource es;
@@ -51,10 +51,15 @@ public class ChatServer {
         return new UserManager().spawn();
     }
     
+    private ActorRef createEventPublisher(){
+        return new EventPublisher(port).spawn();
+    }
+    
     public void init() {
+        event_publisher = createEventPublisher(); 
         room_manager = createRoomManager();
         //user_supervisor = (Supervisor) createUserSupervisor();
-        /*es = (EventSource) createEventSource("user_event_actor");*/   
+        /*es = (EventSource) createEventSource("user_event_actor");*/  
         user_manager = createUserManager();
         Acceptor ac = createAcceptor(room_manager, user_supervisor, user_manager);
         this.acceptor = ac.spawn();
@@ -93,9 +98,14 @@ public class ChatServer {
                         .bind(new InetSocketAddress(port));
 
                 while (true) {
+                    
                     String actor_id = "actor" + user_count++;
                     FiberSocketChannel socket = ss.accept();
-                    ActorRef new_actor = new User(actor_id, room_manager, user_manager, socket, es).spawn();
+                    ActorRef new_actor; 
+                    //se for cliente normal:
+                    new_actor = new User(actor_id, room_manager, user_manager, socket, es).spawn();
+                    //se for cliente tipo notification console:
+                    //new_actor = new NotificationSubscriber(port).spawn();
 
                     /*es.addHandler((EventHandler) (Object event) -> {
                      System.out.println(event.toString());

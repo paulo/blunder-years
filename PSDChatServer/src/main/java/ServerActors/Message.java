@@ -34,6 +34,7 @@ public class Message {
         OK,
         KO,
         LOGINCOMMAND,
+        SUBSCRIBE,
         
         LINE,
         LOG_OUT
