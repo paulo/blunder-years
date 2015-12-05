@@ -50,9 +50,9 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
         } else if (publicRoomPool.containsKey(room_name)) { //aqui o room fica responsavel de mandar a sua ref ao user
             publicRoomPool.get(room_name)
                     .send(new Message.RetrievableMessage(
-                                    Message.MessageType.USER_ENTER_ROOM, msg.sender));
+                                    Message.MessageType.USER_ENTER_ROOM, null, msg.sender));
         } else {
-            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.DATA, "The room doesn't exist"));
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "The room doesn't exist"));
         }
     }
     
@@ -83,7 +83,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
             } else if (privateRoomPool.containsKey(s)) {
                 privateRoomPool.get(s).send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, null));
             } else {
-                msg.sender.send(new Message.RetrievableMessage(Message.MessageType.DATA, "The room "+s+" does not exist."));
+                msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "The room "+s+" does not exist."));
             }
         }
     }
@@ -122,6 +122,8 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
     @Override
     @SuppressWarnings("empty-statement")
     protected Void doRun() throws InterruptedException, SuspendExecution {
+        
+        this.createPublicRoom("global_room");
 
         while (receive((Message.RetrievableMessage msg) -> {
             switch (msg.type) {

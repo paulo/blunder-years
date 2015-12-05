@@ -22,7 +22,14 @@ public class UserInfo {
         this.isLoggedIn = false;
         this.user_actor = null;
     }
-
+    
+    public UserInfo(String username, String password, ActorRef user_actor) {
+        this.username = username;
+        this.password = password;
+        this.isLoggedIn = false;
+        this.user_actor = user_actor;
+    }
+    
     public String getUsername() {
         return username;
     }

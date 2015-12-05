@@ -35,6 +35,12 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
         return new Message.RetrievableMessage(Message.MessageType.DATA, user_room_list);
     }
     
+    //fazer controlo de erros (se o user já estive na sala, etc...
+    private void addUser(Message.RetrievableMessage msg) throws SuspendExecution{
+        users.add((ActorRef) msg.sender);
+        msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM_ACK, room_name, self()));
+                                           System.out.println("Utilizador adicionado com sucesso à sala");
+    }
     
     @SuppressWarnings("empty-statement")
     @Override
@@ -48,14 +54,16 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
                     listUsers(msg);
                     return true;
                 
-                /*case ROOM_ENTER:
-                    users.add((ActorRef) msg.o);
-                    return true;
+                case USER_ENTER_ROOM:
+
+                    addUser(msg);
+                    return true;/*
                 case ROOM_CHANGE:
                     users.remove((ActorRef) msg.sender);
                     manager.send(msg);
                     return true;*/
                 case LINE:
+                                    System.out.println("Mensagem de dados detectada na sala e pronta a ser enviada: "+new String((byte[])msg.o));
                     for (ActorRef u : users) {
                         u.send(msg);
                     }

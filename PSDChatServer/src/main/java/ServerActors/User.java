@@ -11,6 +11,7 @@ import co.paralleluniverse.strands.channels.Channels;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.*;
 
 //talvez passar isto para nonRetrivableMessage
 //falta fazer os checks sobre se está loggedIn ou não
@@ -19,14 +20,15 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     static int MAXLEN = 1024, USER_BOX_LIMIT = 100;
     static Channels.OverflowPolicy box_policy = Channels.OverflowPolicy.DROP;
 
-    private UserInfo user_info;
+    private String username;
+    private String password;
+    public boolean isLoggedIn;
+    private Map<String, ActorRef> rooms;
 
     private ActorRef room_manager;
     final FiberSocketChannel socket;
-    private ActorRef room;
     private EventSource eventsource;
     private ActorRef user_manager;
-    public boolean isLoggedIn;
 
     User(String actor_id, ActorRef room, ActorRef user_manager, FiberSocketChannel socket, EventSource es) {
         super(actor_id, new MailboxConfig(USER_BOX_LIMIT, box_policy));
@@ -35,86 +37,138 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         this.eventsource = es;
         this.isLoggedIn = false;
         this.user_manager = user_manager;
+        this.rooms = new HashMap<>();
     }
 
-    private void userLogout() throws SuspendExecution {
-        if (isLoggedIn) {
-            user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT, user_info.getUsername()));
-            room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT, self()));
-        }
-    }
-
-    private void userLogin(Message.RetrievableMessage msg) throws SuspendExecution {
-        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN, new Message.LoginMessage(Message.MessageType.OK, ((Message.LoginMessage) msg.o).username, ((Message.LoginMessage) msg.o).password, self())));
+    /*private void userLogout() throws SuspendExecution {
+     if (isLoggedIn) {
+     user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT, user_info.getUsername()));
+     room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT, self()));
+     }
+     }*/
+    private void userLogin(Message.UserDataMessage msg) throws SuspendExecution {
+        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN, msg, self()));
     }
 
     private void userRegister(Message.RetrievableMessage msg) throws SuspendExecution {
-        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER, new Message.LoginMessage(Message.MessageType.OK, ((Message.LoginMessage) msg.o).username, ((Message.LoginMessage) msg.o).password, self())));
+        Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
+        this.username = data.username;
+        this.password = data.password;
+        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER, data, self()));
+        System.out.println("Recebido em método userRegister de actor user");
     }
 
-    private void listRoom() throws SuspendExecution {
-        if (user_info.isIsAdmin()) {
-            room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LIST_ROOM, null, self()));
-        } else {
-            room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, null, self()));
-        }
+    private void enterGlobalRoom() throws SuspendExecution {
+        room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM, "global_room", self()));
     }
 
-    private void listRoomUsers() throws SuspendExecution {
+    /*private void listRoom() throws SuspendExecution {
+     if (user_info.isIsAdmin()) {
+     room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LIST_ROOM, null, self()));
+     } else {
+     room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, null, self()));
+     }
+     }*/
+    /*private void listRoomUsers() throws SuspendExecution {
         room.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null, self()));
+    }*/
+
+    /*private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
+     String[] args = (String[]) msg.o;
+     args[0] = user_info.getUsername();
+
+     user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, args, self()));
+     }*/
+    private void writeToSocket(Message.RetrievableMessage msg) throws IOException, SuspendExecution {
+        if(socket==null) System.out.println("O socket ta null");
+        if(msg.o==null) System.out.println("O msg.o ta null");
+        if(msg.type==Message.MessageType.LINE) System.out.println("A mensagem esta com o tipo certo");
+                System.out.println("Mensagem pronta a ser enviada: "+new String((byte[]) msg.o));
+        socket.write(ByteBuffer.wrap((byte[]) msg.o));
     }
-    
-    private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
-        String[] args = (String[]) msg.o;
-        args[0] = user_info.getUsername();
-        
-        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, args, self()));
+
+    //fazer maps de todos os quartos para os que escreve, nome -> actorref
+    private void enterRoom() {
+
+    }
+
+    //Mudar aqui para meter o username de actor na mensagem
+    private void sendMessageToRooms(Message.RetrievableMessage msg) throws SuspendExecution {
+        System.out.println("Mensagem pronta a ser enviada: "+new String((byte[]) msg.o));
+        for (ActorRef room : rooms.values()) {
+            room.send(new Message.RetrievableMessage(Message.MessageType.LINE, msg.o));
+        }
+
+        System.out.println("Mensagem enviada para salas");
     }
 
     @SuppressWarnings("empty-statement")
     protected Void doRun() throws InterruptedException, SuspendExecution {
 
         new LineReader(self(), socket).spawn();
-        room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM, "global_room", self()));
-        room = (ActorRef) receive().o;
+        //room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM, "global_room", self()));
+        //room = (ActorRef) receive().o;
         //eventsource.notify("Nova conexão");
 
         while (receive((Message.RetrievableMessage msg) -> {
             try {
                 switch (msg.type) {
                     case USER_LIST_ROOM:
-                        listRoom();
+                        //listRoom();
                         return true;
                     case USER_LIST_ROOM_USERS:
-                        listRoomUsers();
+                        //listRoomUsers();
                         return true;
                     case USER_PRIVATE_MESSAGE:
-                        sendPrivateMessage(msg);
+                        //sendPrivateMessage(msg);
                         return true;
                     case DATA:
+                        sendMessageToRooms(msg);
                         //eventsource.notify("Enviada linha");
-                        room.send(new Message.RetrievableMessage(Message.MessageType.LINE, msg.o));
+                        //room.send(new Message.RetrievableMessage(Message.MessageType.LINE, msg.o));
+                        System.out.println("Mensagem enviada para salas");
+                        return true;
+                    case USER_ENTER_ROOM: //implementar (nao obriga o utilizador a sair da sala)
                         return true;
                     case USER_CHANGE_ROOM:
-                        room.send(new Message.RetrievableMessage(Message.MessageType.USER_CHANGE_ROOM, msg.o, self()));
+                        //é preciso sair da sala anterior
+                        //room.send(new Message.RetrievableMessage(Message.MessageType.USER_CHANGE_ROOM, msg.o, self()));
                         return true;
                     case EOF:
                         return true;
                     case IOE:
-                        room.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, self()));
+                        //room.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, self()));
                         socket.close();
                         return false;
                     case USER_REGISTER:
+                        System.out.println("Recebido em actor user");
                         userRegister(msg);
                         return true;
-                    case USER_LOGIN:
-                        userLogin(msg);
+                    //talvez meter a logica dos acks nos metodos de envio para os managers
+                    case USER_REGISTER_ACK:
+                        System.out.println("Recebido ack de registo em actor user");
+
+                        userLogin(new Message.UserDataMessage(this.username, this.password));
                         return true;
+                    case USER_LOGIN_ACK:
+                        System.out.println("Recebido ack de login em actor user");
+                        enterGlobalRoom();
+                        return true;
+                    case USER_ENTER_ROOM_ACK:
+                        System.out.println("Recebido ack de entrada em sala em actor user");
+                        this.rooms.put((String) msg.o, msg.sender);
+                        return true;
+                    case USER_LOGIN:
+                        userLogin((Message.UserDataMessage) msg.o);
+                        return true;
+                    /*case LOGIN_OK:
+                     enterRoom();
+                     return true;*/
                     case USER_LOGOUT:
-                        userLogout();
+                        // userLogout();
                         return true;
                     case LINE:
-                        socket.write(ByteBuffer.wrap((byte[]) msg.o));
+                        writeToSocket(msg);
                         return true;
                     /*case REMOVE:
                      login.send(new Message.RetrievableMessage(Message.MessageType.REMOVE, new Message.LoginMessage(Message.MessageType.OK, ((Message.LoginMessage) msg.o).username, ((Message.LoginMessage) msg.o).password, self())));
@@ -122,7 +176,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                      */
                 }
             } catch (IOException e) {
-                room.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, self()));
+                //room.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, self()));
             }
             return false;  // stops the actor if some unexpected message is received
         }));
@@ -157,7 +211,7 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
             case "!listroomusers":
                 return new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null);
             //enviar mensagem privada para utilizador(es)
-            case "!sendpm":                
+            case "!sendpm":
                 return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, inst);
             //criar quarto privado com a lista de utilizadores que estão à frente
             case "!createprivateroom":
@@ -171,12 +225,12 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
             //    return new Message.RetrievableMessage(Message.MessageType.ROOM_ENTER, inst[1]);
             //login de utilizador
             case "!login":
-                return new Message.RetrievableMessage(Message.MessageType.USER_LOGIN, new Message.LoginMessage(Message.MessageType.OK, inst[1], inst[2]));
+                return new Message.RetrievableMessage(Message.MessageType.USER_LOGIN, new Message.UserDataMessage(inst[1], inst[2]));
             //logout de utilizador
             case "!logout":
                 return new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT, null);
             case "!register":
-                return null;
+                return new Message.RetrievableMessage(Message.MessageType.USER_REGISTER, new Message.UserDataMessage(inst[1], inst[2]));
             //criar quarto publico(apenas admin pode fazer isto)
             //case "!createroom":
             //    return new Message.RetrievableMessage(Message.MessageType.CREATE, new Message.LoginMessage(Message.MessageType.OK, inst[1], inst[2]));
@@ -193,6 +247,7 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
             case "?roomremoval":
                 return null;
             default:
+                System.out.println("Mensagem de dados detectada");
                 return new Message.RetrievableMessage(Message.MessageType.DATA, input);
         }
     }

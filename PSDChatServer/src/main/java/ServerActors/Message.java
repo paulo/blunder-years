@@ -31,7 +31,9 @@ public class Message {
         
         
         //Simao
-        OK,
+        USER_LOGIN_ACK,
+        USER_REGISTER_ACK,
+        USER_ENTER_ROOM_ACK,
         KO,
         LOGINCOMMAND,
         
@@ -58,31 +60,28 @@ public class Message {
         }
     }
     
-    static class NonRetrivableMessage {
+    static class NonRetrievableMessage {
         MessageType type;
         final Object o;
         
-        NonRetrivableMessage(MessageType t, Object obj) {
+        NonRetrievableMessage(MessageType t, Object obj) {
             this.type = t;
             this.o = obj;
         }
     }
     
-    static class LoginMessage {
-        MessageType type;
+    static class UserDataMessage {
         String username;
         String password;
         ActorRef sender;
         
-        LoginMessage(MessageType t, String un, String pw, ActorRef sender) {
-            this.type = t;
+        UserDataMessage(String un, String pw, ActorRef sender) {
             this.username = un;
             this.password = pw;
             this.sender = sender;
         }  
         
-        LoginMessage(MessageType t, String un, String pw) {
-            this.type = t;
+        UserDataMessage(String un, String pw) {
             this.username = un;
             this.password = pw;
             this.sender = null;

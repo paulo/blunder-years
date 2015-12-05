@@ -29,58 +29,79 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         userPool.put(user_name, info);
     }
 
-    public void logOutUser(String username){
-        if(userPool.containsKey(username))
+    //atualizar userINFO e meter loggedout e useractor a null
+    public void logOutUser(String username) {
+        if (userPool.containsKey(username)) {
             userPool.get(username).setIsLoggedIn(false);
+        }
     }
-        
+
     //fazer controlo de erros para casos em que nao tem users na frase
     //talvez mudar este tipo de metodos para usar string builder ou algo mais rapido
     @SuppressWarnings("empty-statement")
     private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
         String[] args = (String[]) msg.o;
         List<String> dest_users = new ArrayList<>();
-        String data = args[0]+": ";
-        int i=1;
-        while(i<args.length){
-            if(args[i].startsWith("@")){
+        String data = args[0] + ": ";
+        int i = 1;
+        while (i < args.length) {
+            if (args[i].startsWith("@")) {
                 dest_users.add(args[i]);
                 i++;
-            } else break;
+            } else {
+                break;
+            }
         }
-        while(i<args.length) {
+        while (i < args.length) {
             data = data.concat(args[i]);
         }
-            data = data.concat("\n");
-            
-        for(String s : dest_users){
+        data = data.concat("\n");
+
+        for (String s : dest_users) {
             userPool.get(s).getUser_actor().send(new Message.RetrievableMessage(Message.MessageType.DATA, data));
         }
     }
-    
+
+    //meter controlo para saber se o user já está logged in´
+    private void userLogin(Message.RetrievableMessage msg) throws SuspendExecution {
+        Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
+
+        if (userPool.containsKey(data.username)
+                && userPool.get(data.username).getPassword().equals(data.password)) {
+            UserInfo ui = userPool.get(data.username);
+            ui.setIsLoggedIn(true); ui.setUser_actor(data.sender);
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN_ACK, "Logged in sucessfully!\n"));
+            System.out.println("Sucesso no userLogin do usermanager");
+        } else {
+            System.out.println("Erro no userLogin do usermanager");
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Login information incorrect!\n"));
+        }
+    }
+
+    //meter controlo para ver se o user já existe ou se user ja esta logged in (nao pode registar-se quando está logged in)
+    private void userRegister(Message.RetrievableMessage msg) throws SuspendExecution {
+        Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
+        System.out.println("Data recebida em user_manager: "+data.username+" "+data.password);
+        if (!userPool.containsKey(data.username)) {
+            userPool.put(data.username, new UserInfo(data.username, data.password));
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER_ACK, "Account Created Sucessfully"));
+        } else {
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Error: Username already taken."));
+        }
+
+    }
+
     @Override
     @SuppressWarnings("empty-statement")
     protected Void doRun() throws InterruptedException, SuspendExecution {
         while (receive(msg -> {
-            Message.LoginMessage data = (Message.LoginMessage) msg.o;
 
             switch (msg.type) {
                 case USER_REGISTER:
-                    if (!userPool.containsKey(data.username)) {
-                        //aqui é provavel que nao esteja bem a criação de userinfo
-                        userPool.put(data.username, new UserInfo(data.username, data.password));
-                        data.sender.send(new Message.NonRetrivableMessage(Message.MessageType.OK, "Account Created Sucessfully"));
-                    } else {
-                        data.sender.send(new Message.NonRetrivableMessage(Message.MessageType.KO, "Account not created!"));
-                    }
+                    userRegister(msg);
                     return true;
                 case USER_LOGIN:
-                    if (userPool.containsKey(data.username)
-                            && userPool.get(data.username).equals(data.password)) {
-                        data.sender.send(new Message.NonRetrivableMessage(Message.MessageType.OK, "Logged in sucessful!"));
-                    } else {
-                        data.sender.send(new Message.NonRetrivableMessage(Message.MessageType.KO, "Login information incorrect!"));
-                    }
+                    userLogin(msg);
                     return true;
                 case USER_PRIVATE_MESSAGE: //falta testar
                     sendPrivateMessage(msg);
@@ -91,13 +112,13 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
                     logOutUser((String) msg.o);
                     return true;
                 /*case REMOVE:
-                    if (loginMap.containsKey(data.username)
-                            && loginMap.get(data.username).equals(data.password)) {
-                        loginMap.remove(data.username);
-                        data.sender.send(new Message.NonRetrivableMessage(Message.MessageType.OK, "Account Deleted Sucessfully"));
-                    } else {
-                        data.sender.send(new Message.NonRetrivableMessage(Message.MessageType.KO, "Information incorrect!"));
-                    }*/
+                 if (loginMap.containsKey(data.username)
+                 && loginMap.get(data.username).equals(data.password)) {
+                 loginMap.remove(data.username);
+                 data.sender.send(new Message.NonRetrivableMessage(Message.MessageType.OK, "Account Deleted Sucessfully"));
+                 } else {
+                 data.sender.send(new Message.NonRetrivableMessage(Message.MessageType.KO, "Information incorrect!"));
+                 }*/
 
             }
             return false;
