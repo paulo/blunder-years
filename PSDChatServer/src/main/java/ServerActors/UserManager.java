@@ -34,8 +34,15 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         if (userPool.containsKey(username)) {
             userPool.get(username).setIsLoggedIn(false);
         }
+        
     }
 
+    public void createTestUsers(){
+        addUser("user1", new UserInfo("user1", "p"));
+        addUser("user2", new UserInfo("user2", "p"));
+        addUser("user3", new UserInfo("user3", "p"));        
+    }
+    
     //fazer controlo de erros para casos em que nao tem users na frase
     //talvez mudar este tipo de metodos para usar string builder ou algo mais rapido
     @SuppressWarnings("empty-statement")
@@ -71,9 +78,7 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
             UserInfo ui = userPool.get(data.username);
             ui.setIsLoggedIn(true); ui.setUser_actor(data.sender);
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN_ACK, "Logged in sucessfully!\n"));
-            System.out.println("Sucesso no userLogin do usermanager");
         } else {
-            System.out.println("Erro no userLogin do usermanager");
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Login information incorrect!\n"));
         }
     }
@@ -81,7 +86,6 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
     //meter controlo para ver se o user já existe ou se user ja esta logged in (nao pode registar-se quando está logged in)
     private void userRegister(Message.RetrievableMessage msg) throws SuspendExecution {
         Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
-        System.out.println("Data recebida em user_manager: "+data.username+" "+data.password);
         if (!userPool.containsKey(data.username)) {
             userPool.put(data.username, new UserInfo(data.username, data.password));
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER_ACK, "Account Created Sucessfully"));

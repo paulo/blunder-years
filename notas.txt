@@ -74,3 +74,37 @@ Perguntar ao prof até que ponto o roomManager está a ser demasiado carregado..
 Simão:
     - fazer error control na main
     - no linereader, é preciso controlar os erros de quando nao ha argumentos suficientes para construir a mensagem
+
+
+
+leaveroom
+changeroom
+enterroom
+
+linereader x
+user
+usermanager
+roommanager
+room
+
+
+A fazer:
+    Meter para apenas mandar para um room mas para poder receber de vários (é preciso mudar change room também)
+    Arranjar lógica de mudança de sala (não sai da sala, apenas fica a escrever para outra)
+    Arranjar lógica de saida de sala (se sair de todas as salas, vai para a sala global)
+    Só sai da sala global por proprio comando
+    Se estiver numa sala e sair dela, recebe uma mensagem a dizer que nao escolheu a sala para onde escrever.
+    Meter funcionalidade de que salas está a receber
+
+
+A faltar:
+    Controlo de erros para quando não esta loggedin ou registado
+    Se o user nao estiver loggedout, nao pode fazer logout
+
+
+
+
+
+
+
+

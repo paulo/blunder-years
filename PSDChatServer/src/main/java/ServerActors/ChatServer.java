@@ -51,12 +51,12 @@ public class ChatServer {
         return new UserManager().spawn();
     }
     
-    private ActorRef createEventPublisher(){
+/*    private ActorRef createEventPublisher(){
         return new EventPublisher(port).spawn();
     }
-    
+  */  
     public void init() {
-        event_publisher = createEventPublisher(); 
+        //event_publisher = createEventPublisher(); 
         room_manager = createRoomManager();
         //user_supervisor = (Supervisor) createUserSupervisor();
         /*es = (EventSource) createEventSource("user_event_actor");*/  

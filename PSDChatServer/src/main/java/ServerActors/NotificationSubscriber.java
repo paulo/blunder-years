@@ -7,11 +7,13 @@ package ServerActors;
 
 import co.paralleluniverse.actors.BasicActor;
 import co.paralleluniverse.fibers.SuspendExecution;
+import org.zeromq.ZMQ;
 
 /**
  *
  * @author SimaoDias
  */
+/*
 public class NotificationSubscriber extends BasicActor<Message.RetrievableMessage, Void>{
     
     private int port;
@@ -33,7 +35,7 @@ public class NotificationSubscriber extends BasicActor<Message.RetrievableMessag
                 case SUBSCRIBE:
                     String event =(String) msg.o;
                     socket.subscribe(event.getBytes());
-                    break;
+                return true;
                 default:
                     byte[] b = socket.recv();
                     System.out.println(new String(b));
@@ -49,3 +51,4 @@ public class NotificationSubscriber extends BasicActor<Message.RetrievableMessag
     }
     
 }
+*/

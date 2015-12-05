@@ -13,7 +13,7 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
 
     private String room_name;
     private final Map<String, ActorRef> user_list;
-    private final Set<ActorRef> users;
+    //private final Set<ActorRef> users;
     private ActorRef manager;
     private boolean isPrivate;
     
@@ -21,7 +21,7 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
     public Room(ActorRef room_manager, boolean permission, String room_name) {
         this.room_name = room_name;
         this.user_list = new HashMap<>();
-        this.users = new HashSet();
+        //this.users = new HashSet();
         this.manager = room_manager;
         this.isPrivate = permission;
     }
@@ -37,9 +37,15 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
     
     //fazer controlo de erros (se o user já estive na sala, etc...
     private void addUser(Message.RetrievableMessage msg) throws SuspendExecution{
-        users.add((ActorRef) msg.sender);
+        Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
+        
+        user_list.put(data.username, (ActorRef) msg.sender);
         msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM_ACK, room_name, self()));
-                                           System.out.println("Utilizador adicionado com sucesso à sala");
+    }
+    
+    //falta meter controlo de erros para se o utilizador não estiver loggedin
+    private void logOutUser(Message.RetrievableMessage msg) throws SuspendExecution{
+        this.user_list.remove((String) msg.o);
     }
     
     @SuppressWarnings("empty-statement")
@@ -53,23 +59,25 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
                 case USER_LIST_ROOM_USERS:
                     listUsers(msg);
                     return true;
-                
                 case USER_ENTER_ROOM:
-
                     addUser(msg);
                     return true;/*
                 case ROOM_CHANGE:
                     users.remove((ActorRef) msg.sender);
                     manager.send(msg);
                     return true;*/
+                case USER_LOGOUT:
+                    logOutUser(msg);
+                    return true;
                 case LINE:
-                                    System.out.println("Mensagem de dados detectada na sala e pronta a ser enviada: "+new String((byte[])msg.o));
-                    for (ActorRef u : users) {
+                    for (ActorRef u : this.user_list.values()) {
                         u.send(msg);
                     }
                     return true;
-                /*case LEAVE:
-                    return true;*/
+                case USER_LEAVE_ROOM:
+                    logOutUser(msg);
+                    msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Room "+this.room_name+" exited."));
+                    return true;
             }
             return false;
         }));

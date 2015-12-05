@@ -42,18 +42,25 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
      * @param room_name Nome da sala.
      * @throws SuspendExecution
      */
-    private void addUser2PublicRoom(Message.RetrievableMessage msg) throws SuspendExecution {
+    private void addUser2Room(Message.RetrievableMessage msg) throws SuspendExecution {
         //userRoom.put(user_ref, publicRoomPool.get(room_name));
-        String room_name = (String) msg.o;
+        Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
+        String room_name = (String) data.password;
         if (privateRoomPool.containsKey(room_name)) {
             //falta aqui
         } else if (publicRoomPool.containsKey(room_name)) { //aqui o room fica responsavel de mandar a sua ref ao user
             publicRoomPool.get(room_name)
                     .send(new Message.RetrievableMessage(
-                                    Message.MessageType.USER_ENTER_ROOM, null, msg.sender));
+                                    Message.MessageType.USER_ENTER_ROOM, data.username, msg.sender));
         } else {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "The room doesn't exist"));
         }
+    }
+    
+    public void createTestRooms(){
+        createPublicRoom("room1");
+        createPublicRoom("room2");
+        createPublicRoom("room3");
     }
     
     /*private void addUser2PrivateRoom(Message.RetrievableMessage msg) {
@@ -124,11 +131,12 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
     protected Void doRun() throws InterruptedException, SuspendExecution {
         
         this.createPublicRoom("global_room");
+        createTestRooms();
 
         while (receive((Message.RetrievableMessage msg) -> {
             switch (msg.type) {
                 case USER_ENTER_ROOM: //falta testar
-                    addUser2PublicRoom(msg);
+                    addUser2Room(msg);
                     return true;
                 case USER_CHANGE_ROOM: //o room é que trat de tirar de lá o user, e manda user_enter_room para o room manager
                     //changeRoom(msg);

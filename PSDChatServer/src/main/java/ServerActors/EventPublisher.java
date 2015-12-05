@@ -8,11 +8,13 @@ package ServerActors;
 import co.paralleluniverse.actors.BasicActor;
 import co.paralleluniverse.fibers.SuspendExecution;
 import java.util.Scanner;
+import org.zeromq.ZMQ;
 
 /**
  *
  * @author SimaoDias
  */
+/*
 class NotificationPublisher extends BasicActor<Message.RetrievableMessage, Void> {
     
     private int port;
@@ -44,4 +46,4 @@ class NotificationPublisher extends BasicActor<Message.RetrievableMessage, Void>
                
     }
 
-}
+}*/

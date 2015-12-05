@@ -23,7 +23,7 @@ public class Message {
         USER_PRIVATE_MESSAGE,
         USER_LIST_USERS,
         USER_LIST_ROOM_USERS,
-        
+        USER_LIST_MY_ROOMS,
         //Admin actions
         ADMIN_REMOVE_ROOM,
         ADMIN_LIST_ROOM,
@@ -71,6 +71,7 @@ public class Message {
         }
     }
     
+    //talvez renomear password para ser capaz de ser mais flexivel (vai ser usado para transmitir o nome da sala durante a entrada nesta)
     static class UserDataMessage {
         String username;
         String password;
