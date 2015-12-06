@@ -23,7 +23,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
     private String username;
     private String password;
-    public boolean isLoggedIn;
+    public boolean isLoggedIn, isAdmin;
     private Map<String, ActorRef> rooms;
     private ActorRef writing_room;
     private String temp_user, temp_pass;
@@ -38,7 +38,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         this.room_manager = room;
         this.socket = socket;
         this.eventsource = es;
-        this.isLoggedIn = false;
+        this.isLoggedIn = isAdmin = false;
         this.user_manager = user_manager;
         this.rooms = new HashMap<>();
         this.temp_pass = temp_user = null;
@@ -53,7 +53,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
             this.writing_room = null;
             this.username = this.password = this.temp_pass = this.temp_user = null;
             this.rooms.clear();
-            this.isLoggedIn = false;
+            this.isLoggedIn = isAdmin = false;
         }
     }
 
@@ -75,16 +75,18 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                 new Message.UserDataMessage(this.username, "global_room"), self()));
     }
 
-    /*private void listRoom() throws SuspendExecution {
-     if (user_info.isIsAdmin()) {
-     room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LIST_ROOM, null, self()));
-     } else {
-     room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, null, self()));
-     }
-     }*/
-    /*private void listRoomUsers() throws SuspendExecution {
-     room.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null, self()));
-     }*/
+    private void listRoom() throws SuspendExecution {
+        if(this.isAdmin) {
+            room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LIST_ROOM, null, self()));
+        } else {
+            room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, username, self()));
+        }
+    }
+    private void listRoomUsers() throws SuspendExecution {
+        for(ActorRef ar:this.rooms.values()){
+            ar.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null, self()));
+        }
+    }
 
     /*private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
      String[] args = (String[]) msg.o;
@@ -141,6 +143,18 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         writeStringToSocket(listening_list);
     }
 
+    private void adminRemoveRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
+        if (this.isAdmin) {
+            if (((String) msg.o).equals("global_room")) {
+                writeStringToSocket("You can't remove the global room.\n");
+            } else {
+                room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, this.username, self()));
+            }
+        } else {
+            writeStringToSocket("You do not have permission to remove rooms.\n");
+        }
+    }
+
     //Mudar aqui para meter o username de actor na mensagem
     //Mudar para apenas mandar mensagem para o room em que está a escrever
     private void sendMessageToRoom(Message.RetrievableMessage msg) throws SuspendExecution {
@@ -153,24 +167,53 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         writeStringToSocket("Now receiving messages from: " + (String) msg.o + ".\n");
     }
 
+    private void removeRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
+
+        String room_name = (String) msg.o;
+        if (this.rooms.containsKey(room_name)) {
+            if (this.rooms.size() > 1) {
+                if (this.rooms.get(room_name).equals(writing_room)) {
+                    this.rooms.remove(room_name);
+                    this.writing_room = Iterables.get(this.rooms.values(), 0);
+                } else {
+                    this.rooms.remove(room_name);
+                }
+            } else {
+                enterGlobalRoom();
+            }
+        } else {
+            writeStringToSocket("You are not in the room: " + room_name);
+        }
+    }
+
+    private void createPublicRoom(Message.RetrievableMessage msg) throws SuspendExecution {
+        room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PUBLIC_ROOM, msg.o, self()));
+    }
+
+    private void listOnlineUsers() throws SuspendExecution {
+        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_USERS, null, self()));
+    }
+
+        //talvez meter a logica dos acks nos metodos de envio para os managers
     @SuppressWarnings("empty-statement")
-    //talvez meter a logica dos acks nos metodos de envio para os managers
+    @Override
     protected Void doRun() throws InterruptedException, SuspendExecution {
 
         new LineReader(self(), socket).spawn();
-        //room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM, "global_room", self()));
-        //room = (ActorRef) receive().o;
         //eventsource.notify("Nova conexão");
 
         while (receive((Message.RetrievableMessage msg) -> {
             try {
                 switch (msg.type) {
-                    //case USER_LIST_ROOM:
-                    //listRoom();
-                    //    return true;
-                    //case USER_LIST_ROOM_USERS:
-                    //listRoomUsers();
-                    //    return true;
+                    case USER_LIST_ROOM:
+                        listRoom();
+                        return true;
+                    case USER_LIST_ROOM_USERS:
+                        listRoomUsers();
+                        return true;                    
+                    case USER_LIST_USERS:
+                        listOnlineUsers();
+                        return true;
                     //case USER_PRIVATE_MESSAGE:
                     //sendPrivateMessage(msg);
                     //    return true;
@@ -200,6 +243,12 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         this.password = this.temp_pass;
                         enterGlobalRoom();
                         return true;
+                    case ADMIN_LOGIN_ACK:
+                        this.username = this.temp_user;
+                        this.password = this.temp_pass;
+                        this.isAdmin = true;
+                        enterGlobalRoom();
+                        return true;
                     case USER_ENTER_ROOM_ACK:
                         roomAck(msg);
                         return true;
@@ -211,6 +260,15 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         return true;
                     case USER_LIST_MY_ROOMS:
                         listMyRooms();
+                        return true;
+                    case ADMIN_REMOVE_ROOM:
+                        adminRemoveRoom(msg);
+                        return true;
+                    case ADMIN_REMOVE_ROOM_ACK:
+                        removeRoom(msg);
+                        return true;
+                    case USER_CREATE_PUBLIC_ROOM:
+                        createPublicRoom(msg);
                         return true;
                     case LINE:
                         //System.out.println("Mensagem recibida do room: " + (String) msg.o);
@@ -278,29 +336,30 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
             //listar de que quartos está a receber
             case "!listmyrooms":
                 return new Message.RetrievableMessage(Message.MessageType.USER_LIST_MY_ROOMS, null);
+            //criar quarto privado
+            case "!createprivateroom":
+                return new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PRIVATE_ROOM, inst[1]);
+            //adicionar utilizador a quarto privado
+            case "!adduser":
+                return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_ROOM_ADD, inst[1]);
+            //criar quarto publico(apenas admin pode fazer isto)
+            case "!createroom":
+                return new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PUBLIC_ROOM, inst[1]);
+            //remover quarto (apenas admin pode fazer isto)
+            case "!removeroom":
+                return new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, inst[1]);
             //listar quartos disponiveis a user (se for admin, lista todos)
-            //case "!listrooms":
-            //    return new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, null);
+            case "!listrooms":
+                return new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, null);
             //listar users online
-            //case "!listusers":
-            //    return null;
-            //case "!listroomusers":
-            //    return new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null);
+            case "!listusers":
+                return new Message.RetrievableMessage(Message.MessageType.USER_LIST_USERS, null);
+            //listar users online no mesmo room
+            case "!listroomusers":
+                return new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null);
             //enviar mensagem privada para utilizador(es)
             //case "!sendpm":
             //    return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, inst);
-            //criar quarto privado com a lista de utilizadores que estão à frente
-            //case "!createprivateroom":
-            //    return null;
-            //adicionar utilizador a quarto privado
-            //case "!adduser":
-            //    return null;
-            //criar quarto publico(apenas admin pode fazer isto)
-            //case "!createroom":
-            //    return new Message.RetrievableMessage(Message.MessageType.CREATE, new Message.LoginMessage(Message.MessageType.OK, inst[1], inst[2]));
-            //remover quarto (apenas admin pode fazer isto)
-            //case "!removeroom":
-            //    return new Message.RetrievableMessage(Message.MessageType.REMOVE, new Message.LoginMessage(Message.MessageType.OK, inst[1], inst[2]));
             //notificar-me de criação de quartos (apenas para consola de notificação)
             //case "?roomcreation":
             //    return null;

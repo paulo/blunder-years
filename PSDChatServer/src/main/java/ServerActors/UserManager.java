@@ -40,7 +40,8 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
     public void createTestUsers(){
         addUser("user1", new UserInfo("user1", "p"));
         addUser("user2", new UserInfo("user2", "p"));
-        addUser("user3", new UserInfo("user3", "p"));        
+        addUser("user3", new UserInfo("user3", "p")); 
+        addUser("admin", new UserInfo("admin", "admin", false, null, true));
     }
     
     //fazer controlo de erros para casos em que nao tem users na frase
@@ -77,7 +78,8 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
             UserInfo ui = userPool.get(data.username);
             ui.setIsLoggedIn(true); 
             ui.setUser_actor(data.sender);
-            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN_ACK, "Logged in sucessfully!\n".getBytes()));
+            if(userPool.get(data.username).isIsAdmin()) msg.sender.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LOGIN_ACK, "Logged in sucessfully!\n".getBytes()));                
+            else msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN_ACK, "Logged in sucessfully!\n".getBytes()));
         } else {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Login information incorrect!\n".getBytes()));
         }
@@ -92,6 +94,20 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         } else {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Error: Username already taken.\n".getBytes()));
         }
+    }
+    
+    private void listOnlineUsers(Message.RetrievableMessage msg) throws SuspendExecution {
+        String online = "Online users:\n";
+        int i = 0;
+        for(UserInfo ui : this.userPool.values()){
+            if(ui.isLoggedIn) {
+                online = online.concat(ui.getUsername()+"\n");
+                i++;
+            }
+        }
+        if (i==0) online = "No users online.\n";
+        else online = online.concat("Total: "+i+" users.\n");
+        msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, online.getBytes()));
     }
 
     @Override
@@ -111,7 +127,8 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
                 case USER_PRIVATE_MESSAGE: //falta testar
                     sendPrivateMessage(msg);
                     return true;
-                case USER_LIST_USERS: //implementar (talvez necessite de lock no map)
+                case USER_LIST_USERS:
+                    listOnlineUsers(msg);
                     return true;
                 case USER_LOGOUT:
                     logOutUser((String) msg.o);

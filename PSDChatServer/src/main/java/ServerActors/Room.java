@@ -8,12 +8,10 @@ import java.util.*;
 
 //falta a opção para quando a sala se desliga a si propria
 //falta, ao adicionar um utilizador, adicionar o username dele
-//falta criar quarto com o seu nome como atributo
 public class Room extends BasicActor<Message.RetrievableMessage, Void> {
 
     private final String room_name;
     private final Map<String, ActorRef> user_list;
-    //private final Set<ActorRef> users;
     private ActorRef manager;
     private boolean isPrivate;
     
@@ -32,7 +30,7 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
             user_room_list = user_room_list.concat(s+"\n");
         }
         
-        return new Message.RetrievableMessage(Message.MessageType.DATA, user_room_list);
+        return new Message.RetrievableMessage(Message.MessageType.LINE, user_room_list.getBytes());
     }
     
     //fazer controlo de erros (se o user já estive na sala, etc...
@@ -44,6 +42,16 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
     //falta meter controlo de erros para se o utilizador não estiver loggedin
     private void logOutUser(Message.RetrievableMessage msg) throws SuspendExecution{
         this.user_list.remove((String) msg.o);
+    }
+    
+    private void removeRoom() throws SuspendExecution{
+        for(ActorRef ar : this.user_list.values())
+            ar.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM_ACK, this.room_name));
+        try {
+            self().close();
+        } catch (Exception e) {
+            System.out.println("Exception removing romo");
+        }
     }
     
     @SuppressWarnings("empty-statement")
@@ -59,17 +67,15 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
                     return true;
                 case USER_ENTER_ROOM:
                     addUser(msg);
-                    return true;/*
-                case ROOM_CHANGE:
-                    users.remove((ActorRef) msg.sender);
-                    manager.send(msg);
-                    return true;*/
+                    return true;
+                case ADMIN_REMOVE_ROOM:
+                    removeRoom();
+                    return true;
                 case USER_LOGOUT:
                     logOutUser(msg);
                     return true;
                 case LINE:
                     for (ActorRef u : this.user_list.values()) {
-                        //System.out.println("Mensagem enviada do room: "+ (String) msg.o);
                         u.send(msg);
                     }
                     return true;

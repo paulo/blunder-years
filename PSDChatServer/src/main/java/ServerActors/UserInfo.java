@@ -14,6 +14,7 @@ public class UserInfo {
         this.password = password;
         this.isLoggedIn = isLoggedIn;
         this.user_actor = user_actor;
+        this.isAdmin = false;
     }
 
     public UserInfo(String username, String password) {
@@ -22,14 +23,22 @@ public class UserInfo {
         this.isLoggedIn = false;
         this.user_actor = null;
     }
-    
+
     public UserInfo(String username, String password, ActorRef user_actor) {
         this.username = username;
         this.password = password;
         this.isLoggedIn = false;
         this.user_actor = user_actor;
     }
-    
+
+    public UserInfo(String username, String password, boolean isLoggedIn, ActorRef user_actor, boolean isAdmin) {
+        this.username = username;
+        this.password = password;
+        this.isLoggedIn = isLoggedIn;
+        this.user_actor = user_actor;
+        this.isAdmin = isAdmin;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -70,7 +79,4 @@ public class UserInfo {
         this.user_actor = user_actor;
     }
 
-    
-    
-    
 }

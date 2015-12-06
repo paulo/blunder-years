@@ -27,7 +27,8 @@ public class Message {
         //Admin actions
         ADMIN_REMOVE_ROOM,
         ADMIN_LIST_ROOM,
-        
+        ADMIN_LOGIN_ACK,
+        ADMIN_REMOVE_ROOM_ACK,
         
         
         //Simao
