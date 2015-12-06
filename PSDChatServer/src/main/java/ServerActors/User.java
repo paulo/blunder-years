@@ -58,8 +58,8 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     }
 
     private void userLogin(Message.UserDataMessage msg) throws SuspendExecution {
-        this.temp_user = msg.username;
-        this.temp_pass = msg.password;
+        this.temp_user = (String) msg.username;
+        this.temp_pass = (String) msg.password;
         user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN, msg, self()));
     }
 
@@ -76,24 +76,26 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     }
 
     private void listRoom() throws SuspendExecution {
-        if(this.isAdmin) {
+        if (this.isAdmin) {
             room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LIST_ROOM, null, self()));
         } else {
             room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, username, self()));
         }
     }
+
     private void listRoomUsers() throws SuspendExecution {
-        for(ActorRef ar:this.rooms.values()){
+        for (ActorRef ar : this.rooms.values()) {
             ar.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null, self()));
         }
     }
 
-    /*private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
-     String[] args = (String[]) msg.o;
-     args[0] = user_info.getUsername();
+    private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
+        String[] args = (String[]) msg.o;
+        args[0] = username;
 
-     user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, args, self()));
-     }*/
+        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, args, self()));
+    }
+
     private void writeToSocket(Message.RetrievableMessage msg) throws IOException, SuspendExecution {
         socket.write(ByteBuffer.wrap((byte[]) msg.o));
     }
@@ -194,7 +196,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_USERS, null, self()));
     }
 
-        //talvez meter a logica dos acks nos metodos de envio para os managers
+    //talvez meter a logica dos acks nos metodos de envio para os managers
     @SuppressWarnings("empty-statement")
     @Override
     protected Void doRun() throws InterruptedException, SuspendExecution {
@@ -210,13 +212,13 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         return true;
                     case USER_LIST_ROOM_USERS:
                         listRoomUsers();
-                        return true;                    
+                        return true;
                     case USER_LIST_USERS:
                         listOnlineUsers();
                         return true;
-                    //case USER_PRIVATE_MESSAGE:
-                    //sendPrivateMessage(msg);
-                    //    return true;
+                    case USER_PRIVATE_MESSAGE:
+                        sendPrivateMessage(msg);
+                        return true;
                     case DATA:
                         sendMessageToRoom(msg);
                         //eventsource.notify("Enviada linha");
@@ -271,16 +273,8 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         createPublicRoom(msg);
                         return true;
                     case LINE:
-                        //System.out.println("Mensagem recibida do room: " + (String) msg.o);
-
                         writeToSocket(msg);
-                        System.out.println("Deu erro");
                         return true;
-
-                    /*case REMOVE:
-                     login.send(new Message.RetrievableMessage(Message.MessageType.REMOVE, new Message.LoginMessage(Message.MessageType.OK, ((Message.LoginMessage) msg.o).username, ((Message.LoginMessage) msg.o).password, self())));
-                     return true;
-                     */
                     case EOF:
                         return true;
                     case IOE:
@@ -310,11 +304,13 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
     }
 
     private Message.RetrievableMessage processInput(byte[] input) throws UnsupportedEncodingException {
-        String decoded = new String(input, "UTF-8");
+        String decoded = new String(input, "UTF-8").replace("\n", "");
 
         String[] inst = decoded.split(" ");
 
-        switch (inst[0]) {
+        System.out.println("Recebido: "+inst[0]);
+        
+        switch (inst[0].toLowerCase()) {
             //mudar sala de escrita
             case "!changeroom":
                 return new Message.RetrievableMessage(Message.MessageType.USER_CHANGE_ROOM, inst[1]);
@@ -326,6 +322,7 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
                 return new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, inst[1]);
             //login de utilizador
             case "!login":
+                 System.out.println("Recebido login");
                 return new Message.RetrievableMessage(Message.MessageType.USER_LOGIN, new Message.UserDataMessage(inst[1], inst[2]));
             //logout de utilizador
             case "!logout":
@@ -358,8 +355,8 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
             case "!listroomusers":
                 return new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null);
             //enviar mensagem privada para utilizador(es)
-            //case "!sendpm":
-            //    return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, inst);
+            case "!sendpm":
+                return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, inst);
             //notificar-me de criação de quartos (apenas para consola de notificação)
             //case "?roomcreation":
             //    return null;

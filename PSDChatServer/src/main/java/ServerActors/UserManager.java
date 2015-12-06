@@ -1,5 +1,6 @@
 package ServerActors;
 
+import co.paralleluniverse.actors.ActorRef;
 import co.paralleluniverse.actors.BasicActor;
 import co.paralleluniverse.fibers.SuspendExecution;
 import java.util.*;
@@ -7,7 +8,7 @@ import java.util.*;
 //falta meter o user actor no userinfo sempre que o utilizador faz login
 public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
 
-    private Map<String, UserInfo> userPool;
+    private final Map<String, UserInfo> userPool;
 
     public UserManager() {
         this.userPool = new HashMap<>();
@@ -33,15 +34,16 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
     public void logOutUser(String username) {
         if (userPool.containsKey(username)) {
             userPool.get(username).setIsLoggedIn(false);
+            userPool.get(username).setUser_actor(null);
         }
-        
     }
 
     public void createTestUsers(){
-        addUser("user1", new UserInfo("user1", "p"));
-        addUser("user2", new UserInfo("user2", "p"));
-        addUser("user3", new UserInfo("user3", "p")); 
+        addUser("user1", new UserInfo("user1", "pass"));
+        addUser("user2", new UserInfo("user2", "pass"));
+        addUser("user3", new UserInfo("user3", "pass")); 
         addUser("admin", new UserInfo("admin", "admin", false, null, true));
+        System.out.println("Test users criados");
     }
     
     //fazer controlo de erros para casos em que nao tem users na frase
@@ -51,7 +53,9 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         String[] args = (String[]) msg.o;
         List<String> dest_users = new ArrayList<>();
         String data = args[0] + ": ";
+        
         int i = 1;
+        
         while (i < args.length) {
             if (args[i].startsWith("@")) {
                 dest_users.add(args[i]);
@@ -60,24 +64,27 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
                 break;
             }
         }
+        
         while (i < args.length) {
             data = data.concat(args[i]);
+            i++;
         }
-        data = data.concat("\n");
 
         for (String s : dest_users) {
-            userPool.get(s).getUser_actor().send(new Message.RetrievableMessage(Message.MessageType.LINE, data));
+            userPool.get(s.substring(1)).getUser_actor().send(new Message.RetrievableMessage(Message.MessageType.LINE, data.getBytes()));
         }
     }
 
     //meter controlo para saber se o user já está logged in´
     private void userLogin(Message.RetrievableMessage msg) throws SuspendExecution {
         Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
-        if (userPool.containsKey(data.username)
-                && userPool.get(data.username).getPassword().equals(data.password)) {
-            UserInfo ui = userPool.get(data.username);
+        String username = (String) data.username; String password = (String) data.password;
+        System.out.println("Dados recebidos: "+username+" "+password);
+        System.out.println("Na pool: "+ userPool.get(username).getPassword());
+        if (userPool.containsKey(username) && userPool.get(username).getPassword().equals(password)) {
+            UserInfo ui = userPool.get(username);
             ui.setIsLoggedIn(true); 
-            ui.setUser_actor(data.sender);
+            ui.setUser_actor((ActorRef) msg.sender);
             if(userPool.get(data.username).isIsAdmin()) msg.sender.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LOGIN_ACK, "Logged in sucessfully!\n".getBytes()));                
             else msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN_ACK, "Logged in sucessfully!\n".getBytes()));
         } else {
