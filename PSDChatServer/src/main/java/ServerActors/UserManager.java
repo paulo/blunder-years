@@ -65,21 +65,21 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         data = data.concat("\n");
 
         for (String s : dest_users) {
-            userPool.get(s).getUser_actor().send(new Message.RetrievableMessage(Message.MessageType.DATA, data));
+            userPool.get(s).getUser_actor().send(new Message.RetrievableMessage(Message.MessageType.LINE, data));
         }
     }
 
     //meter controlo para saber se o user já está logged in´
     private void userLogin(Message.RetrievableMessage msg) throws SuspendExecution {
         Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
-
         if (userPool.containsKey(data.username)
                 && userPool.get(data.username).getPassword().equals(data.password)) {
             UserInfo ui = userPool.get(data.username);
-            ui.setIsLoggedIn(true); ui.setUser_actor(data.sender);
-            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN_ACK, "Logged in sucessfully!\n"));
+            ui.setIsLoggedIn(true); 
+            ui.setUser_actor(data.sender);
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN_ACK, "Logged in sucessfully!\n".getBytes()));
         } else {
-            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Login information incorrect!\n"));
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Login information incorrect!\n".getBytes()));
         }
     }
 
@@ -88,16 +88,17 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
         if (!userPool.containsKey(data.username)) {
             userPool.put(data.username, new UserInfo(data.username, data.password));
-            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER_ACK, "Account Created Sucessfully"));
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER_ACK, "Account Created Sucessfully.\n".getBytes()));
         } else {
-            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Error: Username already taken."));
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Error: Username already taken.\n".getBytes()));
         }
-
     }
 
     @Override
     @SuppressWarnings("empty-statement")
     protected Void doRun() throws InterruptedException, SuspendExecution {
+        createTestUsers();
+        
         while (receive(msg -> {
 
             switch (msg.type) {

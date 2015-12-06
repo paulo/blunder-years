@@ -11,7 +11,7 @@ import java.util.*;
 //falta criar quarto com o seu nome como atributo
 public class Room extends BasicActor<Message.RetrievableMessage, Void> {
 
-    private String room_name;
+    private final String room_name;
     private final Map<String, ActorRef> user_list;
     //private final Set<ActorRef> users;
     private ActorRef manager;
@@ -36,10 +36,8 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
     }
     
     //fazer controlo de erros (se o user já estive na sala, etc...
-    private void addUser(Message.RetrievableMessage msg) throws SuspendExecution{
-        Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
-        
-        user_list.put(data.username, (ActorRef) msg.sender);
+    private void addUser(Message.RetrievableMessage msg) throws SuspendExecution{        
+        user_list.put((String) msg.o, (ActorRef) msg.sender);
         msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM_ACK, room_name, self()));
     }
     
@@ -71,6 +69,7 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
                     return true;
                 case LINE:
                     for (ActorRef u : this.user_list.values()) {
+                        //System.out.println("Mensagem enviada do room: "+ (String) msg.o);
                         u.send(msg);
                     }
                     return true;

@@ -65,6 +65,8 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
     private void userRegister(Message.RetrievableMessage msg) throws SuspendExecution {
         Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
+        this.temp_user = data.username;
+        this.temp_pass = data.password;
         user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER, data, self()));
     }
 
@@ -95,7 +97,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     }
 
     private void writeStringToSocket(String msg) throws IOException, SuspendExecution {
-        socket.write(ByteBuffer.wrap((byte[]) msg.getBytes()));
+        socket.write(ByteBuffer.wrap(msg.getBytes()));
     }
 
     //fazer controlo de erros para quando a sala nao existe (talvez implementar do lado do room_manager)
@@ -141,10 +143,14 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
     //Mudar aqui para meter o username de actor na mensagem
     //Mudar para apenas mandar mensagem para o room em que está a escrever
-    private void sendMessageToRooms(Message.RetrievableMessage msg) throws SuspendExecution {
-        for (ActorRef room : rooms.values()) {
-            room.send(new Message.RetrievableMessage(Message.MessageType.LINE, msg.o));
-        }
+    private void sendMessageToRoom(Message.RetrievableMessage msg) throws SuspendExecution {
+        writing_room.send(new Message.RetrievableMessage(Message.MessageType.LINE, msg.o));
+    }
+
+    private void roomAck(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
+        this.rooms.put((String) msg.o, (ActorRef) msg.sender);
+        this.writing_room = (ActorRef) msg.sender;
+        writeStringToSocket("Now receiving messages from: " + (String) msg.o + ".\n");
     }
 
     @SuppressWarnings("empty-statement")
@@ -169,7 +175,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                     //sendPrivateMessage(msg);
                     //    return true;
                     case DATA:
-                        sendMessageToRooms(msg);
+                        sendMessageToRoom(msg);
                         //eventsource.notify("Enviada linha");
                         //room.send(new Message.RetrievableMessage(Message.MessageType.LINE, msg.o));
                         return true;
@@ -187,7 +193,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         return true;
                     case USER_REGISTER_ACK:
                         writeToSocket(msg);
-                        userLogin(new Message.UserDataMessage(this.username, this.password));
+                        userLogin(new Message.UserDataMessage(this.temp_user, this.temp_pass));
                         return true;
                     case USER_LOGIN_ACK:
                         this.username = this.temp_user;
@@ -195,8 +201,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         enterGlobalRoom();
                         return true;
                     case USER_ENTER_ROOM_ACK:
-                        this.rooms.put((String) msg.o, msg.sender);
-                        writeStringToSocket("Now receiving messages from: " + (String) msg.o);
+                        roomAck(msg);
                         return true;
                     case USER_LOGIN:
                         userLogin((Message.UserDataMessage) msg.o);
@@ -208,7 +213,10 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         listMyRooms();
                         return true;
                     case LINE:
+                        //System.out.println("Mensagem recibida do room: " + (String) msg.o);
+
                         writeToSocket(msg);
+                        System.out.println("Deu erro");
                         return true;
 
                     /*case REMOVE:

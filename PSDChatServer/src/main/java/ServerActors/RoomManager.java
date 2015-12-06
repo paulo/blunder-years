@@ -53,7 +53,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
                     .send(new Message.RetrievableMessage(
                                     Message.MessageType.USER_ENTER_ROOM, data.username, msg.sender));
         } else {
-            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "The room doesn't exist"));
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "The room doesn't exist.\n".getBytes()));
         }
     }
     
@@ -90,7 +90,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
             } else if (privateRoomPool.containsKey(s)) {
                 privateRoomPool.get(s).send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, null));
             } else {
-                msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "The room "+s+" does not exist."));
+                msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The room "+s+" does not exist.\n").getBytes()));
             }
         }
     }
@@ -110,7 +110,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
             rooms = rooms.concat(ss + "\n");
         }
 
-        msg.sender.send(new Message.RetrievableMessage(Message.MessageType.DATA, rooms));
+        msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, rooms.getBytes()));
     }
 
     private void publicRoomList(Message.RetrievableMessage msg) throws SuspendExecution {
@@ -119,7 +119,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
             rooms = rooms.concat(s + "\n");
         }
 
-        msg.sender.send(new Message.RetrievableMessage(Message.MessageType.DATA, rooms));
+        msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, rooms.getBytes()));
     }
 
     private void userLogOut() {
