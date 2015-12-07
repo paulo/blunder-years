@@ -19,7 +19,6 @@ public class Message {
         USER_LIST_ROOM,
         USER_CREATE_PUBLIC_ROOM,
         USER_CREATE_PRIVATE_ROOM,
-        USER_PRIVATE_ROOM_ADD,
         USER_PRIVATE_MESSAGE,
         USER_LIST_USERS,
         USER_LIST_ROOM_USERS,

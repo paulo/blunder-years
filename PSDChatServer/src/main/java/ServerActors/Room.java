@@ -7,57 +7,64 @@ import java.util.*;
 
 
 //falta a opção para quando a sala se desliga a si propria
-//falta, ao adicionar um utilizador, adicionar o username dele
 public class Room extends BasicActor<Message.RetrievableMessage, Void> {
 
     private final String room_name;
     private final Map<String, ActorRef> user_list;
-    private ActorRef manager;
+    private final ActorRef manager;
     private boolean isPrivate;
-    
-    
-    public Room(ActorRef room_manager, boolean permission, String room_name) {
+
+    public Room(ActorRef room_manager, boolean privateStatus, String room_name) {
         this.room_name = room_name;
         this.user_list = new HashMap<>();
-        //this.users = new HashSet();
         this.manager = room_manager;
-        this.isPrivate = permission;
+        this.isPrivate = privateStatus;
     }
 
-    private Message.RetrievableMessage listUsers(Message.RetrievableMessage msg) {
-        String user_room_list = "User list for room "+room_name+"\n";
-        for(String s: this.user_list.keySet()){
-            user_room_list = user_room_list.concat(s+"\n");
+    private void listUsers(Message.RetrievableMessage msg) throws SuspendExecution {
+        String user_room_list = "User list for room " + room_name + "\n";
+        for (String s : this.user_list.keySet()) {
+            user_room_list = user_room_list.concat(s + "\n");
         }
-        
-        return new Message.RetrievableMessage(Message.MessageType.LINE, user_room_list.getBytes());
+
+        msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, user_room_list.getBytes()));
     }
-    
+
     //fazer controlo de erros (se o user já estive na sala, etc...
-    private void addUser(Message.RetrievableMessage msg) throws SuspendExecution{        
+    private void addUser(Message.RetrievableMessage msg) throws SuspendExecution {
         user_list.put((String) msg.o, (ActorRef) msg.sender);
         msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM_ACK, room_name, self()));
     }
-    
+
     //falta meter controlo de erros para se o utilizador não estiver loggedin
-    private void logOutUser(Message.RetrievableMessage msg) throws SuspendExecution{
+    private void logOutUser(Message.RetrievableMessage msg) throws SuspendExecution {
         this.user_list.remove((String) msg.o);
     }
+
+    private void userExit(Message.RetrievableMessage msg) throws SuspendExecution {
+        this.user_list.remove((String) msg.o);
+        msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("Room " + this.room_name + " exited.").getBytes()));
+    }
     
-    private void removeRoom() throws SuspendExecution{
-        for(ActorRef ar : this.user_list.values())
+    private void removeRoom() throws SuspendExecution {
+        for (ActorRef ar : this.user_list.values()) {
             ar.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM_ACK, this.room_name));
+        }
         try {
             self().close();
         } catch (Exception e) {
             System.out.println("Exception removing romo");
         }
     }
-    
+
+    private void writeToUsers(Message.RetrievableMessage msg) throws SuspendExecution {
+        for (ActorRef u : this.user_list.values()) {
+            u.send(msg);
+        }
+    }
+
     @SuppressWarnings("empty-statement")
     @Override
-    //opções: entrar sala, sair de sala (neste momento está change, mas a logica pertence ao manager,
-    //portanto se calhar é melhor meter para sair), enviar mensagem para sala
     protected Void doRun() throws InterruptedException, SuspendExecution {
 
         while (receive(msg -> {
@@ -75,13 +82,10 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
                     logOutUser(msg);
                     return true;
                 case LINE:
-                    for (ActorRef u : this.user_list.values()) {
-                        u.send(msg);
-                    }
+                    writeToUsers(msg);
                     return true;
                 case USER_LEAVE_ROOM:
-                    logOutUser(msg);
-                    msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Room "+this.room_name+" exited."));
+                    userExit(msg);
                     return true;
             }
             return false;

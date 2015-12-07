@@ -43,7 +43,6 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         addUser("user2", new UserInfo("user2", "pass"));
         addUser("user3", new UserInfo("user3", "pass")); 
         addUser("admin", new UserInfo("admin", "admin", false, null, true));
-        System.out.println("Test users criados");
     }
     
     //fazer controlo de erros para casos em que nao tem users na frase
@@ -79,8 +78,7 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
     private void userLogin(Message.RetrievableMessage msg) throws SuspendExecution {
         Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
         String username = (String) data.username; String password = (String) data.password;
-        System.out.println("Dados recebidos: "+username+" "+password);
-        System.out.println("Na pool: "+ userPool.get(username).getPassword());
+
         if (userPool.containsKey(username) && userPool.get(username).getPassword().equals(password)) {
             UserInfo ui = userPool.get(username);
             ui.setIsLoggedIn(true); 

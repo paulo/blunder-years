@@ -124,10 +124,13 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     private void leaveRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
         String room_name = (String) msg.o;
         if (this.rooms.containsKey(room_name)) {
+            ActorRef room_ref = this.rooms.get(room_name);
             if (this.rooms.size() > 1) {
                 this.rooms.remove(room_name);
-                this.writing_room = Iterables.get(this.rooms.values(), 0);
-                this.rooms.get(room_name).send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, this.username));
+                if(room_ref.equals(this.writing_room)) {
+                    this.writing_room = Iterables.get(this.rooms.values(), 0);                    
+                }
+                room_ref.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, this.username, self()));
             } else {
                 writeStringToSocket("There has to be at least another room in which you're in.");
             }
@@ -150,7 +153,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
             if (((String) msg.o).equals("global_room")) {
                 writeStringToSocket("You can't remove the global room.\n");
             } else {
-                room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, this.username, self()));
+                room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, (String) msg.o, self()));
             }
         } else {
             writeStringToSocket("You do not have permission to remove rooms.\n");
@@ -194,6 +197,10 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
     private void listOnlineUsers() throws SuspendExecution {
         user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_USERS, null, self()));
+    }
+    
+    private void createPrivateRoom(Message.RetrievableMessage msg) throws SuspendExecution {
+        room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PRIVATE_ROOM, msg.o, self()));
     }
 
     //talvez meter a logica dos acks nos metodos de envio para os managers
@@ -272,6 +279,9 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                     case USER_CREATE_PUBLIC_ROOM:
                         createPublicRoom(msg);
                         return true;
+                    case USER_CREATE_PRIVATE_ROOM:
+                        createPrivateRoom(msg);
+                        return true;
                     case LINE:
                         writeToSocket(msg);
                         return true;
@@ -307,8 +317,6 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
         String decoded = new String(input, "UTF-8").replace("\n", "");
 
         String[] inst = decoded.split(" ");
-
-        System.out.println("Recebido: "+inst[0]);
         
         switch (inst[0].toLowerCase()) {
             //mudar sala de escrita
@@ -322,7 +330,6 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
                 return new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, inst[1]);
             //login de utilizador
             case "!login":
-                 System.out.println("Recebido login");
                 return new Message.RetrievableMessage(Message.MessageType.USER_LOGIN, new Message.UserDataMessage(inst[1], inst[2]));
             //logout de utilizador
             case "!logout":
@@ -335,10 +342,7 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
                 return new Message.RetrievableMessage(Message.MessageType.USER_LIST_MY_ROOMS, null);
             //criar quarto privado
             case "!createprivateroom":
-                return new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PRIVATE_ROOM, inst[1]);
-            //adicionar utilizador a quarto privado
-            case "!adduser":
-                return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_ROOM_ADD, inst[1]);
+                return new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PRIVATE_ROOM, inst);
             //criar quarto publico(apenas admin pode fazer isto)
             case "!createroom":
                 return new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PUBLIC_ROOM, inst[1]);
