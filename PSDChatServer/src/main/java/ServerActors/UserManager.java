@@ -51,7 +51,7 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
     private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
         String[] args = (String[]) msg.o;
         List<String> dest_users = new ArrayList<>();
-        String data = args[0] + ": ";
+        String data = "(pm)"+args[0]+": ";
         
         int i = 1;
         

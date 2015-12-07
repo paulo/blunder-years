@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ChatServer {
+public class ChatServer extends Thread{
 
     ActorRef acceptor, room_manager, user_manager, event_publisher;
     Supervisor user_supervisor;
@@ -55,8 +55,9 @@ public class ChatServer {
         return new EventPublisher(port).spawn();
     }
   */  
-    public void init() {
-        //event_publisher = createEventPublisher(); 
+    @Override
+    public void run(){
+            //event_publisher = createEventPublisher(); 
         room_manager = createRoomManager();
         //user_supervisor = (Supervisor) createUserSupervisor();
         /*es = (EventSource) createEventSource("user_event_actor");*/  
@@ -69,7 +70,9 @@ public class ChatServer {
         } catch (ExecutionException | InterruptedException ex) {
             Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
         }
+    
     }
+    
 
     //criar algum método de contenção para o caso da fiber falhar (tipo, meter um watch sobre isto)
     class Acceptor extends BasicActor {

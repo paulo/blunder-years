@@ -1,25 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ServerActors;
 
 import co.paralleluniverse.actors.BasicActor;
 import co.paralleluniverse.fibers.SuspendExecution;
-import java.util.Scanner;
 import org.zeromq.ZMQ;
 
-/**
- *
- * @author SimaoDias
- */
-/*
-class NotificationPublisher extends BasicActor<Message.RetrievableMessage, Void> {
+class EventPublisher extends BasicActor<Message.RetrievableMessage, Void> {
     
     private int port;
 
-    NotificationPublisher(int port){
+    EventPublisher(int port){
         this.port = port;
     }
     
@@ -34,7 +23,7 @@ class NotificationPublisher extends BasicActor<Message.RetrievableMessage, Void>
         while (receive(msg -> {
             switch(msg.type){
                 case DATA:
-                    socket.send(msg.o);
+                    socket.send((String) msg.o);
                 }
             return false;
         }));
@@ -46,4 +35,4 @@ class NotificationPublisher extends BasicActor<Message.RetrievableMessage, Void>
                
     }
 
-}*/
+}

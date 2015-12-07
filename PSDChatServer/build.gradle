@@ -34,8 +34,8 @@ dependencies {
 }
 
 run {
-    if(hasProperty('myargs')){
-        args System.getProperty("myargs").split(' ') 
+    if(project.hasProperty('myargs')){
+        args(myargs.split(' '))
     }
     
     jvmArgs "-javaagent:${configurations.quasar.iterator().next()}"

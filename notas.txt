@@ -51,21 +51,21 @@ Ver exemplos de testes de código
 
 
 
-
-
-
-
-gradle run -Dmyargs="12344"
     -> Usar isto para depois criar vários servidores ao mesmo tempo.
+
+gradle run -Pmyargs="12344 123456 asdfa 123455"
 
 ter em conta a mailbox e mailbox policy
 
 
 A fazer:
-   - Arranjar main para ser possivel criar várias instancias em várias portas
-   - Evitar o utilizador receber a sua propria mensagem
-   - As mensagems devem vir com o nome do utilizador no estilo "user@room: "
-   - Mudar mensagem privada para se ficar a saber que foi privada
+
    - Controlo de erros para quando não esta loggedin ou registado
    - Se o user nao estiver loggedout, nao pode fazer logout
    - Meter a lógica dos supervisors
+   - Ver se as listas de argumentos estão a ser processadas do lado do manager (ou talvez não...)
+
+
+   - As mensagems devem vir com o nome do utilizador no estilo "user@room: "
+   - Evitar o utilizador receber a sua propria mensagem
+   - Mudar enterroom e createroom para aceitar várias salas (as salas devem ir todas na mesma mensagem e ser processadas do lado do manager)
