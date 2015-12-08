@@ -18,7 +18,7 @@ public class EventSubscriber extends BasicActor<Message.RetrievableMessage, Void
         ZMQ.Context context = ZMQ.context(1);
         ZMQ.Socket socket = context.socket(ZMQ.SUB);
         socket.connect("tcp://localhost:" + port);
-
+        
         while (receive((Message.RetrievableMessage msg) -> {
             switch (msg.type) {
                 case SUBSCRIBE:

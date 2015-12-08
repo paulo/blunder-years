@@ -2,9 +2,6 @@ package ServerActors;
 
 import co.paralleluniverse.actors.ActorRef;
 import co.paralleluniverse.actors.BasicActor;
-import co.paralleluniverse.actors.behaviors.EventHandler;
-import co.paralleluniverse.actors.behaviors.EventSource;
-import co.paralleluniverse.actors.behaviors.EventSourceActor;
 import co.paralleluniverse.actors.behaviors.Supervisor;
 import co.paralleluniverse.actors.behaviors.Supervisor.ChildMode;
 import co.paralleluniverse.actors.behaviors.Supervisor.ChildSpec;
@@ -20,12 +17,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ChatServer extends Thread{
+public class ChatServer extends Thread {
 
-    ActorRef acceptor, room_manager, user_manager, event_publisher;
-    Supervisor user_supervisor;
+    ActorRef acceptor, room_manager, user_manager;
+    Supervisor user_supervisor, room_supervisor, manager_supervisor;
     int port;
-    EventSource es;
 
     ChatServer(int port_nmr) {
         this.port = port_nmr;
@@ -35,34 +31,48 @@ public class ChatServer extends Thread{
         return new SupervisorActor(RestartStrategy.ONE_FOR_ONE).spawn();
     }
 
-    private ActorRef createRoomManager() {
-        return new RoomManager().spawn();
+    private ActorRef createRoomSupervisor() {
+        return new SupervisorActor(RestartStrategy.ONE_FOR_ONE).spawn();
     }
 
-    private Acceptor createAcceptor(ActorRef room_manager, ActorRef user_supervisor, ActorRef user_manager) {
-        return new Acceptor(this.port, room_manager, (Supervisor) user_supervisor, user_manager);
+    private ActorRef createManagerSupervisor(ActorRef user_manager, ActorRef room_manager) {
+        manager_supervisor = new SupervisorActor(RestartStrategy.ONE_FOR_ONE).spawn();
+
+        try {
+            manager_supervisor.addChild(new ChildSpec(
+                    "room_manager", ChildMode.TRANSIENT, 10, 1, TimeUnit.SECONDS, 3, room_manager));
+            manager_supervisor.addChild(new ChildSpec(
+                    "user_manager", ChildMode.TRANSIENT, 10, 1, TimeUnit.SECONDS, 3, user_manager));
+        } catch (SuspendExecution | InterruptedException ex) {
+            Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new SupervisorActor(RestartStrategy.ONE_FOR_ONE).spawn();
     }
 
-    private ActorRef createEventSource(String source_type) {
-        return new EventSourceActor<String>(source_type).spawn();
+    private ActorRef createRoomManager(Supervisor room_supervisor) {
+        return new RoomManager(room_supervisor).spawn();
     }
 
-    private ActorRef createUserManager(){
+    private Acceptor createAcceptor(ActorRef room_manager, ActorRef user_manager, ActorRef user_supervisor) {
+        return new Acceptor(this.port, room_manager, user_manager, (Supervisor) user_supervisor);
+    }
+
+    private ActorRef createUserManager() {
         return new UserManager().spawn();
     }
-    
-/*    private ActorRef createEventPublisher(){
-        return new EventPublisher(port).spawn();
-    }
-  */  
+
     @Override
-    public void run(){
-            //event_publisher = createEventPublisher(); 
-        room_manager = createRoomManager();
-        //user_supervisor = (Supervisor) createUserSupervisor();
-        /*es = (EventSource) createEventSource("user_event_actor");*/  
+    public void run() {
+
+        user_supervisor = (Supervisor) createUserSupervisor();
+        room_supervisor = (Supervisor) createRoomSupervisor();
+
+        room_manager = createRoomManager(room_supervisor);
         user_manager = createUserManager();
-        Acceptor ac = createAcceptor(room_manager, user_supervisor, user_manager);
+
+        manager_supervisor = (Supervisor) createManagerSupervisor(user_manager, room_manager);
+
+        Acceptor ac = createAcceptor(room_manager, user_manager, user_supervisor);
         this.acceptor = ac.spawn();
 
         try {
@@ -70,9 +80,8 @@ public class ChatServer extends Thread{
         } catch (ExecutionException | InterruptedException ex) {
             Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+
     }
-    
 
     //criar algum método de contenção para o caso da fiber falhar (tipo, meter um watch sobre isto)
     class Acceptor extends BasicActor {
@@ -83,7 +92,7 @@ public class ChatServer extends Thread{
         final ActorRef room_manager;
         final Supervisor user_supervisor;
 
-        Acceptor(int port, ActorRef rm, Supervisor us, ActorRef um) {
+        Acceptor(int port, ActorRef rm, ActorRef um, Supervisor us) {
             this.port = port;
             this.room_manager = rm;
             this.user_supervisor = us;
@@ -101,27 +110,27 @@ public class ChatServer extends Thread{
                         .bind(new InetSocketAddress(port));
 
                 while (true) {
-                    
+
                     String actor_id = "actor" + user_count++;
                     FiberSocketChannel socket = ss.accept();
-                    ActorRef new_actor; 
-                    //se for cliente normal:
-                    new_actor = new User(actor_id, room_manager, user_manager, socket, es).spawn();
-                    //se for cliente tipo notification console:
-                    //new_actor = new NotificationSubscriber(port).spawn();
 
-                    /*es.addHandler((EventHandler) (Object event) -> {
-                     System.out.println(event.toString());
-                     });
+                    addChildToUserSupervisor(actor_id, new User(actor_id, room_manager, user_manager, socket).spawn());
                     
-                     this.user_supervisor.addChild(new ChildSpec(
-                     actor_id, ChildMode.TRANSIENT, 10, 1, TimeUnit.SECONDS, 3,
-                     new_actor));*/
                 }
             } catch (IOException e) {
             }
             return null;
         }
+
+        private void addChildToUserSupervisor(String actor_id, ActorRef new_actor) throws SuspendExecution {
+            try {
+                this.user_supervisor.addChild(new ChildSpec(
+                        actor_id, ChildMode.TRANSIENT, 10, 1, TimeUnit.SECONDS, 3, new_actor));
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
 
 }

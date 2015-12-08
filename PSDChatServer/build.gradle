@@ -20,7 +20,6 @@ configurations {
 }
 
 dependencies {
-    compile 'org.zeromq:jzmq:2.1.0'
     testCompile 'junit:junit:4.11'
     compile 'org.slf4j:slf4j-api:1.7.5'
     compile 'org.zeromq:jzmq:2.1.0'

@@ -4,47 +4,40 @@ import static ServerActors.User.MAXLEN;
 import co.paralleluniverse.actors.ActorRef;
 import co.paralleluniverse.actors.BasicActor;
 import co.paralleluniverse.actors.MailboxConfig;
-import co.paralleluniverse.actors.behaviors.EventSource;
 import co.paralleluniverse.fibers.SuspendExecution;
 import co.paralleluniverse.fibers.io.FiberSocketChannel;
-import co.paralleluniverse.strands.channels.Channels;
 import com.google.common.collect.Iterables;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-//talvez passar isto para nonRetrivableMessage
-//falta fazer os checks sobre se está loggedIn ou não
 public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
-    static int MAXLEN = 1024, USER_BOX_LIMIT = 100;
-    static Channels.OverflowPolicy box_policy = Channels.OverflowPolicy.DROP;
+    static int MAXLEN = 1024;
 
     private String username;
     private String password;
     public boolean isLoggedIn, isAdmin;
-    private Map<String, ActorRef> rooms;
+    private final Map<String, ActorRef> rooms;
     private ActorRef writing_room;
     private String temp_user, temp_pass;
 
-    private ActorRef room_manager;
+    private final ActorRef room_manager;
     final FiberSocketChannel socket;
-    private EventSource eventsource;
-    private ActorRef user_manager;
+    private final ActorRef user_manager;
 
-    User(String actor_id, ActorRef room, ActorRef user_manager, FiberSocketChannel socket, EventSource es) {
-        super(actor_id, new MailboxConfig(USER_BOX_LIMIT, box_policy));
+    User(String actor_id, ActorRef room, ActorRef user_manager, FiberSocketChannel socket) {
+        super(actor_id, new MailboxConfig(Message.USER_BOX_LIMIT, Message.BOX_POLICY));
         this.room_manager = room;
         this.socket = socket;
-        this.eventsource = es;
         this.isLoggedIn = isAdmin = false;
         this.user_manager = user_manager;
         this.rooms = new HashMap<>();
         this.temp_pass = temp_user = null;
     }
 
-    private void userLogout() throws SuspendExecution {
+    private void userLogout() throws SuspendExecution, IOException {
         if (this.isLoggedIn) {
             for (ActorRef room : this.rooms.values()) {
                 room.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT, this.username));
@@ -54,20 +47,30 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
             this.username = this.password = this.temp_pass = this.temp_user = null;
             this.rooms.clear();
             this.isLoggedIn = isAdmin = false;
+        } else {
+            notLoggedInMessage();
         }
     }
 
-    private void userLogin(Message.UserDataMessage msg) throws SuspendExecution {
-        this.temp_user = (String) msg.username;
-        this.temp_pass = (String) msg.password;
-        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN, msg, self()));
+    private void userLogin(Message.UserDataMessage msg) throws SuspendExecution, IOException {
+        if (!this.isLoggedIn) {
+            this.temp_user = (String) msg.username;
+            this.temp_pass = (String) msg.userdata;
+            user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN, msg, self()));
+        } else {
+            notLoggedOutMessage();
+        }
     }
 
-    private void userRegister(Message.RetrievableMessage msg) throws SuspendExecution {
-        Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
-        this.temp_user = data.username;
-        this.temp_pass = data.password;
-        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER, data, self()));
+    private void userRegister(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
+        if (!this.isLoggedIn) {
+            Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
+            this.temp_user = (String) data.username;
+            this.temp_pass = (String) data.userdata;
+            user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER, data, self()));
+        } else {
+            notLoggedOutMessage();
+        }
     }
 
     private void enterGlobalRoom() throws SuspendExecution {
@@ -75,25 +78,37 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                 new Message.UserDataMessage(this.username, "global_room"), self()));
     }
 
-    private void listRoom() throws SuspendExecution {
-        if (this.isAdmin) {
-            room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LIST_ROOM, null, self()));
+    private void listRoom() throws SuspendExecution, IOException {
+        if (this.isLoggedIn) {
+            if (this.isAdmin) {
+                room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LIST_ROOM, null, self()));
+            } else {
+                room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, username, self()));
+            }
         } else {
-            room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, username, self()));
+            notLoggedInMessage();
         }
     }
 
-    private void listRoomUsers() throws SuspendExecution {
-        for (ActorRef ar : this.rooms.values()) {
-            ar.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null, self()));
+    private void listRoomUsers() throws SuspendExecution, IOException {
+        if (isLoggedIn) {
+            for (ActorRef ar : this.rooms.values()) {
+                ar.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM_USERS, null, self()));
+            }
+        } else {
+            notLoggedInMessage();
         }
     }
 
-    private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
-        String[] args = (String[]) msg.o;
-        args[0] = username;
+    private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
+        if (isLoggedIn) {
+            String[] args = (String[]) msg.o;
+            args[0] = username;
 
-        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, args, self()));
+            user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, args, self()));
+        } else {
+            notLoggedInMessage();
+        }
     }
 
     private void writeToSocket(Message.RetrievableMessage msg) throws IOException, SuspendExecution {
@@ -107,63 +122,88 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     //fazer controlo de erros para quando a sala nao existe (talvez implementar do lado do room_manager)
     private void changeRoom(Message.RetrievableMessage msg) throws IOException, SuspendExecution {
         String room_name = (String) msg.o;
-        if (this.rooms.containsKey(room_name)) {
-            this.writing_room = this.rooms.get(room_name);
-            writeStringToSocket("Now writing to: " + room_name);
+        if (isLoggedIn) {
+            if (this.rooms.containsKey(room_name)) {
+                this.writing_room = this.rooms.get(room_name);
+                writeStringToSocket("Now writing to: " + room_name);
+            } else {
+                //aqui falta ficar a escrever para a sala em que se entrou, mas talvez deixar assim
+                enterRoom(msg);
+            }
         } else {
-            //aqui falta ficar a escrever para a sala em que se entrou, mas talvez deixar assim
-            enterRoom(msg);
+            notLoggedInMessage();
         }
     }
 
-    private void enterRoom(Message.RetrievableMessage msg) throws SuspendExecution {
-        room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM,
-                new Message.UserDataMessage(this.username, (String) msg.o), self()));
+    private void enterRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
+        String[] rooms_names = (String[]) msg.o;
+        if (isLoggedIn) {
+            for (int i = 1; i < rooms_names.length; i++) {
+                room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM,
+                        new Message.UserDataMessage(this.username, rooms_names[i]), self()));
+            }
+        } else {
+            notLoggedInMessage();
+        }
     }
 
     private void leaveRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
-        String room_name = (String) msg.o;
-        if (this.rooms.containsKey(room_name)) {
-            ActorRef room_ref = this.rooms.get(room_name);
-            if (this.rooms.size() > 1) {
-                this.rooms.remove(room_name);
-                if(room_ref.equals(this.writing_room)) {
-                    this.writing_room = Iterables.get(this.rooms.values(), 0);                    
+        String[] rooms_names = (String[]) msg.o;
+        if (isLoggedIn) {
+            for (int i = 1; i < rooms_names.length; i++) {
+                if (this.rooms.containsKey(rooms_names[i])) {
+                    ActorRef room_ref = this.rooms.get(rooms_names[i]);
+                    if (this.rooms.size() > 1) {
+                        this.rooms.remove(rooms_names[i]);
+                        if (room_ref.equals(this.writing_room)) {
+                            this.writing_room = Iterables.get(this.rooms.values(), 0);
+                        }
+                        room_ref.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, this.username, self()));
+                    } else {
+                        writeStringToSocket("There has to be at least another room in which you're in.");
+                    }
+                } else {
+                    writeStringToSocket("You are not in the room: " + rooms_names[i]);
                 }
-                room_ref.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, this.username, self()));
-            } else {
-                writeStringToSocket("There has to be at least another room in which you're in.");
             }
         } else {
-            writeStringToSocket("You are not in the room: " + room_name);
+            notLoggedInMessage();
         }
     }
 
     private void listMyRooms() throws IOException, SuspendExecution {
         String listening_list = "Listening to rooms:\n";
-        for (String s : this.rooms.keySet()) {
-            listening_list = listening_list.concat(s + "\n");
+        if (isLoggedIn) {
+            for (String s : this.rooms.keySet()) {
+                listening_list = listening_list.concat(s + "\n");
+            }
+            writeStringToSocket(listening_list);
+        } else {
+            notLoggedInMessage();
         }
-
-        writeStringToSocket(listening_list);
     }
 
     private void adminRemoveRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
-        if (this.isAdmin) {
+        if (this.isLoggedIn && this.isAdmin) {
             if (((String) msg.o).equals("global_room")) {
                 writeStringToSocket("You can't remove the global room.\n");
             } else {
                 room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, (String) msg.o, self()));
             }
         } else {
-            writeStringToSocket("You do not have permission to remove rooms.\n");
+            notAdminMessage();
         }
     }
 
     //Mudar aqui para meter o username de actor na mensagem
     //Mudar para apenas mandar mensagem para o room em que está a escrever
-    private void sendMessageToRoom(Message.RetrievableMessage msg) throws SuspendExecution {
-        writing_room.send(new Message.RetrievableMessage(Message.MessageType.LINE, msg.o));
+    private void sendMessageToRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
+        if (isLoggedIn) {
+            writing_room.send(new Message.RetrievableMessage(Message.MessageType.LINE,
+                    new Message.UserDataMessage(username, msg.o), self()));
+        } else {
+            notLoggedInMessage();
+        }
     }
 
     private void roomAck(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
@@ -174,33 +214,77 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
     private void removeRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
 
-        String room_name = (String) msg.o;
-        if (this.rooms.containsKey(room_name)) {
-            if (this.rooms.size() > 1) {
-                if (this.rooms.get(room_name).equals(writing_room)) {
-                    this.rooms.remove(room_name);
-                    this.writing_room = Iterables.get(this.rooms.values(), 0);
+        String[] rooms_names = (String[]) msg.o;
+        for (int i = 1; i < rooms_names.length; i++) {
+            if (this.rooms.containsKey(rooms_names[i])) {
+                if (this.rooms.size() > 1) {
+                    if (this.rooms.get(rooms_names[i]).equals(writing_room)) {
+                        this.rooms.remove(rooms_names[i]);
+                        this.writing_room = Iterables.get(this.rooms.values(), 0);
+                    } else {
+                        this.rooms.remove(rooms_names[i]);
+                    }
                 } else {
-                    this.rooms.remove(room_name);
+                    enterGlobalRoom();
                 }
             } else {
-                enterGlobalRoom();
+                writeStringToSocket("You are not in the room: " + rooms_names[i]);
             }
-        } else {
-            writeStringToSocket("You are not in the room: " + room_name);
         }
     }
 
-    private void createPublicRoom(Message.RetrievableMessage msg) throws SuspendExecution {
-        room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PUBLIC_ROOM, msg.o, self()));
+    private void createPublicRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
+        String[] rooms_names = (String[]) msg.o;
+        if (this.isLoggedIn) {
+            for (int i = 1; i < rooms_names.length; i++) {
+                room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PUBLIC_ROOM, rooms_names[i], self()));
+            }
+        } else {
+            notLoggedInMessage();
+        }
     }
 
-    private void listOnlineUsers() throws SuspendExecution {
-        user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_USERS, null, self()));
+    private void listOnlineUsers() throws SuspendExecution, IOException {
+        if (this.isLoggedIn) {
+            user_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_LIST_USERS, null, self()));
+        } else {
+            notLoggedInMessage();
+        }
     }
-    
-    private void createPrivateRoom(Message.RetrievableMessage msg) throws SuspendExecution {
-        room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PRIVATE_ROOM, msg.o, self()));
+
+    private void createPrivateRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
+        if (this.isLoggedIn) {
+            room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PRIVATE_ROOM, msg.o, self()));
+        } else {
+            notLoggedInMessage();
+        }
+    }
+
+    private void notLoggedInMessage() throws IOException, SuspendExecution {
+        writeStringToSocket("You must be logged in.\n");
+    }
+
+    private void notAdminMessage() throws IOException, SuspendExecution {
+        writeStringToSocket("You must be logged in and have admin privileges.\n");
+    }
+
+    private void notLoggedOutMessage() throws IOException, SuspendExecution {
+        writeStringToSocket("You must be logged out.\n");
+    }
+
+    private void logInUserActor() throws SuspendExecution {
+        this.username = this.temp_user;
+        this.password = this.temp_pass;
+        this.isLoggedIn = true;
+        enterGlobalRoom();
+    }
+
+    private void logInAdminActor() throws SuspendExecution {
+        this.username = this.temp_user;
+        this.password = this.temp_pass;
+        this.isAdmin = true;
+        this.isLoggedIn = true;
+        enterGlobalRoom();
     }
 
     //talvez meter a logica dos acks nos metodos de envio para os managers
@@ -228,8 +312,6 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         return true;
                     case DATA:
                         sendMessageToRoom(msg);
-                        //eventsource.notify("Enviada linha");
-                        //room.send(new Message.RetrievableMessage(Message.MessageType.LINE, msg.o));
                         return true;
                     case USER_ENTER_ROOM: //implementar (nao obriga o utilizador a sair da sala)
                         enterRoom(msg);
@@ -248,15 +330,10 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         userLogin(new Message.UserDataMessage(this.temp_user, this.temp_pass));
                         return true;
                     case USER_LOGIN_ACK:
-                        this.username = this.temp_user;
-                        this.password = this.temp_pass;
-                        enterGlobalRoom();
+                        logInUserActor();
                         return true;
                     case ADMIN_LOGIN_ACK:
-                        this.username = this.temp_user;
-                        this.password = this.temp_pass;
-                        this.isAdmin = true;
-                        enterGlobalRoom();
+                        logInAdminActor();
                         return true;
                     case USER_ENTER_ROOM_ACK:
                         roomAck(msg);
@@ -286,14 +363,18 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         writeToSocket(msg);
                         return true;
                     case EOF:
+                        System.out.println("EOF at lineReader");
+                        userLogout();
+                        socket.close();
                         return true;
                     case IOE:
-                        //room.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, self()));
+                        System.out.println("IOException at lineReader");
+                        userLogout();
                         socket.close();
                         return false;
                 }
             } catch (IOException e) {
-                //room.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, self()));
+                System.out.println("IOException at user: " + e.toString());
             }
             return false;  // stops the actor if some unexpected message is received
         }));
@@ -317,17 +398,17 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
         String decoded = new String(input, "UTF-8").replace("\n", "");
 
         String[] inst = decoded.split(" ");
-        
+
         switch (inst[0].toLowerCase()) {
             //mudar sala de escrita
             case "!changeroom":
                 return new Message.RetrievableMessage(Message.MessageType.USER_CHANGE_ROOM, inst[1]);
             //entrar em sala
             case "!enterroom":
-                return new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM, inst[1]);
+                return new Message.RetrievableMessage(Message.MessageType.USER_ENTER_ROOM, inst);
             //sair de sala
             case "!leaveroom":
-                return new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, inst[1]);
+                return new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, inst);
             //login de utilizador
             case "!login":
                 return new Message.RetrievableMessage(Message.MessageType.USER_LOGIN, new Message.UserDataMessage(inst[1], inst[2]));
@@ -345,10 +426,10 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
                 return new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PRIVATE_ROOM, inst);
             //criar quarto publico(apenas admin pode fazer isto)
             case "!createroom":
-                return new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PUBLIC_ROOM, inst[1]);
+                return new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PUBLIC_ROOM, inst);
             //remover quarto (apenas admin pode fazer isto)
             case "!removeroom":
-                return new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, inst[1]);
+                return new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, inst);
             //listar quartos disponiveis a user (se for admin, lista todos)
             case "!listrooms":
                 return new Message.RetrievableMessage(Message.MessageType.USER_LIST_ROOM, null);
