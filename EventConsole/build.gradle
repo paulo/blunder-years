@@ -2,12 +2,12 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = "ServerActors.Main"
+mainClassName = "Client.Main"
 //mainClassName = "CodeExamples.ChatServerV2"
 
 
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'ServerActors.Main'
+    ext.mainClass = 'Client.Main'
     //ext.mainClass = "CodeExamples.ChatServerV2"
 }
 
@@ -36,6 +36,7 @@ dependencies {
 
 run {
     systemProperty "java.library.path", "/usr/local/lib"
+    standardInput = System.in
     if(project.hasProperty('myargs')){
         args(myargs.split(' '))
     }

@@ -1,4 +1,4 @@
-package ServerActors;
+/*package ServerActors;
 
 import co.paralleluniverse.actors.BasicActor;
 import co.paralleluniverse.fibers.SuspendExecution;
@@ -18,7 +18,10 @@ public class EventSubscriber extends BasicActor<Message.RetrievableMessage, Void
         ZMQ.Context context = ZMQ.context(1);
         ZMQ.Socket socket = context.socket(ZMQ.SUB);
         socket.connect("tcp://localhost:" + port);
-        new SubscriberBot(socket).spawn();
+        socket.subscribe("".getBytes());
+        
+        SubscriberBot sc = new SubscriberBot(socket);
+        sc.start();
 
         
         while (receive((Message.RetrievableMessage msg) -> {
@@ -38,18 +41,22 @@ public class EventSubscriber extends BasicActor<Message.RetrievableMessage, Void
 
     }
     
-    class SubscriberBot extends BasicActor{
+    class SubscriberBot extends Thread{
         private ZMQ.Socket socket;
         SubscriberBot(ZMQ.Socket socket){
             this.socket = socket;
         }
-
-        @Override
-        protected Object doRun() throws InterruptedException, SuspendExecution {
+        
+        public void run(){
             while(true){
-                String s = socket.recvStr();
-                System.out.println(s);
+                System.out.println("Inside subscriber bot");
+                byte[] s = socket.recv(ZMQ.NOBLOCK);
+                if(s !=null ){
+                    System.out.println(new String(s));
+                }
             }
         }  
+        
     } 
 }
+*/

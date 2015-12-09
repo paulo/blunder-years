@@ -289,10 +289,10 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         enterGlobalRoom();
     }
     
-    private void createNotificationConsole() {
+    /*private void createNotificationConsole() {
         ActorRef nc = new EventSubscriber(port).spawn();
         //killTHIS
-    }
+    }*/
  
     //talvez meter a logica dos acks nos metodos de envio para os managers
     @SuppressWarnings("empty-statement")
@@ -379,10 +379,10 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         userLogout();
                         socket.close();
                         return false;
-                    case BECOME_NOTIFICATION_CONSOLE:
-                        createNotificationConsole();
+                    //case BECOME_NOTIFICATION_CONSOLE:
+                    //    createNotificationConsole();
                         //userLogout();
-                        return true;
+                    //    return true;
                 }
             } catch (IOException e) {
                 System.out.println("IOException at user: " + e.toString());
@@ -454,8 +454,8 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
             case "!sendpm":
                 return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, inst);
             //tornar-se consola de notificação
-            case "!becomenc":
-                return new Message.RetrievableMessage(Message.MessageType.BECOME_NOTIFICATION_CONSOLE, null);
+            //case "!becomenc":
+            //    return new Message.RetrievableMessage(Message.MessageType.BECOME_NOTIFICATION_CONSOLE, null);
             //notificar-me de criação de quartos (apenas para consola de notificação)
             //case "?roomcreation":
             //    return null;

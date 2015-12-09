@@ -69,12 +69,12 @@ public class ChatServer extends Thread {
     public void run() {
 
         event_publisher = createEventPublisher(); 
-        try {
-            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.SUBSCRIBE, "@ROOMMANAGER"));
-            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.SUBSCRIBE, "@USERMANAGER"));
+        /*try {
+            //event_publisher.send(new Message.RetrievableMessage(Message.MessageType.SUBSCRIBE, "@ROOMMANAGER"));
+            //event_publisher.send(new Message.RetrievableMessage(Message.MessageType.SUBSCRIBE, "@USERMANAGER"));
         } catch (SuspendExecution ex) {
             Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         
         user_supervisor = (Supervisor) createUserSupervisor();
         room_supervisor = (Supervisor) createRoomSupervisor();

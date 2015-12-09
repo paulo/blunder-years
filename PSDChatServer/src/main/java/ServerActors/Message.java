@@ -37,14 +37,20 @@ public class Message {
         ADMIN_LIST_ROOM,
         ADMIN_LOGIN_ACK,
         ADMIN_REMOVE_ROOM_ACK,
-        //Simao
+        //MISC
         USER_LOGIN_ACK,
         USER_REGISTER_ACK,
         USER_ENTER_ROOM_ACK,
         KO,
         LOGINCOMMAND,
-        SUBSCRIBE,
-        BECOME_NOTIFICATION_CONSOLE,
+        
+        //Event actions
+        USER_LOGIN_EVENT,
+        ROOM_EVENT,
+        
+        //Deprecated
+        //SUBSCRIBE,
+        //BECOME_NOTIFICATION_CONSOLE,
 
         LINE,
         LOG_OUT
