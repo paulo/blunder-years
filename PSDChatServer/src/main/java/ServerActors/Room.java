@@ -2,6 +2,7 @@ package ServerActors;
 
 import co.paralleluniverse.actors.ActorRef;
 import co.paralleluniverse.actors.BasicActor;
+import co.paralleluniverse.actors.MailboxConfig;
 import co.paralleluniverse.fibers.SuspendExecution;
 import java.util.*;
 
@@ -12,9 +13,12 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
     private final String room_name;
     private final Map<String, ActorRef> user_list;
     private final ActorRef manager;
+    
+    //Meter para ao entrar, dizer :"You are entering the private room room_name;
     private boolean isPrivate;
-
+    
     public Room(ActorRef room_manager, boolean privateStatus, String room_name) {
+        super(room_name, new MailboxConfig(Message.ROOM_BOX_LIMIT, Message.BOX_POLICY));
         this.room_name = room_name;
         this.user_list = new HashMap<>();
         this.manager = room_manager;
@@ -43,7 +47,7 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
 
     private void userExit(Message.RetrievableMessage msg) throws SuspendExecution {
         this.user_list.remove((String) msg.o);
-        msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("Room " + this.room_name + " exited.").getBytes()));
+        msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("Room " + this.room_name + " exited.\n").getBytes()));
     }
     
     private void removeRoom() throws SuspendExecution {
@@ -53,13 +57,19 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
         try {
             self().close();
         } catch (Exception e) {
-            System.out.println("Exception removing romo");
+            System.out.println("Exception removing room.");
         }
     }
 
     private void writeToUsers(Message.RetrievableMessage msg) throws SuspendExecution {
+        Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
+        Message.RetrievableMessage msg_sent = 
+                new Message.RetrievableMessage(Message.MessageType.LINE, 
+                        (data.username+"@room_name: "+(new String((byte[]) data.userdata))).getBytes());
+        
         for (ActorRef u : this.user_list.values()) {
-            u.send(msg);
+            if(((ActorRef) msg.sender).equals(u) == false) 
+                u.send(msg_sent);
         }
     }
 

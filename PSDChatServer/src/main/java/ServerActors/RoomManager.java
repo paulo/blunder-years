@@ -3,9 +3,14 @@ package ServerActors;
 import ServerActors.Message.RetrievableMessage;
 import co.paralleluniverse.actors.ActorRef;
 import co.paralleluniverse.actors.BasicActor;
+import co.paralleluniverse.actors.MailboxConfig;
+import co.paralleluniverse.actors.behaviors.Supervisor;
 import co.paralleluniverse.fibers.SuspendExecution;
 import java.util.HashMap;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
 
@@ -13,18 +18,32 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
     Map<String, ActorRef> privateRoomPool;//(nome da sala) -> (referencia da sala)
     Map<String, Set<String>> privateRoomUserMap;
     ActorRef event_publisher;
-    
-    RoomManager(ActorRef event_publisher) {
+    Supervisor room_supervisor;
+
+    RoomManager(Supervisor rs, ActorRef event_publisher) {
+        super("room_manager", new MailboxConfig(Message.ROOMMANAGER_BOX_LIMIT, Message.BOX_POLICY));
+
         publicRoomPool = new HashMap<>();
         privateRoomPool = new HashMap<>();
         privateRoomUserMap = new HashMap<>();
         this.event_publisher = event_publisher;
+        room_supervisor = rs;
+    }
+
+    private void addChildToRoomSupervisor(String room_name, ActorRef new_room) throws SuspendExecution {
+        try {
+            this.room_supervisor.addChild(new Supervisor.ChildSpec(
+                    room_name, Supervisor.ChildMode.TRANSIENT, 10, 1, TimeUnit.SECONDS, 3, new_room));
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RoomManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @SuppressWarnings("empty-statement")
     private void createPublicRoom(String room_name) throws SuspendExecution {
         if (this.publicRoomPool.containsKey(room_name) == false) {
             ActorRef new_room = new Room(self(), false, room_name).spawn();
+            addChildToRoomSupervisor(room_name, new_room);
             publicRoomPool.put(room_name, new_room);
         }
     }
@@ -35,6 +54,8 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The public room " + room_name + " already exists.\n").getBytes()));
         } else {
             ActorRef new_room = new Room(self(), false, room_name).spawn();
+            addChildToRoomSupervisor(room_name, new_room);
+
             publicRoomPool.put(room_name, new_room);
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The public room " + room_name + " has been created.\n").getBytes()));
             event_publisher.send(new RetrievableMessage(Message.MessageType.DATA, "@ROOMMANAGER: The public room: " + room_name + " has been created.\n"));
@@ -53,6 +74,8 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The private room " + room_name + " already exists.\n").getBytes()));
         } else {
             ActorRef new_room = new Room(self(), true, room_name).spawn();
+            addChildToRoomSupervisor(room_name, new_room);
+
             privateRoomPool.put(room_name, new_room);
             privateRoomUserMap.put(room_name, new HashSet<>());
             while (i < args.length) {
@@ -77,7 +100,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
     private void addUser2Room(Message.RetrievableMessage msg) throws SuspendExecution {
 
         Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
-        String room_name = (String) data.password;
+        String room_name = (String) data.userdata;
         String user_name = (String) data.username;
 
         if (privateRoomPool.containsKey(room_name)) {
@@ -85,7 +108,9 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
                 privateRoomPool.get(room_name)
                         .send(new Message.RetrievableMessage(
                                         Message.MessageType.USER_ENTER_ROOM, data.username, msg.sender));
-            } else msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("You do not have the credentials to enter " + room_name).getBytes()));
+            } else {
+                msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("You do not have the credentials to enter " + room_name).getBytes()));
+            }
         } else if (publicRoomPool.containsKey(room_name)) {
             publicRoomPool.get(room_name)
                     .send(new Message.RetrievableMessage(
@@ -168,24 +193,24 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
 
         while (receive((Message.RetrievableMessage msg) -> {
             switch (msg.type) {
-                case USER_ENTER_ROOM: //falta testar
+                case USER_ENTER_ROOM:
                     addUser2Room(msg);
                     return true;
-                case USER_LEAVE_ROOM: //tem de passar para o room default, o room é que trata de tirar de la o user
+                case USER_LEAVE_ROOM:
                     return true;
-                case USER_LIST_ROOM: //falta testar
+                case USER_LIST_ROOM:
                     publicRoomList(msg);
                     return true;
-                case USER_CREATE_PUBLIC_ROOM://falta testar
+                case USER_CREATE_PUBLIC_ROOM:
                     createPublicRoom(msg);
                     return true;
                 case USER_CREATE_PRIVATE_ROOM:
                     createPrivateRoom(msg);
                     return true;
-                case ADMIN_LIST_ROOM: //falta testar
+                case ADMIN_LIST_ROOM:
                     privateAndPublicRoomList(msg);
                     return true;
-                case ADMIN_REMOVE_ROOM://falta testar
+                case ADMIN_REMOVE_ROOM:
                     removeRoom(msg);
                     return true;
             }

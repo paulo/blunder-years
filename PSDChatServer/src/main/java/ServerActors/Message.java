@@ -1,14 +1,23 @@
 package ServerActors;
 
 import co.paralleluniverse.actors.ActorRef;
+import co.paralleluniverse.strands.channels.Channels;
 
 public class Message {
 
+    static int USER_BOX_LIMIT = 100;
+    static int ROOM_BOX_LIMIT = 1000;
+    static int ROOMMANAGER_BOX_LIMIT = 10000;
+    static int USERMANAGER_BOX_LIMIT = 10000;
+    
+    static Channels.OverflowPolicy BOX_POLICY = Channels.OverflowPolicy.DROP;
+    
+    
     public enum MessageType {
+
         DATA,
         EOF,
         IOE,
-        
         //User actions
         USER_LOGIN,
         USER_LOGOUT,
@@ -28,8 +37,6 @@ public class Message {
         ADMIN_LIST_ROOM,
         ADMIN_LOGIN_ACK,
         ADMIN_REMOVE_ROOM_ACK,
-        
-        
         //Simao
         USER_LOGIN_ACK,
         USER_REGISTER_ACK,
@@ -38,7 +45,7 @@ public class Message {
         LOGINCOMMAND,
         SUBSCRIBE,
         BECOME_NOTIFICATION_CONSOLE,
-        
+
         LINE,
         LOG_OUT
     }
@@ -61,33 +68,39 @@ public class Message {
             this.sender = null;
         }
     }
-    
+
     static class NonRetrievableMessage {
+
         MessageType type;
         final Object o;
-        
+
         NonRetrievableMessage(MessageType t, Object obj) {
             this.type = t;
             this.o = obj;
         }
+        
+        NonRetrievableMessage(MessageType t){
+            this.type = t;
+            this.o = null;
+        }
     }
-    
-    //talvez renomear password para ser capaz de ser mais flexivel (vai ser usado para transmitir o nome da sala durante a entrada nesta)
+
     static class UserDataMessage {
+
         String username;
-        String password;
+        Object userdata;
         ActorRef sender;
-        
-        UserDataMessage(String un, String pw, ActorRef sender) {
+
+        UserDataMessage(String un, Object ud, ActorRef sender) {
             this.username = un;
-            this.password = pw;
+            this.userdata = ud;
             this.sender = sender;
-        }  
-        
-        UserDataMessage(String un, String pw) {
+        }
+
+        UserDataMessage(String un, Object ud) {
             this.username = un;
-            this.password = pw;
+            this.userdata = ud;
             this.sender = null;
-        } 
+        }
     }
 }

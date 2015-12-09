@@ -19,6 +19,7 @@ public class EventSubscriber extends BasicActor<Message.RetrievableMessage, Void
         ZMQ.Socket socket = context.socket(ZMQ.SUB);
         socket.connect("tcp://localhost:" + port);
         new SubscriberBot(socket).spawn();
+
         
         while (receive((Message.RetrievableMessage msg) -> {
             switch (msg.type) {

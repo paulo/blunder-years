@@ -19,12 +19,9 @@ configurations {
     quasar
 }
 
-def jzmqVersion = '2.1.0'
-def jzmqClassifier = 'native-amd64-Linux-null-null'
 
 dependencies {
-    compile "org.zeromq:jzmq:$jzmqVersion"
-    compile "org.zeromq:jzmq:$jzmqVersion:$jzmqClassifier"
+    compile "org.zeromq:jzmq:2.1.0"
     testCompile 'junit:junit:4.11'
     compile 'org.slf4j:slf4j-api:1.7.5'
     compile "co.paralleluniverse:quasar-core:0.7.3:jdk8"
@@ -36,7 +33,7 @@ dependencies {
     
     
 }
-
+//-Djava.library.path=/usr/local/lib
 run {
     if(project.hasProperty('myargs')){
         args(myargs.split(' '))
