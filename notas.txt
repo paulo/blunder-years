@@ -62,7 +62,7 @@ A fazer:
 
    - O user ao criar a notification console e os rooms ao serem apagados têm de ir abaixo (ver no supervisor também)
     - falta passar user para receber nonRetrivableMessage (importante)
-
+    - fazer ambiente de teste
 
 removeChild(ActorRef<?> actor, boolean terminate)
 public void close()
