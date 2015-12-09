@@ -9,9 +9,11 @@ import java.util.*;
 public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
 
     private final Map<String, UserInfo> userPool;
+    ActorRef event_publisher;
 
-    public UserManager() {
+    public UserManager(ActorRef event_publisher) {
         this.userPool = new HashMap<>();
+        this.event_publisher = event_publisher;
     }
 
     public UserInfo getUser(String user_name) {
@@ -83,8 +85,15 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
             UserInfo ui = userPool.get(username);
             ui.setIsLoggedIn(true); 
             ui.setUser_actor((ActorRef) msg.sender);
-            if(userPool.get(data.username).isIsAdmin()) msg.sender.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LOGIN_ACK, "Logged in sucessfully!\n".getBytes()));                
-            else msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN_ACK, "Logged in sucessfully!\n".getBytes()));
+            if(userPool.get(data.username).isIsAdmin()) {
+                msg.sender.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_LOGIN_ACK, "Logged in sucessfully!\n".getBytes()));
+                event_publisher.send(new Message.RetrievableMessage(Message.MessageType.DATA, "@USERMANAGER: " + data.username + " has logged in as administrator.\n"));
+            } 
+            
+            else {
+                msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN_ACK, "Logged in sucessfully!\n".getBytes()));
+                event_publisher.send(new Message.RetrievableMessage(Message.MessageType.DATA, "@USERMANAGER: " + data.username + " has logged in.\n"));
+            }
         } else {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Login information incorrect!\n".getBytes()));
         }
@@ -96,6 +105,7 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         if (!userPool.containsKey(data.username)) {
             userPool.put(data.username, new UserInfo(data.username, data.password));
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER_ACK, "Account Created Sucessfully.\n".getBytes()));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.DATA, "@USERMANAGER: New account creater: " + data.username +"\n"));
         } else {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Error: Username already taken.\n".getBytes()));
         }

@@ -35,8 +35,8 @@ public class ChatServer extends Thread{
         return new SupervisorActor(RestartStrategy.ONE_FOR_ONE).spawn();
     }
 
-    private ActorRef createRoomManager() {
-        return new RoomManager().spawn();
+    private ActorRef createRoomManager(ActorRef event_publisher) {
+        return new RoomManager(event_publisher).spawn();
     }
 
     private Acceptor createAcceptor(ActorRef room_manager, ActorRef user_supervisor, ActorRef user_manager) {
@@ -47,21 +47,29 @@ public class ChatServer extends Thread{
         return new EventSourceActor<String>(source_type).spawn();
     }
 
-    private ActorRef createUserManager(){
-        return new UserManager().spawn();
+    private ActorRef createUserManager(ActorRef user_manager){
+        return new UserManager(user_manager).spawn();
     }
     
-/*    private ActorRef createEventPublisher(){
+    private ActorRef createEventPublisher(){
         return new EventPublisher(port).spawn();
     }
-  */  
+    
     @Override
     public void run(){
-            //event_publisher = createEventPublisher(); 
-        room_manager = createRoomManager();
+        event_publisher = createEventPublisher(); 
+        try {
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.SUBSCRIBE, "@ROOMMANAGER"));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.SUBSCRIBE, "@USERMANAGER"));
+        } catch (SuspendExecution ex) {
+            Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        room_manager = createRoomManager(event_publisher);
         //user_supervisor = (Supervisor) createUserSupervisor();
         /*es = (EventSource) createEventSource("user_event_actor");*/  
-        user_manager = createUserManager();
+        user_manager = createUserManager(event_publisher);
         Acceptor ac = createAcceptor(room_manager, user_supervisor, user_manager);
         this.acceptor = ac.spawn();
 
@@ -106,7 +114,7 @@ public class ChatServer extends Thread{
                     FiberSocketChannel socket = ss.accept();
                     ActorRef new_actor; 
                     //se for cliente normal:
-                    new_actor = new User(actor_id, room_manager, user_manager, socket, es).spawn();
+                    new_actor = new User(actor_id, room_manager, user_manager, socket, port).spawn();
                     //se for cliente tipo notification console:
                     //new_actor = new NotificationSubscriber(port).spawn();
 

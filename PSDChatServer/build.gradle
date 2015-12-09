@@ -19,11 +19,14 @@ configurations {
     quasar
 }
 
+def jzmqVersion = '2.1.0'
+def jzmqClassifier = 'native-amd64-Linux-null-null'
+
 dependencies {
-    compile 'org.zeromq:jzmq:2.1.0'
+    compile "org.zeromq:jzmq:$jzmqVersion"
+    compile "org.zeromq:jzmq:$jzmqVersion:$jzmqClassifier"
     testCompile 'junit:junit:4.11'
     compile 'org.slf4j:slf4j-api:1.7.5'
-    compile 'org.zeromq:jzmq:2.1.0'
     compile "co.paralleluniverse:quasar-core:0.7.3:jdk8"
     compile "co.paralleluniverse:quasar-actors:0.7.3"
     compile "co.paralleluniverse:quasar-galaxy:0.7.3"
@@ -31,12 +34,13 @@ dependencies {
     compile "co.paralleluniverse:quasar-kotlin:0.7.3"
     quasar  "co.paralleluniverse:quasar-core:0.7.3:jdk8"
     
+    
 }
 
 run {
     if(project.hasProperty('myargs')){
         args(myargs.split(' '))
-    }
-    
+    }    
     jvmArgs "-javaagent:${configurations.quasar.iterator().next()}"
+   
 }

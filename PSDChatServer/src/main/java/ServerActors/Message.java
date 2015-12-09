@@ -37,6 +37,7 @@ public class Message {
         KO,
         LOGINCOMMAND,
         SUBSCRIBE,
+        BECOME_NOTIFICATION_CONSOLE,
         
         LINE,
         LOG_OUT

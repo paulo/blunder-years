@@ -28,20 +28,22 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     private ActorRef writing_room;
     private String temp_user, temp_pass;
 
-    private ActorRef room_manager;
+    final int port;
+    ActorRef line_reader;
+    final ActorRef room_manager;
     final FiberSocketChannel socket;
-    private EventSource eventsource;
-    private ActorRef user_manager;
+    final ActorRef user_manager;
 
-    User(String actor_id, ActorRef room, ActorRef user_manager, FiberSocketChannel socket, EventSource es) {
+    User(String actor_id, ActorRef room, ActorRef user_manager, FiberSocketChannel socket, int port) {
         super(actor_id, new MailboxConfig(USER_BOX_LIMIT, box_policy));
         this.room_manager = room;
         this.socket = socket;
-        this.eventsource = es;
         this.isLoggedIn = isAdmin = false;
         this.user_manager = user_manager;
         this.rooms = new HashMap<>();
         this.temp_pass = temp_user = null;
+        this.port = port;
+        this.line_reader = null;
     }
 
     private void userLogout() throws SuspendExecution {
@@ -202,13 +204,18 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     private void createPrivateRoom(Message.RetrievableMessage msg) throws SuspendExecution {
         room_manager.send(new Message.RetrievableMessage(Message.MessageType.USER_CREATE_PRIVATE_ROOM, msg.o, self()));
     }
-
+    
+    private void createNotificationConsole() {
+        ActorRef nc = new EventSubscriber(port).spawn();
+        //killTHIS
+    }
+ 
     //talvez meter a logica dos acks nos metodos de envio para os managers
     @SuppressWarnings("empty-statement")
     @Override
     protected Void doRun() throws InterruptedException, SuspendExecution {
 
-        new LineReader(self(), socket).spawn();
+        line_reader = new LineReader(self(), socket).spawn();
         //eventsource.notify("Nova conexão");
 
         while (receive((Message.RetrievableMessage msg) -> {
@@ -291,6 +298,10 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         //room.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, self()));
                         socket.close();
                         return false;
+                    case BECOME_NOTIFICATION_CONSOLE:
+                        createNotificationConsole();
+                        //userLogout();
+                        return true;
                 }
             } catch (IOException e) {
                 //room.send(new Message.RetrievableMessage(Message.MessageType.USER_LEAVE_ROOM, self()));
@@ -314,10 +325,10 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
     }
 
     private Message.RetrievableMessage processInput(byte[] input) throws UnsupportedEncodingException {
-        String decoded = new String(input, "UTF-8").replace("\n", "");
 
+        String decoded = new String(input, "UTF-8").replaceAll("[\r\n]", "");
         String[] inst = decoded.split(" ");
-        
+
         switch (inst[0].toLowerCase()) {
             //mudar sala de escrita
             case "!changeroom":
@@ -361,6 +372,9 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
             //enviar mensagem privada para utilizador(es)
             case "!sendpm":
                 return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, inst);
+            //tornar-se consola de notificação
+            case "!becomenc":
+                return new Message.RetrievableMessage(Message.MessageType.BECOME_NOTIFICATION_CONSOLE, null);
             //notificar-me de criação de quartos (apenas para consola de notificação)
             //case "?roomcreation":
             //    return null;
