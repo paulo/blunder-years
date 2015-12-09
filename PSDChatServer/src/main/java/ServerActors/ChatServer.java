@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 public class ChatServer extends Thread {
 
-    ActorRef acceptor, room_manager, user_manager;
+    ActorRef acceptor, room_manager, user_manager, event_publisher;
     Supervisor user_supervisor, room_supervisor, manager_supervisor;
     int port;
 
@@ -49,26 +49,38 @@ public class ChatServer extends Thread {
         return new SupervisorActor(RestartStrategy.ONE_FOR_ONE).spawn();
     }
 
-    private ActorRef createRoomManager(Supervisor room_supervisor) {
-        return new RoomManager(room_supervisor).spawn();
+    private ActorRef createRoomManager(Supervisor room_supervisor, ActorRef event_publisher) {
+        return new RoomManager(room_supervisor, event_publisher).spawn();
     }
 
     private Acceptor createAcceptor(ActorRef room_manager, ActorRef user_manager, ActorRef user_supervisor) {
         return new Acceptor(this.port, room_manager, user_manager, (Supervisor) user_supervisor);
     }
 
-    private ActorRef createUserManager() {
-        return new UserManager().spawn();
+    private ActorRef createUserManager(ActorRef event_publisher){
+        return new UserManager(event_publisher).spawn();
+    }
+    
+    private ActorRef createEventPublisher(){
+        return new EventPublisher(port).spawn();
     }
 
     @Override
     public void run() {
 
+        event_publisher = createEventPublisher(); 
+        try {
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.SUBSCRIBE, "@ROOMMANAGER"));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.SUBSCRIBE, "@USERMANAGER"));
+        } catch (SuspendExecution ex) {
+            Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         user_supervisor = (Supervisor) createUserSupervisor();
         room_supervisor = (Supervisor) createRoomSupervisor();
 
-        room_manager = createRoomManager(room_supervisor);
-        user_manager = createUserManager();
+        room_manager = createRoomManager(room_supervisor, event_publisher);
+        user_manager = createUserManager(event_publisher);
 
         manager_supervisor = (Supervisor) createManagerSupervisor(user_manager, room_manager);
 
@@ -114,7 +126,7 @@ public class ChatServer extends Thread {
                     String actor_id = "actor" + user_count++;
                     FiberSocketChannel socket = ss.accept();
 
-                    addChildToUserSupervisor(actor_id, new User(actor_id, room_manager, user_manager, socket).spawn());
+                    addChildToUserSupervisor(actor_id, new User(actor_id, room_manager, user_manager, socket, port).spawn());
                     
                 }
             } catch (IOException e) {

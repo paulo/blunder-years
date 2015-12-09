@@ -22,12 +22,13 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     private final Map<String, ActorRef> rooms;
     private ActorRef writing_room;
     private String temp_user, temp_pass;
-
     private final ActorRef room_manager;
     final FiberSocketChannel socket;
     private final ActorRef user_manager;
+    final int port;
+    
 
-    User(String actor_id, ActorRef room, ActorRef user_manager, FiberSocketChannel socket) {
+    User(String actor_id, ActorRef room, ActorRef user_manager, FiberSocketChannel socket, int port) {
         super(actor_id, new MailboxConfig(Message.USER_BOX_LIMIT, Message.BOX_POLICY));
         this.room_manager = room;
         this.socket = socket;
@@ -35,6 +36,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         this.user_manager = user_manager;
         this.rooms = new HashMap<>();
         this.temp_pass = temp_user = null;
+        this.port = port;
     }
 
     private void userLogout() throws SuspendExecution, IOException {
@@ -286,7 +288,12 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         this.isLoggedIn = true;
         enterGlobalRoom();
     }
-
+    
+    private void createNotificationConsole() {
+        ActorRef nc = new EventSubscriber(port).spawn();
+        //killTHIS
+    }
+ 
     //talvez meter a logica dos acks nos metodos de envio para os managers
     @SuppressWarnings("empty-statement")
     @Override
@@ -372,6 +379,10 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         userLogout();
                         socket.close();
                         return false;
+                    case BECOME_NOTIFICATION_CONSOLE:
+                        createNotificationConsole();
+                        //userLogout();
+                        return true;
                 }
             } catch (IOException e) {
                 System.out.println("IOException at user: " + e.toString());
@@ -395,8 +406,8 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
     }
 
     private Message.RetrievableMessage processInput(byte[] input) throws UnsupportedEncodingException {
-        String decoded = new String(input, "UTF-8").replace("\n", "");
 
+        String decoded = new String(input, "UTF-8").replaceAll("[\r\n]", "");
         String[] inst = decoded.split(" ");
 
         switch (inst[0].toLowerCase()) {
@@ -442,6 +453,9 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
             //enviar mensagem privada para utilizador(es)
             case "!sendpm":
                 return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, inst);
+            //tornar-se consola de notificação
+            case "!becomenc":
+                return new Message.RetrievableMessage(Message.MessageType.BECOME_NOTIFICATION_CONSOLE, null);
             //notificar-me de criação de quartos (apenas para consola de notificação)
             //case "?roomcreation":
             //    return null;

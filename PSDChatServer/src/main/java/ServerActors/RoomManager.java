@@ -1,5 +1,6 @@
 package ServerActors;
 
+import ServerActors.Message.RetrievableMessage;
 import co.paralleluniverse.actors.ActorRef;
 import co.paralleluniverse.actors.BasicActor;
 import co.paralleluniverse.actors.MailboxConfig;
@@ -16,13 +17,16 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
     Map<String, ActorRef> publicRoomPool; //(nome da sala) -> (referencia da sala)
     Map<String, ActorRef> privateRoomPool;//(nome da sala) -> (referencia da sala)
     Map<String, Set<String>> privateRoomUserMap;
+    ActorRef event_publisher;
     Supervisor room_supervisor;
 
-    RoomManager(Supervisor rs) {
+    RoomManager(Supervisor rs, ActorRef event_publisher) {
         super("room_manager", new MailboxConfig(Message.ROOMMANAGER_BOX_LIMIT, Message.BOX_POLICY));
+
         publicRoomPool = new HashMap<>();
         privateRoomPool = new HashMap<>();
         privateRoomUserMap = new HashMap<>();
+        this.event_publisher = event_publisher;
         room_supervisor = rs;
     }
 
@@ -54,6 +58,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
 
             publicRoomPool.put(room_name, new_room);
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The public room " + room_name + " has been created.\n").getBytes()));
+            event_publisher.send(new RetrievableMessage(Message.MessageType.DATA, "@ROOMMANAGER: The public room: " + room_name + " has been created.\n"));
         }
     }
 
@@ -81,6 +86,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
                 addUser2PrivateRoom(u, room_name);
             }
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The private room " + room_name + " has been created.\n").getBytes()));
+            event_publisher.send(new RetrievableMessage(Message.MessageType.DATA, "@ROOMMANAGER: The private room: " + room_name + " has been created.\n"));
         }
     }
 
@@ -133,10 +139,12 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
             publicRoomPool.get(room_name).send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, null));
             this.publicRoomPool.remove(room_name);
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The public room " + room_name + " was removed.\n").getBytes()));
+            event_publisher.send(new RetrievableMessage(Message.MessageType.DATA, "@ROOMMANAGER: The public room: " + room_name + " was removed.\n"));
         } else if (privateRoomPool.containsKey(room_name)) {
             privateRoomPool.get(room_name).send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, null));
             this.privateRoomPool.remove(room_name);
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The private room " + room_name + " was removed.\n").getBytes()));
+            event_publisher.send(new RetrievableMessage(Message.MessageType.DATA, "@ROOMMANAGER: The private room: " + room_name + " was removed.\n"));
         } else {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The room " + room_name + " does not exist.\n").getBytes()));
         }
