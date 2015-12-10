@@ -21,7 +21,7 @@ configurations {
 
 
 dependencies {
-    compile "org.zeromq:jzmq:2.1.0"
+    compile "org.zeromq:jzmq:3.0.1"
     testCompile 'junit:junit:4.11'
     compile 'org.slf4j:slf4j-api:1.7.5'
     compile "co.paralleluniverse:quasar-core:0.7.3:jdk8"
@@ -34,10 +34,15 @@ dependencies {
     
 }
 //-Djava.library.path=/usr/local/lib
+//-Pjpath=/usr/local/lib
 run {
     if(project.hasProperty('myargs')){
         args(myargs.split(' '))
     }    
+        systemProperty "java.library.path", "/usr/local/lib"
+
+
+    
     jvmArgs "-javaagent:${configurations.quasar.iterator().next()}"
    
 }
