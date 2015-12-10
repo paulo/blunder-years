@@ -61,11 +61,6 @@ public class Message {
         ROOM_PUBLIC_REMOVAL_EVENTS,
         ROOM_PUBLIC_NEWUSER_EVENTS,
         ROOM_PUBLIC_USEREXIT_EVENTS,
-        
-        
-        //Deprecated
-        //SUBSCRIBE,
-        //BECOME_NOTIFICATION_CONSOLE,
 
         LINE,
         LOG_OUT
