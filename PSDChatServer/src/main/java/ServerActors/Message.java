@@ -44,9 +44,24 @@ public class Message {
         KO,
         LOGINCOMMAND,
         
-        //Event actions
-        USER_LOGIN_EVENT,
-        ROOM_EVENT,
+        //User realated Event actions
+        USER_FOLLOW,
+        USER_LOGIN_EVENTS,
+        USER_LOGOUT_EVENTS,
+        USER_CREATION_EVENTS,
+        USER_REMOVAL_EVENTS,
+        
+        //Room related Event actions
+        ROOM_PRIVATE_CREATION_EVENTS,
+        ROOM_PRIVATE_REMOVAL_EVENTS,
+        ROOM_PRIVATE_NEWUSER_EVENTS,
+        ROOM_PRIVATE_USEREXIT_EVENTS,
+        
+        ROOM_PUBLIC_CREATION_EVENTS,
+        ROOM_PUBLIC_REMOVAL_EVENTS,
+        ROOM_PUBLIC_NEWUSER_EVENTS,
+        ROOM_PUBLIC_USEREXIT_EVENTS,
+        
         
         //Deprecated
         //SUBSCRIBE,
@@ -107,6 +122,15 @@ public class Message {
             this.username = un;
             this.userdata = ud;
             this.sender = null;
+        }
+    }
+    
+    static class UserFollowDataMessage extends UserDataMessage{
+        MessageType type;
+        
+        UserFollowDataMessage(MessageType type, String un, Object ud, ActorRef sender){
+            super(un, ud, sender);
+            this.type = type;
         }
     }
 }

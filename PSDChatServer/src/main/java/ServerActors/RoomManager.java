@@ -1,6 +1,5 @@
 package ServerActors;
 
-import ServerActors.Message.RetrievableMessage;
 import co.paralleluniverse.actors.ActorRef;
 import co.paralleluniverse.actors.BasicActor;
 import co.paralleluniverse.actors.MailboxConfig;
@@ -58,7 +57,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
 
             publicRoomPool.put(room_name, new_room);
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The public room " + room_name + " has been created.\n").getBytes()));
-            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_EVENT, "The public room " + room_name + " has been created.\n"));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PUBLIC_CREATION_EVENTS, "The public room " + room_name + " has been created.\n"));
         }
     }
 
@@ -84,9 +83,10 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
             }
             for (String u : dest_users) {
                 addUser2PrivateRoom(u, room_name);
+                event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PRIVATE_NEWUSER_EVENTS, "User "+ u +" joined the private room "  + room_name + ".\n"));
             }
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The private room " + room_name + " has been created.\n").getBytes()));
-            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_EVENT, "The private room " + room_name + " has been created.\n"));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PRIVATE_CREATION_EVENTS, "The private room " + room_name + " has been created.\n"));
         }
     }
 
@@ -108,14 +108,17 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
                 privateRoomPool.get(room_name)
                         .send(new Message.RetrievableMessage(
                                         Message.MessageType.USER_ENTER_ROOM, data.username, msg.sender));
+                event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PRIVATE_NEWUSER_EVENTS, "User "+ data.username +" joined the private room "  + room_name + ".\n"));
+                event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_FOLLOW, data.username +  " joined the private room "  + room_name + ".\n", null));
             } else {
                 msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("You do not have the credentials to enter " + room_name).getBytes()));
-                event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_EVENT, "The user "+ data.username + " tried to access " +room_name + " without permissions."));
             }
         } else if (publicRoomPool.containsKey(room_name)) {
             publicRoomPool.get(room_name)
                     .send(new Message.RetrievableMessage(
                                     Message.MessageType.USER_ENTER_ROOM, data.username, msg.sender));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PUBLIC_NEWUSER_EVENTS, "User "+ data.username +" joined the public room "  + room_name + ".\n"));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_FOLLOW,  data.username+ " joined the public room "  + room_name + ".\n", null));
         } else {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The room " + room_name + " doesn't exist.\n").getBytes()));
         }
@@ -140,12 +143,12 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
             publicRoomPool.get(room_name).send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, null));
             this.publicRoomPool.remove(room_name);
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The public room " + room_name + " was removed.\n").getBytes()));
-            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_EVENT, "The public room " + room_name + " was removed.\n"));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PUBLIC_REMOVAL_EVENTS, "The public room " + room_name + " was removed.\n"));
         } else if (privateRoomPool.containsKey(room_name)) {
             privateRoomPool.get(room_name).send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, null));
             this.privateRoomPool.remove(room_name);
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The private room " + room_name + " was removed.\n").getBytes()));
-            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_EVENT, "The private room " + room_name + " was removed.\n"));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PRIVATE_REMOVAL_EVENTS, "The private room " + room_name + " was removed.\n"));
         } else {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The room " + room_name + " does not exist.\n").getBytes()));
         }
@@ -197,7 +200,11 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
                 case USER_ENTER_ROOM:
                     addUser2Room(msg);
                     return true;
-                case USER_LEAVE_ROOM:
+                case ROOM_PRIVATE_USEREXIT_EVENTS:
+                    privateRoomUserExit(msg);
+                    return true;
+                case ROOM_PUBLIC_USEREXIT_EVENTS:
+                    publicRoomUserExit(msg);
                     return true;
                 case USER_LIST_ROOM:
                     publicRoomList(msg);
@@ -219,5 +226,15 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
 
         }));
         return null;
+    }
+
+    private void privateRoomUserExit(Message.RetrievableMessage msg) throws SuspendExecution {    
+        event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PRIVATE_USEREXIT_EVENTS, msg.o));
+        event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_FOLLOW, msg.o));
+    }
+
+    private void publicRoomUserExit(Message.RetrievableMessage msg) throws SuspendExecution{
+        event_publisher.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PUBLIC_USEREXIT_EVENTS, msg.o));
+        event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_FOLLOW, msg.o));
     }
 }

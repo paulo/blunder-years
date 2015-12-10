@@ -10,12 +10,12 @@ import java.util.*;
 //falta a opção para quando a sala se desliga a si propria
 public class Room extends BasicActor<Message.RetrievableMessage, Void> {
 
-    private final String room_name;
+    public final String room_name;
     private final Map<String, ActorRef> user_list;
     private final ActorRef manager;
     
     //Meter para ao entrar, dizer :"You are entering the private room room_name;
-    private boolean isPrivate;
+    public boolean isPrivate;
     
     public Room(ActorRef room_manager, boolean privateStatus, String room_name) {
         super(room_name, new MailboxConfig(Message.ROOM_BOX_LIMIT, Message.BOX_POLICY));
@@ -42,7 +42,15 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
 
     //falta meter controlo de erros para se o utilizador não estiver loggedin
     private void logOutUser(Message.RetrievableMessage msg) throws SuspendExecution {
-        this.user_list.remove((String) msg.o);
+        String user = (String) msg.o;
+        this.user_list.remove(user);
+        if(this.isPrivate){
+            manager.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PRIVATE_USEREXIT_EVENTS, user + " left private room " + room_name + ".\n", null));
+        }
+        else{
+            manager.send(new Message.RetrievableMessage(Message.MessageType.ROOM_PUBLIC_USEREXIT_EVENTS,  user + " left public room " + room_name + ".\n"));
+        }
+        
     }
 
     private void userExit(Message.RetrievableMessage msg) throws SuspendExecution {
