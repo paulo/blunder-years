@@ -172,8 +172,6 @@ public class InputReader extends Thread{
                     }
                     break;
                 default:
-                   
-                    System.out.println("MATCHES: " + Pattern.matches(userPattern, topic));
                     if(Pattern.matches(userPattern, topic)){
                         res += topic + " ";
                     }

@@ -22,17 +22,38 @@ public class Main{
     }
     
     public static void main(String[] args) throws IOException {
-        
+        int default_port = 12346, port;
         ZMQ.Context ctx = ZMQ.context(1);
         ZMQ.Socket socket = ctx.socket(ZMQ.SUB); 
         
-        InputReader commands = new InputReader(socket);
-        commands.start();
+        if (args.length > 0 && args[0] != null) {
+            for (String arg : args) {
+                System.out.println("Parsing port number: " + arg);
+                try {
+                    port = Integer.parseInt(arg);
+                    System.out.println("Connecting to server on port number: " + port);
+                    InputReader commands = new InputReader(socket);
+                    commands.start();
 
-        socket.connect("tcp://localhost:"+12346);  
+                    socket.connect("tcp://localhost:"+port); 
+                } catch (NumberFormatException e) {
+                    System.out.println("Port " + arg + " is not valid.");
+                }
+            }
+        } else {
+            InputReader commands = new InputReader(socket);
+            commands.start();
+
+            socket.connect("tcp://localhost:"+default_port);  
+        }
         startListening(socket);
         socket.close();
         ctx.term();
     } 
 
 }
+
+
+
+        
+        
