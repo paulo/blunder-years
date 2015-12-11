@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Client;
 import java.io.IOException;
 import org.zeromq.ZMQ;
-/**
- *
- * @author SimaoDias
- */
+
 public class Main{
     
 
@@ -27,19 +20,17 @@ public class Main{
         ZMQ.Socket socket = ctx.socket(ZMQ.SUB); 
         
         if (args.length > 0 && args[0] != null) {
-            for (String arg : args) {
-                System.out.println("Parsing port number: " + arg);
+                System.out.println("Parsing port number: " + args[0]);
                 try {
-                    port = Integer.parseInt(arg);
+                    port = Integer.parseInt(args[0]);
                     System.out.println("Connecting to server on port number: " + port);
                     InputReader commands = new InputReader(socket);
                     commands.start();
 
                     socket.connect("tcp://localhost:"+port); 
                 } catch (NumberFormatException e) {
-                    System.out.println("Port " + arg + " is not valid.");
+                    System.out.println("Port " + args[0] + " is not valid.");
                 }
-            }
         } else {
             InputReader commands = new InputReader(socket);
             commands.start();
