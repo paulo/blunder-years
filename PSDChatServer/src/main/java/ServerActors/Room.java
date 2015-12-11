@@ -13,8 +13,6 @@ public class Room extends BasicActor<Message.RetrievableMessage, Void> {
     public final String room_name;
     private final Map<String, ActorRef> user_list;
     private final ActorRef manager;
-    
-    //Meter para ao entrar, dizer :"You are entering the private room room_name;
     public boolean isPrivate;
     
     public Room(ActorRef room_manager, boolean privateStatus, String room_name) {

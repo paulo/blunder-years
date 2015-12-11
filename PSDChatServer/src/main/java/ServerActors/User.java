@@ -121,7 +121,6 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         socket.write(ByteBuffer.wrap(msg.getBytes()));
     }
 
-    //fazer controlo de erros para quando a sala nao existe (talvez implementar do lado do room_manager)
     private void changeRoom(Message.RetrievableMessage msg) throws IOException, SuspendExecution {
         String room_name = (String) msg.o;
         if (isLoggedIn) {
@@ -129,7 +128,6 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                 this.writing_room = this.rooms.get(room_name);
                 writeStringToSocket("Now writing to: " + room_name);
             } else {
-                //aqui falta ficar a escrever para a sala em que se entrou, mas talvez deixar assim
                 enterRoom(msg);
             }
         } else {
@@ -197,8 +195,6 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         }
     }
 
-    //Mudar aqui para meter o username de actor na mensagem
-    //Mudar para apenas mandar mensagem para o room em que está a escrever
     private void sendMessageToRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
         if (isLoggedIn) {
             writing_room.send(new Message.RetrievableMessage(Message.MessageType.LINE,
@@ -288,19 +284,12 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         this.isLoggedIn = true;
         enterGlobalRoom();
     }
-    
-    /*private void createNotificationConsole() {
-        ActorRef nc = new EventSubscriber(port).spawn();
-        //killTHIS
-    }*/
  
-    //talvez meter a logica dos acks nos metodos de envio para os managers
     @SuppressWarnings("empty-statement")
     @Override
     protected Void doRun() throws InterruptedException, SuspendExecution {
 
         new LineReader(self(), socket).spawn();
-        //eventsource.notify("Nova conexão");
 
         while (receive((Message.RetrievableMessage msg) -> {
             try {
@@ -320,7 +309,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                     case DATA:
                         sendMessageToRoom(msg);
                         return true;
-                    case USER_ENTER_ROOM: //implementar (nao obriga o utilizador a sair da sala)
+                    case USER_ENTER_ROOM:
                         enterRoom(msg);
                         return true;
                     case USER_CHANGE_ROOM:
@@ -379,10 +368,6 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         userLogout();
                         socket.close();
                         return false;
-                    //case BECOME_NOTIFICATION_CONSOLE:
-                    //    createNotificationConsole();
-                        //userLogout();
-                    //    return true;
                 }
             } catch (IOException e) {
                 System.out.println("IOException at user: " + e.toString());
@@ -453,18 +438,6 @@ class LineReader extends BasicActor<Message.RetrievableMessage, Void> {
             //enviar mensagem privada para utilizador(es)
             case "!sendpm":
                 return new Message.RetrievableMessage(Message.MessageType.USER_PRIVATE_MESSAGE, inst);
-            //tornar-se consola de notificação
-            //case "!becomenc":
-            //    return new Message.RetrievableMessage(Message.MessageType.BECOME_NOTIFICATION_CONSOLE, null);
-            //notificar-me de criação de quartos (apenas para consola de notificação)
-            //case "?roomcreation":
-            //    return null;
-            //notificar-me da entrada de um dado user (apenas para consola de notificação)
-            //case "?userlogin":
-            //    return null;
-            //notificar-me da remoção de quartos (apenas para consola de notificação)
-            //case "?roomremoval":
-            //    return null;
             default:
                 return new Message.RetrievableMessage(Message.MessageType.DATA, input);
         }
