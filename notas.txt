@@ -1,0 +1,31 @@
+Data de entrega: 8 de Janeiro
+Relatório até 6 páginas.
+
+---
+
+.Sistema transacional distribuido
+.Armazena dados (saldo) de contas bancárias em múltiplos servidores e permite transferências atómicas.
+.Deve permitir a reinicialização de cada um dos servidores a qualquer momento e reforçar serializabilidade.
+
+#Cliente
+
+.Escrito em java.
+.Permite uma única operação: transferência entre duas contas.
+    .Recebe 3 parâmetros (2 números de contas e uma quantidade).
+    .Imprime a confirmação se a transferência for bem sucedida.
+.O número de contas devem identificar facilmente o correspondente bank server.
+
+#Bank Server
+
+.Escrito em java com uma base de dados Apache Derby.
+    - https://db.apache.org/derby/
+    - http://www.vogella.com/tutorials/ApacheDerby/article.html
+    - http://mvnrepository.com/artifact/org.apache.derby
+.Deve fornecer operações de deposito e levantamento numa interface Java RMI para clientes.
+.A concorrência dos pedidos de utilizadores deve ser gerida com threads.
+
+#Transactional server
+
+.Escrito em java -> deve usar um mecanismo de persistência de dados à nossa escolha para armazenar o log (p.e. um servidor de bases de dados em non-XA mode).
+.Deve fornecer operações para o cliente poder iniciar e terminar transacções distribuidas e interfaces para os recursos.
+.O mecanismo de comunicação e as primitivas de concorrência escolhidas para o servidor transacional devem ser brevemente justificadas no relatório.
