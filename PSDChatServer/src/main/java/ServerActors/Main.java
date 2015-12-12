@@ -2,6 +2,7 @@ package ServerActors;
 
 public class Main {
 
+    //As portas podem ser passadas como argumento, sendo que cada uma dará origem a um ChatServer diferente
     public static void main(String[] args) throws Exception {
         int default_port = 12345, port;
         

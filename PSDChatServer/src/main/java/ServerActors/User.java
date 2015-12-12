@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
@@ -26,7 +28,6 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     final FiberSocketChannel socket;
     private final ActorRef user_manager;
     final int port;
-    
 
     User(String actor_id, ActorRef room, ActorRef user_manager, FiberSocketChannel socket, int port) {
         super(actor_id, new MailboxConfig(Message.USER_BOX_LIMIT, Message.BOX_POLICY));
@@ -184,11 +185,15 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
     }
 
     private void adminRemoveRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
+        String[] room_names = (String[]) msg.o;
+
         if (this.isLoggedIn && this.isAdmin) {
-            if (((String) msg.o).equals("global_room")) {
-                writeStringToSocket("You can't remove the global room.\n");
-            } else {
-                room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, (String) msg.o, self()));
+            for (int i = 1; i < room_names.length; i++) {
+                if (room_names[i].equals("global_room")) {
+                    writeStringToSocket("You can't remove the global room.\n");
+                } else {
+                    room_manager.send(new Message.RetrievableMessage(Message.MessageType.ADMIN_REMOVE_ROOM, room_names[i], self()));
+                }
             }
         } else {
             notAdminMessage();
@@ -212,22 +217,20 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
 
     private void removeRoom(Message.RetrievableMessage msg) throws SuspendExecution, IOException {
 
-        String[] rooms_names = (String[]) msg.o;
-        for (int i = 1; i < rooms_names.length; i++) {
-            if (this.rooms.containsKey(rooms_names[i])) {
-                if (this.rooms.size() > 1) {
-                    if (this.rooms.get(rooms_names[i]).equals(writing_room)) {
-                        this.rooms.remove(rooms_names[i]);
-                        this.writing_room = Iterables.get(this.rooms.values(), 0);
-                    } else {
-                        this.rooms.remove(rooms_names[i]);
-                    }
+        String room_name = (String) msg.o;
+        if (this.rooms.containsKey(room_name)) {
+            if (this.rooms.size() > 1) {
+                if (this.rooms.get(room_name).equals(writing_room)) {
+                    this.rooms.remove(room_name);
+                    this.writing_room = Iterables.get(this.rooms.values(), 0);
                 } else {
-                    enterGlobalRoom();
+                    this.rooms.remove(room_name);
                 }
             } else {
-                writeStringToSocket("You are not in the room: " + rooms_names[i]);
+                enterGlobalRoom();
             }
+        } else {
+            writeStringToSocket("You are not in the room: " + room_name);
         }
     }
 
@@ -284,7 +287,7 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
         this.isLoggedIn = true;
         enterGlobalRoom();
     }
- 
+
     @SuppressWarnings("empty-statement")
     @Override
     protected Void doRun() throws InterruptedException, SuspendExecution {
@@ -370,6 +373,11 @@ public class User extends BasicActor<Message.RetrievableMessage, Void> {
                         return false;
                 }
             } catch (IOException e) {
+                try {
+                    socket.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 System.out.println("IOException at user: " + e.toString());
             }
             return false;  // stops the actor if some unexpected message is received

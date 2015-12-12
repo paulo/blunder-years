@@ -85,22 +85,6 @@ public class Message {
         }
     }
 
-    static class NonRetrievableMessage {
-
-        MessageType type;
-        final Object o;
-
-        NonRetrievableMessage(MessageType t, Object obj) {
-            this.type = t;
-            this.o = obj;
-        }
-        
-        NonRetrievableMessage(MessageType t){
-            this.type = t;
-            this.o = null;
-        }
-    }
-
     static class UserDataMessage {
 
         String username;
@@ -120,12 +104,4 @@ public class Message {
         }
     }
     
-    static class UserFollowDataMessage extends UserDataMessage{
-        MessageType type;
-        
-        UserFollowDataMessage(MessageType type, String un, Object ud, ActorRef sender){
-            super(un, ud, sender);
-            this.type = type;
-        }
-    }
 }

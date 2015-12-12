@@ -1,4 +1,3 @@
-
 package Client;
 
 import java.util.ArrayList;
@@ -12,8 +11,8 @@ public class InputReader extends Thread{
     
     static ZMQ.Socket socket;
     static ArrayList topics_subscribed = new ArrayList<>();
-    static HashMap<String, String> existing_topics = new HashMap<String, String>();
-    static HashMap<String, String> existing_commands = new HashMap<String, String>();
+    static HashMap<String, String> existing_topics = new HashMap<>();
+    static HashMap<String, String> existing_commands = new HashMap<>();
     static String userPattern = "@<[^>]+>";
     
     public static final String ANSI_RESET = "\u001B[0m";
@@ -67,7 +66,7 @@ public class InputReader extends Thread{
     }
     
     private static void printSubscriptions(ArrayList<String> topics) {
-        if(topics.size()==0){
+        if(topics.isEmpty()){
             System.out.println("There are no current subscriptions");
         }
         else{

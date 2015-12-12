@@ -56,17 +56,3 @@ Ver exemplos de testes de código
 gradle run -Pmyargs="12344 123456 asdfa 123455"
 
 ter em conta a mailbox e mailbox policy
-
-
-A fazer:
-
-    removeChild(ActorRef<?> actor, boolean terminate)
-    public void close();
-
-
-   - O user ao criar a notification console e os rooms ao serem apagados têm de ir abaixo (ver no supervisor também)
-    - falta passar user para receber nonRetrivableMessage (importante)
-    - fazer ambiente de teste
-    - ver se o sendpm faz verificação de o user existir.
-
-

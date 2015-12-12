@@ -8,7 +8,7 @@ import org.zeromq.ZMQ;
 
 class EventPublisher extends BasicActor<Message.RetrievableMessage, Void> {
     
-    private int port;
+    private final int port;
 
     EventPublisher(int port){
         this.port = port+1;
@@ -30,67 +30,54 @@ class EventPublisher extends BasicActor<Message.RetrievableMessage, Void> {
             switch(msg.type){
                 case USER_LOGIN_EVENTS:
                     res = stampMessage("@LOGIN",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 case USER_LOGOUT_EVENTS:
                     res = stampMessage("@LOGIN",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 case USER_CREATION_EVENTS:
                     res = stampMessage("@USER",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 case USER_REMOVAL_EVENTS:
                     res = stampMessage("@USER",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 case ROOM_PRIVATE_CREATION_EVENTS:
                     res = stampMessage("@PRIVATE_ROOM_MANAGEMENT",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 case ROOM_PRIVATE_REMOVAL_EVENTS:
                     res = stampMessage("@PRIVATE_ROOM_MANAGEMENT",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 case ROOM_PUBLIC_CREATION_EVENTS:
                     res = stampMessage("@PUBLIC_ROOM_MANAGEMENT",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 case ROOM_PUBLIC_REMOVAL_EVENTS:
                     res = stampMessage("@PUBLIC_ROOM_MANAGEMENT",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 case ROOM_PUBLIC_NEWUSER_EVENTS:
                     res = stampMessage("@PUBLIC_ROOM_USERS",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 case ROOM_PUBLIC_USEREXIT_EVENTS:
                     res = stampMessage("@PUBLIC_ROOM_USERS",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true; 
                 case ROOM_PRIVATE_NEWUSER_EVENTS:
                     res = stampMessage("@PRIVATE_ROOM_USERS",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 case ROOM_PRIVATE_USEREXIT_EVENTS:
                     res = stampMessage("@PRIVATE_ROOM_USERS",(String) msg.o);
-                    System.out.print(res);
                     socket.send(res);
                     return true; 
                 case USER_FOLLOW:
                     res = stampMessage("@<"+ getUsername(msg).toUpperCase()+">", getInfo(msg));
-                    System.out.print(res);
                     socket.send(res);
                     return true;
                 default:

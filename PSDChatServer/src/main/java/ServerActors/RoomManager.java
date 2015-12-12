@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
 
     Map<String, ActorRef> publicRoomPool; //(nome da sala) -> (referencia da sala)
-    Map<String, ActorRef> privateRoomPool;//(nome da sala) -> (referencia da sala)
-    Map<String, Set<String>> privateRoomUserMap;
+    Map<String, ActorRef> privateRoomPool; //(nome da sala) -> (referencia da sala)
+    Map<String, Set<String>> privateRoomUserMap; //(roomname) -> (lista de users permitidos) 
     ActorRef event_publisher;
     Supervisor room_supervisor;
 
@@ -42,18 +42,18 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
     private void createPublicRoom(String room_name) throws SuspendExecution {
         if (this.publicRoomPool.containsKey(room_name) == false) {
             ActorRef new_room = new Room(self(), false, room_name).spawn();
-            addChildToRoomSupervisor(room_name, new_room);
+            //addChildToRoomSupervisor(room_name, new_room);
             publicRoomPool.put(room_name, new_room);
         }
     }
 
     private void createPublicRoom(Message.RetrievableMessage msg) throws SuspendExecution {
         String room_name = (String) msg.o;
-        if (this.publicRoomPool.containsKey(room_name)) {
+        if (this.publicRoomPool.containsKey(room_name)==true) {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The public room " + room_name + " already exists.\n").getBytes()));
         } else {
             ActorRef new_room = new Room(self(), false, room_name).spawn();
-            addChildToRoomSupervisor(room_name, new_room);
+            //addChildToRoomSupervisor(room_name, new_room);
 
             publicRoomPool.put(room_name, new_room);
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The public room " + room_name + " has been created.\n").getBytes()));
@@ -61,8 +61,6 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
         }
     }
 
-    //falta meter aqui o controlo de erros para o processamento da msg
-    //falta adicionar o user
     private void createPrivateRoom(Message.RetrievableMessage msg) throws SuspendExecution {
         String[] args = (String[]) msg.o;
         String room_name = args[1];
@@ -73,7 +71,7 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("The private room " + room_name + " already exists.\n").getBytes()));
         } else {
             ActorRef new_room = new Room(self(), true, room_name).spawn();
-            addChildToRoomSupervisor(room_name, new_room);
+            //addChildToRoomSupervisor(room_name, new_room);
 
             privateRoomPool.put(room_name, new_room);
             privateRoomUserMap.put(room_name, new HashSet<>());
@@ -90,13 +88,6 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
         }
     }
 
-    /**
-     * Adicionar user a sala.
-     *
-     * @param user_ref Referencia do utilizador.
-     * @param room_name Nome da sala.
-     * @throws SuspendExecution
-     */
     private void addUser2Room(Message.RetrievableMessage msg) throws SuspendExecution {
 
         Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
@@ -128,6 +119,8 @@ public class RoomManager extends BasicActor<Message.RetrievableMessage, Void> {
         createPublicRoom("room1");
         createPublicRoom("room2");
         createPublicRoom("room3");
+        createPublicRoom("room4");
+        createPublicRoom("room5");
     }
 
     private void addUser2PrivateRoom(String username, String room_name) {

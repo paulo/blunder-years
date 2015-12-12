@@ -89,7 +89,6 @@ public class ChatServer extends Thread {
 
     }
 
-    //criar algum método de contenção para o caso da fiber falhar (tipo, meter um watch sobre isto)
     class Acceptor extends BasicActor {
 
         final int port;

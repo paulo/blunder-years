@@ -11,13 +11,12 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
     private final Map<String, UserInfo> userPool;
     ActorRef event_publisher;
 
-
     public UserManager(ActorRef event_publisher) {
         super("user_manager", new MailboxConfig(Message.USERMANAGER_BOX_LIMIT, Message.BOX_POLICY));
         this.userPool = new HashMap<>();
         this.event_publisher = event_publisher;
     }
-    
+
     private void addUser(String user_name, UserInfo info) {
         userPool.put(user_name, info);
     }
@@ -27,9 +26,9 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         if (userPool.containsKey(username)) {
             userPool.get(username).setIsLoggedIn(false);
             userPool.get(username).setUser_actor(null);
-             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Logged out sucessfully.\n".getBytes()));
-             event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT_EVENTS, "User "+username+" has logged out.\n"));
-             event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_FOLLOW, username + " has logged out.\n"));
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Logged out sucessfully.\n".getBytes()));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGOUT_EVENTS, "User " + username + " has logged out.\n"));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_FOLLOW, username + " has logged out.\n"));
         }
     }
 
@@ -40,8 +39,6 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         addUser("admin", new UserInfo("admin", "admin", false, null, true));
     }
 
-    //fazer controlo de erros para casos em que nao tem users na frase
-    //talvez mudar este tipo de metodos para usar string builder ou algo mais rapido
     @SuppressWarnings("empty-statement")
     private void sendPrivateMessage(Message.RetrievableMessage msg) throws SuspendExecution {
         String[] args = (String[]) msg.o;
@@ -59,14 +56,19 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
             }
         }
 
-        while (i < args.length) {
-            data = data.concat(args[i]);
-            i++;
-        }
-        data = data.concat("\n");
+        if (dest_users.isEmpty()) {
+            msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("You have to define users to send that message!\n").getBytes()));
+        } else {
+            while (i < args.length) {
+                data = data.concat(args[i]);
+                i++;
+            }
+            data = data.concat("\n");
 
-        for (String s : dest_users) {
-            userPool.get(s.substring(1)).getUser_actor().send(new Message.RetrievableMessage(Message.MessageType.LINE, data.getBytes()));
+            for (String s : dest_users) {
+                UserInfo dest_user = userPool.get(s.substring(1));
+                if(dest_user.isLoggedIn) dest_user.getUser_actor().send(new Message.RetrievableMessage(Message.MessageType.LINE, data.getBytes()));
+            }
         }
     }
 
@@ -76,7 +78,7 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         String password = (String) data.userdata;
 
         if (userPool.containsKey(username) && userPool.get(username).getPassword().equals(password)) {
-            if (userPool.get(username).isIsLoggedIn()==false) {  
+            if (userPool.get(username).isIsLoggedIn() == false) {
                 UserInfo ui = userPool.get(username);
                 ui.setIsLoggedIn(true);
                 ui.setUser_actor((ActorRef) msg.sender);
@@ -89,7 +91,9 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
                     event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_LOGIN_EVENTS, username + " has logged in.\n"));
                     event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_FOLLOW, username + " has logged in.\n", null));
                 }
-            } else msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("User "+username+" is already logged in!\n").getBytes()));
+            } else {
+                msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, ("User " + username + " is already logged in!\n").getBytes()));
+            }
         } else {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Login information incorrect!\n".getBytes()));
         }
@@ -99,9 +103,9 @@ public class UserManager extends BasicActor<Message.RetrievableMessage, Void> {
         Message.UserDataMessage data = (Message.UserDataMessage) msg.o;
         if (!userPool.containsKey(data.username)) {
             userPool.put(data.username, new UserInfo((String) data.username, (String) data.userdata));
-            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_CREATION_EVENTS, ("Account with the name "+ data.username +" was created.\n")));
+            event_publisher.send(new Message.RetrievableMessage(Message.MessageType.USER_CREATION_EVENTS, ("Account with the name " + data.username + " was created.\n")));
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.USER_REGISTER_ACK, "Account Created Sucessfully.\n".getBytes()));
-            
+
         } else {
             msg.sender.send(new Message.RetrievableMessage(Message.MessageType.LINE, "Error: Username already taken.\n".getBytes()));
         }
