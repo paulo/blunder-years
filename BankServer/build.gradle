@@ -12,11 +12,13 @@ sourceCompatibility = '1.8'
 // prefer. In this case NetBeans will not add these tasks but you may rely on
 // your own implementation.
 
-mainClassName = "ServerActors.Main"
+//mainClassName = "ServerActors.Main"
+mainClassName = "ExemploAD.AppSrv"
 
+/*
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'ServerActors.Main'
-}
+}*/
 
 repositories {
     mavenCentral()
@@ -30,14 +32,19 @@ configurations {
 }
 
 dependencies {
+    compile 'org.apache.derby:derby:10.12.1.1'
+    compile files('/opt/Apache/db-derby-10.12.1.1-bin/lib/derbyclient.jar')
     testCompile 'junit:junit:4.11'
-}
-
+} 
+/*
 run {
-    systemProperty "java.library.path", "/usr/local/lib"
+//    systemProperty "java.library.path", "/usr/local/lib"
+    //systemProperty "java.library.path", "/opt/Apache/db-derby-10.12.1.1-bin/lib/"
+    
     if(project.hasProperty('myargs')){
         args(myargs.split(' '))
     }    
 
-    jvmArgs "-javaagent:${configurations.quasar.iterator().next()}"  
+    //jvmArgs "-javaagent:${configurations.quasar.iterator().next()}"  
 }
+*/

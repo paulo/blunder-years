@@ -14,6 +14,7 @@ Relatório até 6 páginas.
     .Recebe 3 parâmetros (2 números de contas e uma quantidade).
     .Imprime a confirmação se a transferência for bem sucedida.
 .O número de contas devem identificar facilmente o correspondente bank server.
+    - 3 primeiros digitos para identificar o servidor, e o resto para identificar a conta dentro desse servidor
 
 #Bank Server
 
@@ -21,11 +22,120 @@ Relatório até 6 páginas.
     - https://db.apache.org/derby/
     - http://www.vogella.com/tutorials/ApacheDerby/article.html
     - http://mvnrepository.com/artifact/org.apache.derby
+    - https://netbeans.org/kb/docs/ide/java-db.html
 .Deve fornecer operações de deposito e levantamento numa interface Java RMI para clientes.
+    - https://docs.oracle.com/javase/tutorial/rmi/
+    - http://docs.oracle.com/javase/7/docs/technotes/guides/rmi/
+    - https://docs.oracle.com/javase/tutorial/rmi/overview.html
 .A concorrência dos pedidos de utilizadores deve ser gerida com threads.
 
 #Transactional server
 
+https://www.progress.com/jdbc/resources/tutorials/understanding-jta/distributed-transactions-and-the-transaction-manager
+http://docs.oracle.com/javaee/6/tutorial/doc/bnbpz.html (java persistence)
+
+- Ver serializable
+
 .Escrito em java -> deve usar um mecanismo de persistência de dados à nossa escolha para armazenar o log (p.e. um servidor de bases de dados em non-XA mode).
 .Deve fornecer operações para o cliente poder iniciar e terminar transacções distribuidas e interfaces para os recursos.
 .O mecanismo de comunicação e as primitivas de concorrência escolhidas para o servidor transacional devem ser brevemente justificadas no relatório.
+
+
+Perguntas:
+    - O que é o non-XA mode.
+        - O XA mode permite as transacções em 2PC. non-XA mode é basicamente uma tabela da base de dados onde vao ser guardados os logs. Serializable também dá, mas a tabela simplifica muito a vida.
+    - Formato do log, o que deve ser feito com o log, redo-log/undo-log?
+        - O log é basicamente a info dos participantes da transacção (ter em conta que isto vai ser 2PC e por isso deve ser mantida a informação em caso de falhar do servidor de transacções). Quando é requisitada a transacção ao servidor de transacçoes, este guarda a informação dos recursos (máquinas) e quando a transição acaba e o servidor recebe a confirmação de ambos os recursos, a entrada no log é apagada.
+        Formato: O nome do participante, onde o encontrar, em que transacção esta a participar. (EmbeddedDataSource: nomes, endereço, xid)
+
+        EmbeddedXADataSource: logica de negócio
+
+
+#Apache Derby
+
+Terminal do Apache Derby:
+    rlwrap java org.apache.derby.tools.ij (pq o terminal e um bocado fraco)
+
+Criar base de dados: (o codigo sql é do tipo do postgres)
+    connect 'jdbc:derby:~/Dropbox/MIEI/ParadigmasdeSistemasDistribuidos/TP2/testDB;create=true';
+    show tables in app;
+
+Ligar servidor:
+    startNetworkServer -p 3301 
+
+
+
+
+
+To simplify the explanation of XAResource, these examples illustrate how an application would use JTA when there is no application server and transaction manager involved. Basically, the application in these examples is also acting as application server and transaction manager. 
+
+
+
+
+
+##Notas
+
+Penso que seja um base de dados em cada bank porque tenho aqui uma nota a dizer que as contas são criadas com um populate e que cada bank tem contas diferentes.
+
+
+
+
+
+##Dúvidas tiradas com o prof
+
+> Boa noite professor. Estou com algumas dúvidas referentes à
+> implementação do trabalho prático que gostaria de ver esclarecidas.
+> 
+> 1) O cliente será uma implementação simples que apenas permite a
+> execução dos comandos referidos com a passagem de todos os argumentos
+> (incluindo o número da própria conta cada vez que quer efetuar um
+> depósito), ou é necessário o registo da informação de estes clientes
+> (requerendo a autenticação destes, etc)? Isto é, tem de haver algum
+> tipo de sessão do lado do cliente?
+
+Não é precisa qualquer identificação ou autenticação.
+
+> 2) Entendi que o cliente deva efetuar comunicação com o transaction
+> server para a operação de transacção e diretamente com os bank
+> servers para as operações de levantamento e depósito (corrija-me se
+> errado). A minha ideia seria implementar o transaction server
+> utilizando a tecnologia de EJB + Java Transaction API, e o cliente e
+> bank servers utilizando EJB + Java RMI (penso que o relatório obriga
+> à implementação obrigatória de uma interface Java RMI para a
+> comunicação entre cliente e bank servers). A minha linha de
+> pensamento está correcta?
+
+Atenão! O enunciado pede-lhes que implementem um servidor transacional
+simples, não lhes pede que usem um servidor transacional existente no
+Java EE.
+
+> 3) A matéria da última aula (Message Driven Beans) tomará parte no
+> projeto (visto ter sido leccionada sem exemplo prático)?
+
+Não.
+
+> 4) Só para confirmar, a execução de transacções deve ser executada
+> através de 2PC?
+
+Sim.
+
+> 5) No enunciado refere que o transaction server deve fornecer ao
+> cliente a capacidade de terminar transacções distribuídas. É suposto
+> o cliente poder cancelar a transacção se esta estiver a demorar
+> muito? Poderia explicar melhor este conceito?
+> 
+
+"Terminar uma transação" significa executar a operação de commit() ou
+rollback() depois de efetuadas as operações que a constituem. Não se
+espera que interrompam assincronamente operações em curso.
+
+> Desculpe professor, mais ainda estou um bocado confuso. Nós devemos
+> utilizar EJB mas não utilizar um servidor transacional existente no
+> Java EE? Ou simplesmente a utilização de EJB não é aconselhada e
+> devemos implementar tudo com Java RMI?
+
+O enunciado não refere nem JavaEE nem EJB. Apenas pede que as operações
+correspondentes à logica de negócio (entre o cliente e o servidor do
+banco) sejam feitas com RMI. Em relação à comunicação entre o servidor
+transacional e os outros componentes, pede-se que escolham o mecanismo
+mais adequado dos que estudaram, entre sockets, 0MQ, etc.
