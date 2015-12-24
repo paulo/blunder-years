@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+// NetBeans will automatically add "run" and "debug" tasks relying on the
+// "mainClass" property. You may however define the property prior executing
+// tasks by passing a "-PmainClass=<QUALIFIED_CLASS_NAME>" argument.
+//
+// Note however, that you may define your own "run" and "debug" task if you
+// prefer. In this case NetBeans will not add these tasks but you may rely on
+// your own implementation.
+
+//mainClassName = "ServerActors.Main"
+mainClassName = "ExemploAD.AppSrv"
+
+/*
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'ServerActors.Main'
+}*/
+
+repositories {
+    mavenCentral()
+    // You may define additional repositories, or even remove "mavenCentral()".
+    // Read more about repositories here:
+    //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
+}
+
+configurations {
+        
+}
+
+dependencies {
+    compile 'org.apache.derby:derby:10.12.1.1'
+    compile files('/opt/Apache/db-derby-10.12.1.1-bin/lib/derbyclient.jar')
+    testCompile 'junit:junit:4.11'
+} 
+/*
+run {
+//    systemProperty "java.library.path", "/usr/local/lib"
+    //systemProperty "java.library.path", "/opt/Apache/db-derby-10.12.1.1-bin/lib/"
+    
+    if(project.hasProperty('myargs')){
+        args(myargs.split(' '))
+    }    
+
+    //jvmArgs "-javaagent:${configurations.quasar.iterator().next()}"  
+}
+*/
