@@ -41,3 +41,5 @@ Thumbs.db
 /TransactionalDS/build/
 /TransactionalDistSys/nbproject/private/
 /TransactionalDistSys/build/
+/TransactionalDistSys/src/BankClient/.nb-gradle/
+/TransactionalDistSys/src/BankServer/.nb-gradle/
