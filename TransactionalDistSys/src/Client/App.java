@@ -1,4 +1,4 @@
-package Main;
+package Client;
 
 import Model.Account;
 import Utils.Colour;

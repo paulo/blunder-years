@@ -1,4 +1,4 @@
-package Main;
+package Client;
 
 import Model.AccountIf;
 import Model.BankIf;
