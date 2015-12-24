@@ -1,0 +1,1 @@
+protoc --java_out=./BankServer/src/main/java/ transaction.proto

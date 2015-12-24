@@ -37,3 +37,7 @@ ehthumbs.db
 Thumbs.db
 /BankServer/.nb-gradle/
 /BankServer/build/
+/TransactionalDS/nbproject/private/
+/TransactionalDS/build/
+/TransactionalDistSys/nbproject/private/
+/TransactionalDistSys/build/
