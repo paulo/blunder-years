@@ -1,8 +1,8 @@
 package Client;
 
-import Model.AccountIf;
-import Model.Bank;
 import Utils.Normalize;
+import BankServer.Bank;
+import BankServer.AccountIf;
 import java.rmi.Naming;
 
 public class Server {

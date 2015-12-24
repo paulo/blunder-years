@@ -188,7 +188,7 @@ e consequentemente uma exceção que deve levar ao rollback.
 > No enunciado o professor refere que "[bank servers should] enforce 
 > serializability". O que se entende por isto? 
 
-Que as transações executadas são equivalentes a a uma sequência sem 
+Que as transações executadas são equivalentes a uma sequência sem 
 execução concorrente. Isso será garantido pelo 2PL+2PC. 
 
 > É ainda referido que os bank servers devem fornecer uma API para 

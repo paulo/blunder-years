@@ -1,4 +1,4 @@
-package Model;
+package BankServer;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

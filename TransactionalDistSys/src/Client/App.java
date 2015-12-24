@@ -1,6 +1,6 @@
 package Client;
 
-import Model.Account;
+import BankServer.Account;
 import Utils.Colour;
 
 import java.util.HashMap;
@@ -50,7 +50,7 @@ public class App {
         existing_commands.put("deposit", ": Deposits currency into a bank account(s)\n");
         existing_commands.put("withdraw", ": Withdraws currency from a bank account(s)");
         existing_commands.put("transfer", ": Transfers currency from one bank account to another.\n");
-        existing_commands.put("balance", ": Displays the current balance of a bank account(s)\n");
+        //existing_commands.put("balance", ": Displays the current balance of a bank account(s)\n"); para sair
     }
     
     /**

@@ -1,8 +1,8 @@
 package Client;
 
-import Model.AccountIf;
-import Model.BankIf;
-import Model.TransactionIf;
+import BankServer.AccountIf;
+import BankServer.BankIf;
+import BankServer.TransactionIf;
 import java.rmi.Naming;
 
 public class Client {
