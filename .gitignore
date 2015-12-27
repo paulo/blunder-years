@@ -43,3 +43,4 @@ Thumbs.db
 /TransactionalDistSys/build/
 /TransactionalDistSys/src/BankClient/.nb-gradle/
 /TransactionalDistSys/src/BankServer/.nb-gradle/
+/TransactionalDistSys/dist/

@@ -1,30 +1,26 @@
 package BankServer;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
-public class Account extends UnicastRemoteObject implements AccountIf {
+public class Account {
     
-    private String id;
+    private final String client_id;
     private int balance;
     
     public Account(String number, int balance) throws RemoteException{
         super();
-        this.id = number;
+        this.client_id = number;
         this.balance = balance;
     }
 
-    @Override
     public String getId() throws RemoteException {
-        return this.id;
+        return this.client_id;
     }
     
-    @Override
     public int getBalance() throws RemoteException {
         return this.balance;
     }  
 
-    @Override
     public void setBalance(int amount) throws RemoteException {
         this.balance = amount;
     }

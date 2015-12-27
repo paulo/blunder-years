@@ -1,22 +1,40 @@
 package TransactionServer;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class TransactionManager {
 
     public static void main(String[] args) throws Exception {
-        initDBConnection();
-        initTServerConnection();
+        /* initDBConnection();
+         initTServerConnection();
 
-        int received = receiveFromBank();
-        insertIntoTable(received);
+         int received = receiveFromBank();
+         insertIntoTable(received);
 
-        connection.close();
+         connection.close();
+         */
 
-        Socket cli = srv.accept();
-        new Thread(new ClientHandler(cli, cHub)).start();
-        
+        ServerSocket srv = null;
+
+        try {
+            srv = new ServerSocket(55555);
+
+            while (true) {
+                Socket cli = srv.accept();
+                new TransactionHandler(cli).start();
+            }
+
+        } finally {
+            if (srv != null) {
+                try {
+                    srv.close();
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+
     }
 }

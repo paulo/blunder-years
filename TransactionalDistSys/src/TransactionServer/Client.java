@@ -1,8 +1,14 @@
 package TransactionServer;
 
+import BankServer.OperationIf;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class Client {
 
@@ -17,19 +23,17 @@ public class Client {
 
     //alterar esta lógica se afinal não for para fazer depositos e levantamentos diretos no bank server
     public void initTServerConnection() {
-        t_con = new TServerConnection();
-        t_con.initConnection(t_server_port);
+        //t_con = new TServerConnection();
+        //t_con.initConnection(t_server_port);
     }
-    
-    private String registerNewTransaction(){
-        return t_con.sendBeginMessage();
-    }
-    
+
+    /* private String registerNewTransaction(){
+     return t_con.sendBeginMessage();
+     }*/
     private void makeTransaction() throws IOException {
         Transaction t = readTransactionInfo();
-        
-        String txnId = registerNewTransaction();
-        
+
+        //String txnId = registerNewTransaction();
     }
 
     //isto pode ser abstraido para outra classe de leitura de comandos
@@ -43,8 +47,8 @@ public class Client {
 
         System.out.println("What is the ammount($) to transfer?");
         int ammount = Integer.parseInt(br.readLine().trim());
-
-        return new Transaction(sourceAccount, targetAccount, ammount);
+        return null;
+        //return new Transaction(sourceAccount, targetAccount, ammount);
     }
 
     private void initOperations() throws IOException {
@@ -63,12 +67,19 @@ public class Client {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    private void testRMI() throws NotBoundException, MalformedURLException, RemoteException {
+        Registry registry = LocateRegistry.getRegistry(3333);
+        OperationIf of = (OperationIf) registry.lookup("bank10");
+
+        of.deposit("10", 10, "0000009");
+    }
+
+    public static void main(String[] args) throws Exception {
         Client c = new Client(55555);
 
-        c.initTServerConnection();
-
-        c.initOperations();        
+        //c.initTServerConnection();
+        //c.initOperations();        
+        c.testRMI();
     }
-    
+
 }

@@ -2,13 +2,9 @@ package Client;
 
 import TransactionServer.TServerConnection;
 import TransactionServer.Transaction;
-import BankServer.AccountIf;
-import BankServer.BankIf;
-import BankServer.TransactionIf;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.rmi.Naming;
 
 //vai haver uma class client onde vai estar a lógica de fazer operações
 //vai haver uma class TServerConnection onde vai estar a lógica da coneção com o TServer e de fazer transações
@@ -25,10 +21,10 @@ public class Client {
     }
 
     //alterar esta lógica se afinal não for para fazer depositos e levantamentos diretos no bank server
-    public static void initTServerConnection() {
+   /* public static void initTServerConnection() {
         t_con = new TServerConnection();
         t_con.initConnection(t_server_port);
-    }
+    }*/
 
     private void processTransfer(Transaction t) {
         
@@ -41,7 +37,7 @@ public class Client {
     private void makeTransaction() throws IOException {
         Transaction t = readTransactionInfo();
         
-        processTransfer(t);
+       // processTransfer(t);
     }
 
     //isto pode ser abstraido para outra classe de leitura de comandos
@@ -78,7 +74,7 @@ public class Client {
     public static void main(String[] args) throws IOException {
         Client c = new Client(123456);
 
-        initTServerConnection();
+        //initTServerConnection();
 
         c.initOperations();
 

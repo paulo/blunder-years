@@ -21,11 +21,6 @@ public class TServerConnection {
         s = new Socket("localhost", port);
         in = s.getInputStream();
         out = s.getOutputStream();
-        s.
-    }
-
-    String sendBeginMessage() {
-        out.
-        //socket.send("begin");
+        
     }
 }

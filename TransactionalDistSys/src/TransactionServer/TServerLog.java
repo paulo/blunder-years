@@ -12,10 +12,11 @@ import org.apache.derby.jdbc.EmbeddedDataSource;
 public class TServerLog {
     
     Connection connection;
+    EmbeddedDataSource rawDataSource;
    
     private void initDBConnection() throws SQLException {
 
-        EmbeddedDataSource rawDataSource = new EmbeddedDataSource();
+        rawDataSource = new EmbeddedDataSource();
 
         rawDataSource.setDatabaseName("../testDB");
         //rawDataSource.setCreateDatabase("create");
