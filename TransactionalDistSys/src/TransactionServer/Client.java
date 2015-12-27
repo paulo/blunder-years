@@ -1,22 +1,13 @@
-package Client;
+package TransactionServer;
 
-import TransactionServer.TServerConnection;
-import TransactionServer.Transaction;
-import BankServer.AccountIf;
-import BankServer.BankIf;
-import BankServer.TransactionIf;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.rmi.Naming;
 
-//vai haver uma class client onde vai estar a lógica de fazer operações
-//vai haver uma class TServerConnection onde vai estar a lógica da coneção com o TServer e de fazer transações
-//vai haver uma class BServerConnection onde vai estar a lógica da coneção com os BankServers e de fazer levantamentos e depósitos
 public class Client {
 
-    private static TServerConnection t_con;
-    private static int t_server_port;
+    private TServerConnection t_con;
+    private final int t_server_port;
     private BufferedReader br;
 
     Client(int server_port) {
@@ -25,23 +16,20 @@ public class Client {
     }
 
     //alterar esta lógica se afinal não for para fazer depositos e levantamentos diretos no bank server
-    public static void initTServerConnection() {
+    public void initTServerConnection() {
         t_con = new TServerConnection();
         t_con.initConnection(t_server_port);
     }
-
-    private void processTransfer(Transaction t) {
-        
+    
+    private String registerNewTransaction(){
+        return t_con.sendBeginMessage();
     }
     
-    /*private int beginTransaction(){
-        return t_con.sendBeginMessage();
-    }*/
-
     private void makeTransaction() throws IOException {
         Transaction t = readTransactionInfo();
         
-        processTransfer(t);
+        String txnId = registerNewTransaction();
+        
     }
 
     //isto pode ser abstraido para outra classe de leitura de comandos
@@ -76,21 +64,11 @@ public class Client {
     }
 
     public static void main(String[] args) throws IOException {
-        Client c = new Client(123456);
+        Client c = new Client(55555);
 
-        initTServerConnection();
+        c.initTServerConnection();
 
-        c.initOperations();
-
-        /* 
-         BankIf bank = (BankIf) Naming.lookup("//localhost/firstbank");
-
-         AccountIf acc = bank.getAccount(00100002);
-         System.out.println("Current Balance: " + acc.getBalance());
-        
-         TransactionIf trans = bank.makeTransaction();
-         trans.deposit(100, acc);
-         System.out.println("We made a deposit of 100");
-         System.out.println("Current Balance: " + acc.getBalance());*/
+        c.initOperations();        
     }
+    
 }

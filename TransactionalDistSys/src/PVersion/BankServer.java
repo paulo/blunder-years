@@ -1,7 +1,5 @@
 package PVersion;
 
-import PVersion.Message.Transaction;
-import com.google.protobuf.InvalidProtocolBufferException;
 import org.zeromq.ZMQ;
 
 //meter porta/s a receber como argumento da main
@@ -16,18 +14,18 @@ public class BankServer {
         socket_to_server.connect("tcp://localhost:123456");
     }
 
-    private static int receiveFromClient() throws InvalidProtocolBufferException {
+    /*private static int receiveFromClient() throws InvalidProtocolBufferException {
         byte b[] = socket.recv();
-        Transaction t = Message.Transaction.parseFrom(b);
+        //Transaction t = Message.Transaction.parseFrom(b);
         socket.send("Number received on BankServer");
         
         return t.getId();
     }
 
     private static void sendToTServer(int to_send_to_tserver) {
-        Transaction t = Transaction.newBuilder().setId(to_send_to_tserver).build();
+        //Transaction t = Transaction.newBuilder().setId(to_send_to_tserver).build();
         socket_to_server.send(t.toByteArray(), 0);
-    }
+    }*/
 
     public void makestuff() {
         /*ZMQ.Context context = ZMQ.context(1);
@@ -49,10 +47,10 @@ public class BankServer {
 
         //implementar isto como rmi
         initBankServerConnection();
-        int to_send_to_tserver = receiveFromClient();
+       //int to_send_to_tserver = receiveFromClient();
 
-        System.out.println("Received number:"+to_send_to_tserver);
-        sendToTServer(to_send_to_tserver);
+        //System.out.println("Received number:"+to_send_to_tserver);
+       // sendToTServer(to_send_to_tserver);
     }
 
 }

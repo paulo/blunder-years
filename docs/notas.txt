@@ -234,14 +234,98 @@ um gestor de transações e dois recursos, que neste caso serão os
 servidores dos bancos. Lembra-se de o ter explicado na aula?
 
 
+> 1) Continuo sem entender a forma como os diversos componentes vão
+> interagir. Nomeadamente:
+>  A aplicação cliente vai interagir com os Bank Servers para
+> fazer operações apenas de levantamento OU depósito? Segundo a minha
+> ideia, e segundo o que está descrito nos slides fornecidos pelo
+> professor sobre enterprise middleware (slide 48), a aplicação cliente
+> é responsável por dizer aos bank serarvers que estes se devem
+> apresentar ao transactional server, sendo que após todos os recursos
+> se apresentarem ao transactional server, este procede à invocação  
+
+A quem se refere o "este" nesta frase? Deve ser ao cliente, pois é ele
+que invoca o levantamente e o deposito.
+
+> remota dos métodos de depósito e levantamento nos respetivos bank
+> servers de forma a efetuar a transacção. No entanto, em mails
+> anteriores o professor deu a entender que a lógica da transação está
+> na aplicação cliente e que esta seria a responsável por fazer a
+> invocação remota dos métodos de depósito e levantamento. Pode dizer
+> qual o caso a implementar?
+
+O cliente invoca os métodos de depósito e levantamento nos servidores
+dos bancos.
+
+> Eu percebo a ideia de que o transactional server deve ser genérico,
+> no entanto não me parece adequado a presença de tanta lógica de
+> negócio no cliente. 
+>
+> Como é que estas bases de dados funcionam em termos de
+> concorrência? Pode existir conflitos se diferentes threads tentarem
+> aceder ao mesmo tempo ao mesmo item de dados ou elas permitem apenas
+> acesso a uma thread de cada vez?
+> 
+
+As bases de dados fazem-lhe 2-phase locking. Garantem pois que não tem
+mais do que um thread a aceder a cada linha (i.e. conta).
+
+Recomendo que consulte a sec. 2.3.2 do livro "Web Services" (http://www
+.springer.com/us/book/9783540440086) disponivel nos SDUM. (Verifiquei
+que ainda não tinha a bibliografia no elearning. Acrescentei-a na
+secção de conteúdo).
+
+
+> Muito obrigado pela ajuda. Só ficamos com uma última dúvida, uma vez 
+> que o professor tinha dito que o Transactional Server teria de ser 
+> genérico e encaixar em qualquer aplicação, causou-nos um pouco de 
+> confusão sobre a forma como os Bank Servers iriam registar as suas 
+> transações no coordenador. 
+> 
+> Isto é, devemos considerar que teremos um TransactionalServer<T>
+> extendsMovementIf>, sendo que MovementIf será uma classe que irá conter o c
+> ódigo necessário para correr a transação (indicar se é levantamento ou 
+> depósito, o número da conta, o montante e se existe saldo suficiente) e 
+> gerar o SQL correspondente para o run ou 
+
+Não. O que lhe é pedido é que implement 3 programas: o cliente do 
+banco, o servidor do banco, e o servidor transacional. O servidor 
+transacional não depende nem conhece de forma nenhuma da lógica da 
+aplicação nem invoca quaisquer operações da lógica de negócio. 
+
+Sugiro também que consulte a sec. 2.3.2 do livro "Web Services" (http:/ 
+/www.springer.com/us/book/9783540440086) disponivel nos SDUM. 
+(Verifiquei que ainda não tinha a bibliografia no elearning. 
+Acrescentei-a na secção de conteúdo). 
+
+> deveremos usar alguma classe da API de XA Transaction? 
+
+Sim, precisa de usar a API em javax.transaction.xa como no exemplo da 
+livraria que implementamos na aula, para fazer prepare() e depois 
+commit() na base de dados. Recomendo que reveja os apontamentos e o 
+código de exemplo da aula em que discutimos o 2PC. 
+
+Cumprimentos,
+
+
+
+
+
+
+
 
 - Criar contexto é meter uma entrada no log com as cenas que vai receber?
 - cada resource identifica-se a si proprio ao transServer?
 
-Epifania:
-- No inicio, o cliente vai criar um contexto no transServer. Isto significa simplesmente que vai dizer ao transServer que quer fazer uma transação. O transServer responde a dizer-lhe o id dessa transacção.
-- De seguida, o cliente vai dizer a cada um dos recursos para se ligarem ao transServer. Isto transmite info ao transServer pq os recursos sabem qual é o id da transacção. Assim, no log do transServer, a informação para fazer a transação vai-se completando.
-- Depois de fazer isso, o cliente vai dar sinal ao transServer para fazer commit da transação, sendo que este vai começar a fase 1 e a fase 2. Apenas aqui começa verdadeiramente o 2PC. No fim o transServer recebe a confirmação se correu bem ou mal.
+
+
+
+
+
+
+
+
+##Justificar o uso de rmi entre os bankservers e o transerver por dizer que facilita imenso a vida, tanto a guardar as cenas no log, como a tratar das conexões
 
 
 #Explicação sobre o porquê de usar protobuffers

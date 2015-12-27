@@ -2,6 +2,7 @@ package BankServer;
 
 import java.rmi.RemoteException;
 
+//isto nao se pode chamar transaction... 
 public class Transaction implements TransactionIf{
 
     Transaction(){}
