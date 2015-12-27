@@ -17,8 +17,6 @@ public class BankServer extends UnicastRemoteObject {
     private static Connection conn = null;
     private static Statement stmt = null;
     
-    
-    
     public BankServer () throws RemoteException
     {
         super();
@@ -49,10 +47,6 @@ public class BankServer extends UnicastRemoteObject {
     private static void initDBConnection() throws RemoteException{
     }   
        
-       
-   
-
-
      private static void shutdown()
     {
         try
