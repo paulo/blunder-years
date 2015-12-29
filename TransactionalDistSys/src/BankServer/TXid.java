@@ -11,6 +11,7 @@ public class TXid implements Xid {
             this.id = id;
 	}
 
+        //vai devolver 0x01 se for o branch onde se faz o deposito e 0x02 se for onde se faz o levantamento
         @Override
 	public byte[] getBranchQualifier() {
 		return new byte[0];

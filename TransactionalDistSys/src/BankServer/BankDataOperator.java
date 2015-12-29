@@ -118,6 +118,8 @@ public class BankDataOperator {
         xa_res.end(new_t, XAResource.TMSUCCESS);
     }
 
+    /*
+    
     public void commit() {
         //boolean r = phase1();
 
@@ -126,15 +128,13 @@ public class BankDataOperator {
         //parar();
         //phase2(r);
     }
-
-    boolean phase1() throws Exception {
-        //boolean r = true;
-        // for(...)
-        //r = r && (xar.prepare(xid) == XAResource.XA_OK);
-        //return r;
-        return false;
+    */
+    
+    //nao percebo pq é que o prof mete o true...
+    boolean phase1prepare(TXid txid) throws Exception {
+        return true && (xa_res.prepare(txid) == XAResource.XA_OK);
     }
-
+/*
     void phase2(boolean r) throws Exception {
         // for(...)
         //if (r) {
@@ -154,5 +154,5 @@ public class BankDataOperator {
     public void parar() throws Exception {
         //System.out.println("parado...");
         //System.in.read();
-    }
+    }*/
 }

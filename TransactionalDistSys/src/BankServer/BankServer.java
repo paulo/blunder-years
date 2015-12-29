@@ -3,7 +3,6 @@ package BankServer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -15,8 +14,8 @@ public class BankServer {
     static BankDataOperator bdo;
     
     public BankServer(String id) throws RemoteException{
-        this.bank_id = id;
-        this.bdo = new BankDataOperator(id);
+        BankServer.bank_id = id;
+        BankServer.bdo = new BankDataOperator(id);
     }
     
     
@@ -27,7 +26,7 @@ public class BankServer {
         return "bank"+userIn.readLine();
     }
     
-    
+    //mover o registru para uma class à parte
     public static void main(String[] args) throws RemoteException, IOException, SQLException{
                 
         BankServer bs = new BankServer(setBankInfo());

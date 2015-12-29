@@ -1,40 +1,28 @@
 package TransactionServer;
 
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class TransactionManager {
 
-    public static void main(String[] args) throws Exception {
-        /* initDBConnection();
-         initTServerConnection();
+    TServerLog server_log;
+    int transaction_number;
 
-         int received = receiveFromBank();
-         insertIntoTable(received);
-
-         connection.close();
-         */
-
-        ServerSocket srv = null;
-
-        try {
-            srv = new ServerSocket(55555);
-
-            while (true) {
-                Socket cli = srv.accept();
-                new TransactionHandler(cli).start();
-            }
-
-        } finally {
-            if (srv != null) {
-                try {
-                    srv.close();
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-
+    TransactionManager(TServerLog server_log) {
+        this.server_log = server_log;
+        transaction_number = server_log.getCurrentTransactionNumber();
     }
+    
+    String commitTransaction(String TxId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public synchronized String createNewTContext(Socket c_socket) {
+        int new_t_number = this.transaction_number;
+        String new_txn_id = "TXN"+transaction_number++;
+        
+        server_log.insertNewLog(new_txn_id, c_socket);
+        
+        return new_txn_id;
+    }
+
 }

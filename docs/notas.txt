@@ -309,7 +309,20 @@ Cumprimentos,
 
 
 
+> Surgiu uma dúvida no desenvolvimento do trabalho prático 2. Na 
+> descrição do funcionamento de Two Phase Commit dos slides das aulas, 
+> no caso de falha de um participante, é referido que se este tiver 
+> votado (ou seja, se tiver informado o coordenador que se encontra 
+> preparado) antes de haver a falha, após reiniciar deve esperar por 
+> uma mensagem do coordenador (a mensagem COMMIT). Não será possível, 
+> no entanto, que o coordenador tenha enviado a mensagem de COMMIT 
+> enquanto o participante ainda estava desligado? Nesse caso, o 
+> participante deveria contactar o coordenador? 
 
+Pode optar por qualquer das alternativas. Ou o coordenador tenta 
+repetidamente contactar o participante, até que finalmente consegue, ou 
+então o participante contacta o coordenador quando reinicia, para 
+descobrir se entretanto perdeu alguma mensagem.
 
 
 
@@ -335,3 +348,13 @@ If you are 100% certain that the programs that are going to communicate over ZMQ
 As soon as the above condition cannot be satisfied (like partner programs running on different host types, programs written in different languages or even partner programs that can evolve independently in time - which may cause incompatibilities in their raw binary structures) serialization becomes quite probably a must.
 
 It seems that nowadays everybody and their brother is creating serialization solutions, which may be an indication that there's no one size fits all solution. This page contains a pretty thorough benchmarking of serialization time, deserialization time and sizes for 27 (!!) different serialization systems. Don't skip the first paragraph of that page, it says "Warning, benchmarks can be misleading". Your application, your data are what counts for you, but the data presented there may help you narrow down the choices you want to study in detail.
+
+#Transaction context
+
+The transaction context is a pseudo-object that is passed to the server object from the client, or from one server object to another, in the case where one server object is invoking methods on another, and hence acting as its client. The transaction context carries the state of the transaction.
+
+After a client-side transaction service is initialized, and a begin transaction method is invoked, the transaction service implicitly creates a transaction context, and assigns a transaction ID number to the context. The client transaction service then propagates the transaction context to each participant in the transaction, that is, to each object that the client calls.
+
+Propagation of the transaction context on each method invocation is normally transparent to the client program. The transaction context is maintained by the transaction service for each client. Transaction contexts are propagated transparently from the transaction initiator to the server object. On the client side, an interceptor is engaged to submit the transaction context on any method call to a server object. A server-side interceptor extracts the transaction context information, and makes it available to the server object.
+
+As stated in "Limitations", a transaction context cannot span multiple sessions. Each new session connection requires a new transaction context.
