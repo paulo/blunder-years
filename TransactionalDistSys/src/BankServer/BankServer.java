@@ -33,7 +33,7 @@ public class BankServer {
         
         bdo.initDBConnection();
         
-        Transaction t = new Transaction(bdo);
+        Bank t = new Bank(bdo);
         
         try {
             //Registry registry = LocateRegistry.getRegistry();

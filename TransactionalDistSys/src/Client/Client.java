@@ -1,6 +1,6 @@
 package Client;
 
-import BankServer.OperationIf;
+import BankServer.BankIf;
 import TransactionServer.Transaction;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class Client {
 
     private void testRMI() throws NotBoundException, MalformedURLException, RemoteException {
         Registry registry = LocateRegistry.getRegistry(3333);
-        OperationIf of = (OperationIf) registry.lookup("bank10");
+        BankIf of = (BankIf) registry.lookup("bank10");
 
         of.deposit("10", 10, "0000009");
     }

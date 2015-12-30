@@ -9,12 +9,10 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 //depois implementar troca de mensagens com protobuf
 //http://stackoverflow.com/questions/30564404/how-to-determine-message-type-in-protobuf-so-that-i-can-use-that-type-parsefrom
 public class ClientHandler extends Thread {
 
-    TServerLog log;
     Socket c_socket;
     BufferedReader reader;
     BufferedWriter writer;
@@ -33,44 +31,48 @@ public class ClientHandler extends Thread {
 
         try {
             while ((msg = reader.readLine()) != null) {
-                processLine(msg); 
+                processLine(msg);
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
- 
+
     private void processLine(String msg) throws IOException {
         String[] args = msg.split(" ");
-        
-        switch(args[0]){
+
+        switch (args[0]) {
             case "begin":
+                System.out.println("Begin message received");
                 beginMessage();
                 break;
             case "commit":
+                System.out.println("Commit message received");
                 commitMessage(args[1]);
                 break;
             case "restart": //quando o user se ligar pode enviar esta mensagem para atualizar o seu estado na transação
+                System.out.println("Restart message received");
                 break;
         }
-        
+
     }
 
     private void beginMessage() throws IOException {
         String new_txid = t_manager.createNewTContext(c_socket);
+        System.out.println("New TXID created:"+new_txid);
         
         writeToClient(new_txid);
     }
-    
+
     private void commitMessage(String TxId) throws IOException {
         String response = t_manager.commitTransaction(TxId);
-        
+
         writeToClient(response);
     }
-    
+
     private void writeToClient(String msg) throws IOException {
-        writer.write(msg);
+        writer.write(msg+"\n");
         writer.flush();
     }
 

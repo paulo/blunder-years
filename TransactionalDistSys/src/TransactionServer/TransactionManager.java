@@ -1,5 +1,6 @@
 package TransactionServer;
 
+import java.io.IOException;
 import java.net.Socket;
 
 public class TransactionManager {
@@ -16,7 +17,7 @@ public class TransactionManager {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public synchronized String createNewTContext(Socket c_socket) {
+    public synchronized String createNewTContext(Socket c_socket) throws IOException {
         int new_t_number = this.transaction_number;
         String new_txn_id = "TXN"+transaction_number++;
         
