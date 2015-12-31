@@ -34,6 +34,7 @@ public class TServerLog {
         createTables();
     }
 
+    //arranjar a forma como os nomes dos bancos sao passados de um lado para o outro
     public void createTables() throws SQLException {
         Statement s = null;
 
@@ -49,17 +50,19 @@ public class TServerLog {
         s = connection.createStatement();
         s.executeUpdate("create table LOGTABLE (TXID VARCHAR(10) PRIMARY KEY, "
                 //+ "CLIENT BLOB NOT NULL, "
-                + "RESOURCEN1 VARCHAR(3), "
-                + "RESOURCEN2 VARCHAR(3))");
+                + "RESOURCEN1 VARCHAR(10), "
+                + "RESOURCEN2 VARCHAR(10))");
         s.close();
     }
 
     public void logResource(String Txid, int resourceNmr, String value) {
-        Statement stmt = null;
+        PreparedStatement stmt = null;
 
         try {
-            stmt = connection.createStatement();
-            stmt.execute("update APP.LOGTABLE set RESOURCEN" + resourceNmr + " = " + value + " where TXID = " + Txid);
+            stmt = connection.prepareStatement("update APP.LOGTABLE set RESOURCEN" + resourceNmr + " = ? where TXID = ?");
+            stmt.setString(1, value);
+            stmt.setString(2, Txid);
+            stmt.execute();
             stmt.close();
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
@@ -82,12 +85,12 @@ public class TServerLog {
             sqlExcept.printStackTrace();
         }
     }
-    
-    public byte[] serializeObject(Socket obj) throws IOException{
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
+
+    public byte[] serializeObject(Socket obj) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(obj);
-        } 
+        }
 
         return bos.toByteArray();
     }
@@ -106,6 +109,21 @@ public class TServerLog {
         }
     }
 
+    public String getResource(String Txid, int type) throws SQLException {
+        String resource_name = null;
+
+        try (PreparedStatement s = connection.prepareStatement("SELECT RESOURCEN" + type + " FROM APP.LOGTABLE WHERE TXID = ?")) {
+            s.setString(1, Txid);
+            ResultSet res = s.executeQuery();
+            if (res.next()) {
+                resource_name = res.getString("RESOURCEN" + type);
+            }
+        }
+        return resource_name;
+
+    }
+
+    //ainda falta meter a usar isto
     public void removeLog(String Txid) {
         Statement stmt = null;
 
@@ -120,31 +138,33 @@ public class TServerLog {
 
     int getCurrentTransactionNumber() {
         int nmr = 1;
-        
+
         try ( // getting the data back
                 Statement s = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 ResultSet res = s.executeQuery(
                         "SELECT TXID FROM APP.LOGTABLE")) {
 
-            if(res.last()) nmr = Integer.parseInt(res.getString("TXID").substring(3)); 
+            if (res.last()) {
+                nmr = Integer.parseInt(res.getString("TXID").substring(3));
+            }
 
         } catch (SQLException ex) {
             Logger.getLogger(TServerLog.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return nmr;
     }
 
     /*
-    public void updateClient(String TxId, Socket new_client) {
-        Statement stmt = null;
+     public void updateClient(String TxId, Socket new_client) {
+     Statement stmt = null;
 
-        try {
-            stmt = connection.createStatement();
-            stmt.execute("update APP.LOGTABLE set RESOURCEN" + resourceNmr + " = " + value + " where TXID = " + Txid);
-            stmt.close();
-        } catch (SQLException sqlExcept) {
-            sqlExcept.printStackTrace();
-        }
-    }*/
+     try {
+     stmt = connection.createStatement();
+     stmt.execute("update APP.LOGTABLE set RESOURCEN" + resourceNmr + " = " + value + " where TXID = " + Txid);
+     stmt.close();
+     } catch (SQLException sqlExcept) {
+     sqlExcept.printStackTrace();
+     }
+     }*/
 }

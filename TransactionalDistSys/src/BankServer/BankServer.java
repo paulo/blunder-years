@@ -26,6 +26,11 @@ public class BankServer {
         return "bank"+userIn.readLine();
     }
     
+    public void initBankServerTest(){
+    
+    
+    }
+    
     //mover o registru para uma class à parte
     public static void main(String[] args) throws RemoteException, IOException, SQLException{
                 
@@ -33,11 +38,11 @@ public class BankServer {
         
         bdo.initDBConnection();
         
-        Bank t = new Bank(bdo);
+        Bank t = new Bank(bdo, bank_id);
         
         try {
-            //Registry registry = LocateRegistry.getRegistry();
-            Registry registry = LocateRegistry.createRegistry(3333);
+            Registry registry = LocateRegistry.getRegistry(3333);
+            
             registry.rebind(bank_id, t);
             System.out.println("Transaction bound");
         } catch (Exception e) {

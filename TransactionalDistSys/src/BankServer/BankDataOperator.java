@@ -194,30 +194,18 @@ public class BankDataOperator {
 
         return new_txid;
     }
-    /*
-    
-     public void commit() {
-     //boolean r = phase1();
-
-     // escrever r para o log do coordenador
-     //System.out.println("resultado = " + r);
-     //parar();
-     //phase2(r);
-     }
-     */
 
     //nao percebo pq é que o prof mete o true...
     boolean phase1prepare(TXid txid) throws Exception {
         return true && (xa_res.prepare(txid) == XAResource.XA_OK);
     }
 
-    void phase2Commit(boolean r) throws Exception {
-        // for(...)
-        //if (r) {
-        //    xar.commit(xid, false);
-        //} else {
-        //    xar.rollback(xid);
-        // }
+    void phase2Commit(TXid txid) throws Exception {
+        xa_res.commit(txid, false);
+    }
+
+    void phase2Rollback(TXid txid) throws XAException{
+        xa_res.rollback(txid);
     }
     /*
      void recover() throws Exception {

@@ -29,20 +29,20 @@ public class Clientv_2 {
     private void transactionTest() throws IOException, RemoteException, NotBoundException {
         
         System.out.println("Transaction test has begun");
-        sendMessage("begin\n");
+        sendMessage("begin");
         String txid = receiveMessage();
         System.out.println("TXID Recebido: "+txid);
-        if(withrawMoney(txid, "bank10", "0000005", 10)) /* && 
-                depositMoney(txid, "bank20", "0000005", 10))*/
+        if(withrawMoney(txid, "bank10", "0000005", 10)  && 
+                depositMoney(txid, "bank20", "0000005", 10))
             System.out.println("Chamadas RMI com sucesso");
-        /* feito até aqui -> é preciso mudar a inicializaçao dos bank servers (para nao usar a mesma porta, ou entao fazer o servidor rmi disjunto)
-        sendMessage("commit");
-        System.out.println(receiveMessage());*/
+        //é preciso mudar a inicializaçao dos bank servers (para nao usar a mesma porta, ou entao fazer o servidor rmi disjunto)
+        sendMessage("commit "+txid);
+        System.out.println(receiveMessage());
     }
 
     private boolean depositMoney(String txid, String target_bank, String target_account, int amount) throws RemoteException, NotBoundException{
         Registry registry = LocateRegistry.getRegistry(3333);
-        BankIf bi = (BankIf) registry.lookup("bank10");
+        BankIf bi = (BankIf) registry.lookup(target_bank);
 
         return bi.deposit(txid, amount, target_account);
     }
@@ -55,7 +55,7 @@ public class Clientv_2 {
     }
     
     private void sendMessage(String msg) throws IOException {
-        writer.write(msg);
+        writer.write(msg+"\n");
         writer.flush();
     }
     

@@ -44,11 +44,11 @@ public class ClientHandler extends Thread {
 
         switch (args[0]) {
             case "begin":
-                System.out.println("Begin message received");
+                System.out.println("2. Begin message received");
                 beginMessage();
                 break;
             case "commit":
-                System.out.println("Commit message received");
+                System.out.println("5. Commit message received");
                 commitMessage(args[1]);
                 break;
             case "restart": //quando o user se ligar pode enviar esta mensagem para atualizar o seu estado na transação
@@ -60,7 +60,7 @@ public class ClientHandler extends Thread {
 
     private void beginMessage() throws IOException {
         String new_txid = t_manager.createNewTContext(c_socket);
-        System.out.println("New TXID created:"+new_txid);
+        System.out.println("3. New TXID created:"+new_txid);
         
         writeToClient(new_txid);
     }

@@ -1,6 +1,10 @@
 package BankServer;
 
+import TransactionServer.ResourceRecordIf;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -13,27 +17,32 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
 
     BankDataOperator bdo;
     Map<String, TXid> t_ids;
+    String bank_id;
 
-    Bank(BankDataOperator bank_operator) throws RemoteException {
+    Bank(BankDataOperator bank_operator, String bank_id) throws RemoteException {
         this.bdo = bank_operator;
         this.t_ids = new HashMap<>();
+        this.bank_id = bank_id;
     }
 
     @Override
     public boolean deposit(String Txid, int amount, String account_nmr) throws RemoteException {
         System.out.println("New deposit");
         TXid xid = null;
-        
+
         try {
-            bdo.beginDeposit(Txid, amount, account_nmr);
+            xid = bdo.beginDeposit(Txid, amount, account_nmr);
         } catch (SQLException | XAException ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         if (xid != null) {
             t_ids.put(Txid, xid);
+            registerBank(Txid, 2);
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     //vai fazer start da operação
@@ -49,15 +58,19 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
         }
         if (xid != null) {
             t_ids.put(Txid, xid);
+            //meter para dar false se não for possível inserir no banco
+            registerBank(Txid, 1);
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     //talvez seja para passar o xid entre os servidores e nao a string do xid
     @Override
     public boolean prepare(String Txid) throws RemoteException {
         try {
-            return false;//bdo.phase1prepare(t_ids.get(Txid));
+            return bdo.phase1prepare(t_ids.get(Txid));
         } catch (Exception ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,19 +78,36 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
     }
 
     @Override
-    public boolean commit(String Txid) throws RemoteException {
-        return false;
-
+    public void commit(String Txid) throws RemoteException {
+        try {
+            bdo.phase2Commit(t_ids.get(Txid));
+        } catch (Exception ex) {
+            Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
-    public boolean rollbackPhase1(String Txid) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void rollback(String Txid) throws RemoteException {
+        try {
+            bdo.phase2Rollback(t_ids.get(Txid));
+        } catch (XAException ex) {
+            Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    @Override
-    public boolean rollbackPhase2(String Txid) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void registerBank(String Txid, int i) {
+        try {
+            Registry registry = null;
+            
+            registry = LocateRegistry.getRegistry(3333);
+            
+            ResourceRecordIf rr = (ResourceRecordIf) registry.lookup("transactionManager");
+            rr.registerResource(Txid, i, bank_id);
+            
+            //return bi.deposit(txid, amount, target_account);
+        } catch (RemoteException | NotBoundException ex) {
+            Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
