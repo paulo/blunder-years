@@ -22,8 +22,8 @@ public class Clientv_2 {
     Clientv_2(int server_port) throws IOException {
         t_server_port = server_port;
         s = new Socket("localhost", 55555);
-        writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
-        reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        //writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+        //reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
     }
      
     private void transactionTest() throws IOException, RemoteException, NotBoundException {
@@ -35,7 +35,6 @@ public class Clientv_2 {
         if(withrawMoney(txid, "bank10", "0000005", 10)  && 
                 depositMoney(txid, "bank20", "0000005", 10))
             System.out.println("Chamadas RMI com sucesso");
-        //é preciso mudar a inicializaçao dos bank servers (para nao usar a mesma porta, ou entao fazer o servidor rmi disjunto)
         sendMessage("commit "+txid);
         System.out.println(receiveMessage());
     }
@@ -54,19 +53,30 @@ public class Clientv_2 {
         return bi.withdraw(txid, amount, source_account);
     }
     
-    private void sendMessage(String msg) throws IOException {
-        writer.write(msg+"\n");
-        writer.flush();
+    private void sendBeginMessage() {
+    
+    
     }
     
-    private String receiveMessage() throws IOException {
-        return reader.readLine();
+    private void sendCommitMessage(){
+    
+    
     }
+    
+    
+    /*private void sendMessage(String msg) throws IOException {
+        writer.write(msg+"\n");
+        writer.flush();
+    }*/
+    
+    /*private String receiveMessage() throws IOException {
+        return reader.readLine();
+    }*/
  
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
         Clientv_2 c = new Clientv_2(55555);
 
         c.transactionTest();
-    }
+    }*/
 
 }
