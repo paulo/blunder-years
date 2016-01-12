@@ -9,8 +9,6 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//depois implementar troca de mensagens com protobuf
-//http://stackoverflow.com/questions/30564404/how-to-determine-message-type-in-protobuf-so-that-i-can-use-that-type-parsefrom
 public class ClientHandler extends Thread {
 
     Socket c_socket;
@@ -45,19 +43,19 @@ public class ClientHandler extends Thread {
         switch (args[0]) {
             case "begin":
                 System.out.println("2. Begin message received");
-                beginMessage();
+                //beginMessage();
                 break;
             case "commit":
                 System.out.println("5. Commit message received");
-                commitMessage(args[1]);
+                //commitMessage(args[1]);
                 break;
             case "restart": //quando o user se ligar pode enviar esta mensagem para atualizar o seu estado na transação
                 System.out.println("Restart message received");
                 break;
         }
-
     }
 
+    /*
     private void beginMessage() throws IOException {
         String new_txid = t_manager.createNewTContext(c_socket);
         System.out.println("3. New TXID created:"+new_txid);
@@ -74,6 +72,6 @@ public class ClientHandler extends Thread {
     private void writeToClient(String msg) throws IOException {
         writer.write(msg+"\n");
         writer.flush();
-    }
+    }*/
 
 }

@@ -1,6 +1,5 @@
 package Client;
 
-import BankServer.Account;
 import Utils.Colour;
 
 import java.util.HashMap;
@@ -73,9 +72,9 @@ public class App {
      * @param source
      * @param destination 
      */
-    public void transfer(int transfer, Account source, Account destination) {
+    /*public void transfer(int transfer, Account source, Account destination) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    }*/
     
 }
 

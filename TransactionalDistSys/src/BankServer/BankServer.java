@@ -12,46 +12,50 @@ public class BankServer {
 
     static String bank_id;
     static BankDataOperator bdo;
-    
-    public BankServer(String id) throws RemoteException{
+
+    public BankServer(String id) throws RemoteException {
         BankServer.bank_id = id;
         BankServer.bdo = new BankDataOperator(id);
     }
-    
-    
-    public static String setBankInfo() throws IOException{
-        BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));   
+
+    /**
+     * User sets the bank id
+     * @return Bank Id
+     * @throws IOException 
+     */
+    public static String setBankInfo() throws IOException {
+        BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Set bank id: ");
- 
-        return "bank"+userIn.readLine();
+
+        return "bank" + userIn.readLine();
     }
-    
-    public void initBankServerTest(){
-    
-    
-    }
-    
-    //mover o registru para uma class à parte
-    public static void main(String[] args) throws RemoteException, IOException, SQLException{
-                
-        BankServer bs = new BankServer(setBankInfo());
-        
-        bdo.initDBConnection();
-        
-        Bank t = new Bank(bdo, bank_id);
-        
+
+    /**
+     * Export bank object through RMI
+     * @param t Bank object to export
+     * @throws RemoteException 
+     */
+    public void exportBankObject(Bank t) throws RemoteException {
         try {
             Registry registry = LocateRegistry.getRegistry(3333);
-            
+
             registry.rebind(bank_id, t);
-            System.out.println("Transaction bound");
         } catch (Exception e) {
-            System.err.println("ComputeEngine exception:");
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        BankServer bs = new BankServer(setBankInfo());
+        bdo.initDB();
         
-        System.out.println(bank_id);
-        
-        while(true);
+        Bank bank_object = new Bank(bdo, bank_id);
+        bdo.recover();
+        bs.exportBankObject(bank_object);
+
+        System.out.println("Created New Bank: "+bank_id);
+
+        while (true);
     }
 }

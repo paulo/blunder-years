@@ -1,8 +1,6 @@
 package TransactionServer;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
@@ -21,12 +19,13 @@ public class TransactionServer {
         t_manager = new TransactionManager(server_log);
     }
 
-    public String setTServerInfo() throws IOException {
+    /*
+    public String setRMIPortInfo() throws IOException {
         BufferedReader userIn = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Set server port: ");
+        System.out.print("Set RMI port: ");
 
         return userIn.readLine();
-    }
+    }*/
 
     public void bindRMI() {
         try {
@@ -43,30 +42,12 @@ public class TransactionServer {
         new ClientHandler(cli, t_manager).start();
     }
 
-    //depois meter aqui a ler a porta do stdin
     public static void main(String[] args) throws RemoteException, Exception {
 
         TransactionServer ts = new TransactionServer();
         ServerSocket srv = null;
 
-        try {
-            srv = new ServerSocket(55555);
-            ts.bindRMI();
-            
-            while (true) {
-                Socket cli = srv.accept();
-                System.out.println("1. Client connection received");
-                ts.createClientHandler(cli);
-            }
-
-        } finally {
-            if (srv != null) {
-                try {
-                    srv.close();
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
+        ts.bindRMI();
+        while (true);
     }
 }

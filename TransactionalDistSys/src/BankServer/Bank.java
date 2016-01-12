@@ -29,7 +29,7 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
     public boolean deposit(String Txid, int amount, String account_nmr) throws RemoteException {
         System.out.println("New deposit");
         TXid xid = null;
-
+        
         try {
             xid = bdo.beginDeposit(Txid, amount, account_nmr);
         } catch (SQLException | XAException ex) {
@@ -66,7 +66,6 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
         }
     }
 
-    //talvez seja para passar o xid entre os servidores e nao a string do xid
     @Override
     public boolean prepare(String Txid) throws RemoteException {
         try {
@@ -89,25 +88,21 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
     @Override
     public void rollback(String Txid) throws RemoteException {
         try {
-            bdo.phase2Rollback(t_ids.get(Txid));
-        } catch (XAException ex) {
+            bdo.rollbackTransaction(t_ids.get(Txid));
+        } catch (Exception ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void registerBank(String Txid, int i) {
         try {
-            Registry registry = null;
-            
-            registry = LocateRegistry.getRegistry(3333);
+            Registry registry = LocateRegistry.getRegistry(3333);
             
             ResourceRecordIf rr = (ResourceRecordIf) registry.lookup("transactionManager");
             rr.registerResource(Txid, i, bank_id);
             
-            //return bi.deposit(txid, amount, target_account);
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }

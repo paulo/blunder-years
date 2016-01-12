@@ -3,40 +3,25 @@ package BankServer;
 import javax.transaction.xa.Xid;
 
 public class TXid implements Xid {
-	
-	private final String id;
-	
-        //fazer controlo de concorrencia no id
-	public TXid(String id) {
-            this.id = id;
-	}
 
-        //vai devolver 0x01 se for o branch onde se faz o deposito e 0x02 se for onde se faz o levantamento
-        @Override
-	public byte[] getBranchQualifier() {
-		return new byte[0];
-	}
+    private final String id;
 
-        //devolve sempre 0
-	@Override
-	public int getFormatId() {
-		return 0;
-	}
+    public TXid(String id) {
+        this.id = id;
+    }
 
-        //isto mais o branch qualifier têm de ser globalmente únicos
-        // The gtrid and bqual can each contain up to 64 bytes of binary code to identify the global transaction 
-        //and the branch transaction, respectively. The only requirement is that the gtrid and bqual taken together
-        //must be globally unique.
-	@Override
-	public byte[] getGlobalTransactionId() {
-		return id.getBytes();
-	}
-        
-        
-// A transaction branch is associated with a request to each resource manager involved in the 
-// distributed transaction. Requests to three different RDBMSs, therefore, require three transaction 
-// branches. Each transaction branch must be committed or rolled back by the local resource manager. 
-// The transaction manager controls the boundaries of the transaction and is responsible for the final 
-// decision as to whether or not the total transaction should commit or rollback. This decision is made 
-// in two phases, called the Two-Phase Commit Protocol.
+    @Override
+    public byte[] getBranchQualifier() {
+        return new byte[0];
+    }
+
+    @Override
+    public int getFormatId() {
+        return 0;
+    }
+
+    @Override
+    public byte[] getGlobalTransactionId() {
+        return id.getBytes();
+    }
 }

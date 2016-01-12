@@ -10,7 +10,6 @@ public class RegistryServer {
     
     public static void main(String[] args){
         try {
-                       // System.setProperty("java.rmi.server.hostname","192.168.1.91");
             Registry registry = LocateRegistry.createRegistry(3333);
             while(true);
         } catch (RemoteException ex) {

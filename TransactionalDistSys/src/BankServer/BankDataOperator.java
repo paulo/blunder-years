@@ -6,20 +6,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.sql.XAConnection;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
 import org.apache.derby.jdbc.EmbeddedXADataSource;
 
 public class BankDataOperator {
 
-    XAConnection xa_con;
-    Connection con;
     EmbeddedXADataSource rawDataSource;
-    String bankID;
-    String bankDBName;
-    XAResource xa_res;
+    String bankID, bankDBName;
     Map<String, TXid> t_ids;
 
     public BankDataOperator(String bank_id) {
@@ -27,26 +25,34 @@ public class BankDataOperator {
         t_ids = new HashMap<>();
     }
 
-    //iniciar base de dados
-    public void initDBConnection() throws SQLException {
+    /**
+     * Initiate database with the current bank name
+     *
+     * @throws SQLException
+     */
+    public void initDB() throws SQLException {
         rawDataSource = new EmbeddedXADataSource();
-
-        rawDataSource.setDatabaseName("../Bank" + bankID);
         bankDBName = "Bank" + bankID;
+        rawDataSource.setDatabaseName("../" + bankDBName);
         rawDataSource.setCreateDatabase("create");
 
-        xa_con = rawDataSource.getXAConnection();
-        con = xa_con.getConnection();
-        xa_res = xa_con.getXAResource();
+        try (Connection con = rawDataSource.getXAConnection().getConnection()) {
+            createTables(con);
+            populateDB(con);
+            con.close();
 
-        createTables();
-        populateDB();
-        //printAccounts();
-        //endConnection();
+            //printAccounts();
+            //endConnection();
+        }
     }
 
-    //criar tabela de clientes
-    public void createTables() throws SQLException {
+    /**
+     * Create accounts table
+     *
+     * @param con Connection to the database
+     * @throws SQLException
+     */
+    public void createTables(Connection con) throws SQLException {
         Statement s = null;
 
         try {
@@ -63,8 +69,12 @@ public class BankDataOperator {
         s.close();
     }
 
-    //carregar 10 clientes na base de dados
-    public void populateDB() {
+    /**
+     * Populate database with test accounts
+     *
+     * @param con Connection to the database
+     */
+    public void populateDB(Connection con) {
         PreparedStatement stmt = null;
 
         try {
@@ -81,8 +91,13 @@ public class BankDataOperator {
         }
     }
 
+    /**
+     * Print all account information in the database
+     *
+     * @throws SQLException
+     */
     public void printAccounts() throws SQLException {
-        Statement s = con.createStatement();
+        Statement s = rawDataSource.getXAConnection().getConnection().createStatement();
 
         try ( // getting the data back
                 ResultSet res = s.executeQuery(
@@ -96,12 +111,15 @@ public class BankDataOperator {
                 s.close();
     }
 
-    public void endConnection() throws SQLException {
-        con.close();
-        xa_con.close();
-    }
-
-    boolean clientExists(String account_nmr) throws SQLException {
+    /**
+     * Checks whether a certain account with account_nmr exists in the database
+     *
+     * @param account_nmr Account number to look for
+     * @param con Connection to the database
+     * @return Returns true if the account exists
+     * @throws SQLException
+     */
+    private boolean clientExists(String account_nmr, Connection con) throws SQLException {
         PreparedStatement stmt = null;
         boolean exists = true;
 
@@ -120,7 +138,16 @@ public class BankDataOperator {
         return exists;
     }
 
-    int getFunds(String account_nmr) throws SQLException {
+    /**
+     * Returns the current balance from an account with account number equal to
+     * account_nmr
+     *
+     * @param account_nmr Account number to search for
+     * @param con Connection to the database
+     * @return Balance from the account
+     * @throws SQLException
+     */
+    private int getFunds(String account_nmr, Connection con) throws SQLException {
         PreparedStatement stmt = null;
         int funds = 0;
 
@@ -134,12 +161,20 @@ public class BankDataOperator {
         }
 
         stmt.close();
-        
+
         return funds;
     }
 
     //isto tem de estar sincronizado, ele nao pode fazer o deposito enquanto estao a acontecer outras coisas
-    void changeBalance(int new_balance, String account_nmr) throws SQLException {
+    /**
+     * Update a given account balance
+     *
+     * @param new_balance The new balance to update the account
+     * @param account_nmr The account number to be updated
+     * @param con The database connection
+     * @throws SQLException
+     */
+    void changeBalance(int new_balance, String account_nmr, Connection con) throws SQLException {
         PreparedStatement stmt = null;
         int funds = 0;
 
@@ -148,22 +183,25 @@ public class BankDataOperator {
         stmt.setInt(1, new_balance);
         stmt.setString(2, account_nmr);
         stmt.execute();
-        
+
         stmt.close();
     }
 
     //se nao der, o cliente tem de mandar uma mensagem ao tServer a dizer para cancelar a transação
     TXid beginWithraw(String TXid, int amount, String account_nmr) throws SQLException, XAException {
         TXid new_txid = null;
+        XAConnection xa_con = rawDataSource.getXAConnection();
+        Connection con = xa_con.getConnection();
+        XAResource xa_res = xa_con.getXAResource();
 
-        if (clientExists(account_nmr)) {
-            int current_balance = getFunds(account_nmr);
+        if (clientExists(account_nmr, con)) {
+            int current_balance = getFunds(account_nmr, con);
             if (current_balance > amount) {
                 new_txid = new TXid(TXid);
 
                 xa_res.start(new_txid, 0);
 
-                changeBalance(current_balance - amount, account_nmr);
+                changeBalance(current_balance - amount, account_nmr, con);
                 //printAccounts();
                 xa_res.end(new_txid, XAResource.TMSUCCESS);
 
@@ -173,18 +211,24 @@ public class BankDataOperator {
         } else {
             System.out.println("Client doesn't exist");
         }
+        con.close();
+        xa_con.close();
+
         return new_txid;
     }
 
-    TXid beginDeposit(String TXid, int amount, String account_nmr) throws SQLException, XAException {
+    public TXid beginDeposit(String TXid, int amount, String account_nmr) throws SQLException, XAException {
         TXid new_txid = null;
+        XAConnection xa_con = rawDataSource.getXAConnection();
+        Connection con = xa_con.getConnection();
+        XAResource xa_res = xa_con.getXAResource();
 
-        if (clientExists(account_nmr)) {
-            int current_balance = getFunds(account_nmr);
+        if (clientExists(account_nmr, con)) {
+            int current_balance = getFunds(account_nmr, con);
             new_txid = new TXid(TXid);
             xa_res.start(new_txid, 0);
 
-            changeBalance(current_balance + amount, account_nmr);
+            changeBalance(current_balance + amount, account_nmr, con);
 
             xa_res.end(new_txid, XAResource.TMSUCCESS);
 
@@ -192,32 +236,47 @@ public class BankDataOperator {
             System.out.println("Client doesn't exist");
         }
 
+        con.close();
+        xa_con.close();
+
         return new_txid;
     }
 
-    //nao percebo pq é que o prof mete o true...
     boolean phase1prepare(TXid txid) throws Exception {
+        XAConnection xa_con = rawDataSource.getXAConnection();
+        XAResource xa_res = xa_con.getXAResource();
+
         return true && (xa_res.prepare(txid) == XAResource.XA_OK);
     }
 
     void phase2Commit(TXid txid) throws Exception {
+        XAConnection xa_con = rawDataSource.getXAConnection();
+        XAResource xa_res = xa_con.getXAResource();
+
         xa_res.commit(txid, false);
+
+        xa_con.close();
     }
 
-    void phase2Rollback(TXid txid) throws XAException{
+    void rollbackTransaction(TXid txid) throws Exception {
+        XAConnection xa_con = rawDataSource.getXAConnection();
+        XAResource xa_res = xa_con.getXAResource();
+
         xa_res.rollback(txid);
+        xa_con.close();
     }
-    /*
-     void recover() throws Exception {
-     // Isto devia ser lido do log...
-     // for(...)
-     //xid = new MiniXid();
-     //phase2(true);
-     }
 
+    void recover() throws Exception {
+        Xid[] prepared_trans = rawDataSource.getXAConnection().getXAResource().recover(XAResource.TMNOFLAGS);
+    
+        for(Xid x : prepared_trans) {
+            phase2Commit((TXid) x);
+        }
+    }
+    
+     /*
      public void parar() throws Exception {
      //System.out.println("parado...");
      //System.in.read();
      }*/
-
 }

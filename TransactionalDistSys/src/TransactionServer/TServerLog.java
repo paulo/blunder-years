@@ -1,28 +1,24 @@
 package TransactionServer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import static java.sql.Types.JAVA_OBJECT;
-import static java.sql.Types.NULL;
 import static java.sql.Types.VARCHAR;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 
-//arranjar os metodos de forma a nao estar sempre a fazer createStatement
-//nao se esta a guardar nenhuma info do cliente ainda (talvez guardar iNetAddress e port?
 public class TServerLog {
 
-    Connection connection;
     EmbeddedDataSource rawDataSource;
 
+    /**
+     * Initialize database (always creates in test mode)
+     * @throws SQLException 
+     */
     public void initDBConnection() throws SQLException {
 
         rawDataSource = new EmbeddedDataSource();
@@ -30,16 +26,19 @@ public class TServerLog {
         rawDataSource.setDatabaseName("../ServerLog");
         rawDataSource.setCreateDatabase("create");
 
-        connection = rawDataSource.getConnection();
         createTables();
     }
 
-    //arranjar a forma como os nomes dos bancos sao passados de um lado para o outro
+    /**
+     * Create database tables for storing transaction information (Transaction id, Source Bank Id, Target Bank Id)
+     * @throws SQLException 
+     */
     public void createTables() throws SQLException {
         Statement s = null;
-
+        Connection c = rawDataSource.getConnection();
+        
         try {
-            s = connection.createStatement();
+            s = c.createStatement();
             s.executeUpdate("DROP TABLE LOGTABLE");
         } catch (SQLException e) {
             if (!e.getSQLState().equals("42Y55")) {
@@ -47,7 +46,7 @@ public class TServerLog {
             }
         }
 
-        s = connection.createStatement();
+        s = c.createStatement();
         s.executeUpdate("create table LOGTABLE (TXID VARCHAR(10) PRIMARY KEY, "
                 //+ "CLIENT BLOB NOT NULL, "
                 + "RESOURCEN1 VARCHAR(10), "
@@ -55,11 +54,17 @@ public class TServerLog {
         s.close();
     }
 
+    /**
+     * Register resource (bank) for transaction
+     * @param Txid Transaction Context Id
+     * @param resourceNmr Value 1 if the withdraw is to be made in this resource, 2 otherwise
+     * @param value Id of the resource
+     */
     public void logResource(String Txid, int resourceNmr, String value) {
         PreparedStatement stmt = null;
 
         try {
-            stmt = connection.prepareStatement("update APP.LOGTABLE set RESOURCEN" + resourceNmr + " = ? where TXID = ?");
+            stmt = rawDataSource.getConnection().prepareStatement("update APP.LOGTABLE set RESOURCEN" + resourceNmr + " = ? where TXID = ?");
             stmt.setString(1, value);
             stmt.setString(2, Txid);
             stmt.execute();
@@ -69,14 +74,18 @@ public class TServerLog {
         }
     }
 
-    public void insertNewLog(String Txid, Socket client) throws IOException {
+    /**
+     * Create new entry on log table
+     * @param Txid New Transaction Context Id
+     * @throws IOException 
+     */
+    public void insertNewLog(String Txid) throws IOException {
         PreparedStatement stmt = null;
 
         try {
-            stmt = connection.prepareStatement(
+            stmt = rawDataSource.getConnection().prepareStatement(
                     "insert into APP.LOGTABLE values (?,?,?)");
             stmt.setString(1, Txid);
-            //stmt.setObject(2, );
             stmt.setNull(2, VARCHAR);
             stmt.setNull(3, VARCHAR);
             stmt.execute();
@@ -86,18 +95,13 @@ public class TServerLog {
         }
     }
 
-    public byte[] serializeObject(Socket obj) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-            oos.writeObject(obj);
-        }
-
-        return bos.toByteArray();
-    }
-
-    public void printAccounts() throws SQLException {
-        try ( // getting the data back
-                Statement s = connection.createStatement();
+    /**
+     * Print log table contents (for test purposes only)
+     * @throws SQLException 
+     */
+    public void printTransactionLogs() throws SQLException {
+        try (
+                Statement s = rawDataSource.getConnection().createStatement();
                 ResultSet res = s.executeQuery(
                         "SELECT * FROM APP.LOGTABLE")) {
             System.out.println("List of log entrys: ");
@@ -109,10 +113,17 @@ public class TServerLog {
         }
     }
 
+    /**
+     * Retrieve resource (bank) Id from the log table (if present)
+     * @param Txid Transaction Context Id
+     * @param type Value 1 if the withdraw was made in this resource, 2 otherwise
+     * @return Resource Id if present, null otherwise
+     * @throws SQLException 
+     */
     public String getResource(String Txid, int type) throws SQLException {
         String resource_name = null;
 
-        try (PreparedStatement s = connection.prepareStatement("SELECT RESOURCEN" + type + " FROM APP.LOGTABLE WHERE TXID = ?")) {
+        try (PreparedStatement s = rawDataSource.getConnection().prepareStatement("SELECT RESOURCEN" + type + " FROM APP.LOGTABLE WHERE TXID = ?")) {
             s.setString(1, Txid);
             ResultSet res = s.executeQuery();
             if (res.next()) {
@@ -120,15 +131,17 @@ public class TServerLog {
             }
         }
         return resource_name;
-
     }
 
-    //ainda falta meter a usar isto
+    /**
+     * Remove log after transaction finishes
+     * @param Txid Transaction Context Id
+     */
     public void removeLog(String Txid) {
         Statement stmt = null;
 
         try {
-            stmt = connection.createStatement();
+            stmt = rawDataSource.getConnection().createStatement();
             stmt.execute("delete from APP.LOGTABLE where TXID = " + Txid);
             stmt.close();
         } catch (SQLException sqlExcept) {
@@ -136,11 +149,18 @@ public class TServerLog {
         }
     }
 
+    //Arranjar isto, talvez meter mais um campo na tabela da base de dados a dizer o estado da transação
+    //Ver se existe forma de obter o número de entradas ja feitas na tabela
+    //
+    /**
+     * Retrieve last transaction number
+     * @return Transaction Context Id of the last transaction made
+     */
     int getCurrentTransactionNumber() {
         int nmr = 1;
 
-        try ( // getting the data back
-                Statement s = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        try (
+                Statement s = rawDataSource.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 ResultSet res = s.executeQuery(
                         "SELECT TXID FROM APP.LOGTABLE")) {
 
@@ -154,17 +174,4 @@ public class TServerLog {
 
         return nmr;
     }
-
-    /*
-     public void updateClient(String TxId, Socket new_client) {
-     Statement stmt = null;
-
-     try {
-     stmt = connection.createStatement();
-     stmt.execute("update APP.LOGTABLE set RESOURCEN" + resourceNmr + " = " + value + " where TXID = " + Txid);
-     stmt.close();
-     } catch (SQLException sqlExcept) {
-     sqlExcept.printStackTrace();
-     }
-     }*/
 }
