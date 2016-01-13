@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.sql.XAConnection;
 import javax.transaction.xa.XAException;
@@ -35,6 +34,7 @@ public class BankDataOperator {
         bankDBName = "Bank" + bankID;
         rawDataSource.setDatabaseName("../" + bankDBName);
         rawDataSource.setCreateDatabase("create");
+        rawDataSource.setConnectionAttributes("derby.locks.deadlockTrace=true");
 
         try (Connection con = rawDataSource.getXAConnection().getConnection()) {
             createTables(con);
@@ -106,8 +106,8 @@ public class BankDataOperator {
                     while (res.next()) {
                         System.out.println("Client: " + res.getInt("CLIENTID") + "\nBalance: " + res.getString("BALANCE"));
                     }
+                    res.close();
                 }
-
                 s.close();
     }
 
@@ -120,20 +120,19 @@ public class BankDataOperator {
      * @throws SQLException
      */
     private boolean clientExists(String account_nmr, Connection con) throws SQLException {
-        PreparedStatement stmt = null;
         boolean exists = true;
 
-        stmt = con.prepareStatement(
-                "SELECT BALANCE FROM APP.ACCOUNTS WHERE CLIENTID = ?");
-        stmt.setString(1, account_nmr);
-        stmt.execute();
-        ResultSet res = stmt.getResultSet();
-
-        if (!res.next()) {
-            exists = false;
+        try (PreparedStatement stmt = con.prepareStatement(
+                "SELECT BALANCE FROM APP.ACCOUNTS WHERE CLIENTID = ?")) {
+            stmt.setString(1, account_nmr);
+            stmt.execute();
+            try (ResultSet res = stmt.getResultSet()) {
+                if (!res.next()) {
+                    exists = false;
+                }
+            }
+            stmt.close();
         }
-
-        stmt.close();
 
         return exists;
     }
@@ -159,7 +158,7 @@ public class BankDataOperator {
         while (res.next()) {
             funds = res.getInt("BALANCE");
         }
-
+        res.close();
         stmt.close();
 
         return funds;
@@ -175,16 +174,12 @@ public class BankDataOperator {
      * @throws SQLException
      */
     void changeBalance(int new_balance, String account_nmr, Connection con) throws SQLException {
-        PreparedStatement stmt = null;
-        int funds = 0;
-
-        stmt = con.prepareStatement(
-                "update APP.ACCOUNTS set BALANCE = ? where CLIENTID = ?");
-        stmt.setInt(1, new_balance);
-        stmt.setString(2, account_nmr);
-        stmt.execute();
-
-        stmt.close();
+        try (PreparedStatement stmt = con.prepareStatement(
+                "update APP.ACCOUNTS set BALANCE = ? where CLIENTID = ?")) {
+            stmt.setInt(1, new_balance);
+            stmt.setString(2, account_nmr);
+            stmt.execute();
+        }
     }
 
     //se nao der, o cliente tem de mandar uma mensagem ao tServer a dizer para cancelar a transação
@@ -243,10 +238,14 @@ public class BankDataOperator {
     }
 
     boolean phase1prepare(TXid txid) throws Exception {
+        boolean r = true;
         XAConnection xa_con = rawDataSource.getXAConnection();
         XAResource xa_res = xa_con.getXAResource();
 
-        return true && (xa_res.prepare(txid) == XAResource.XA_OK);
+        r = r && (xa_res.prepare(txid) == XAResource.XA_OK);
+        xa_con.close();
+        
+        return r;     
     }
 
     void phase2Commit(TXid txid) throws Exception {
@@ -267,14 +266,25 @@ public class BankDataOperator {
     }
 
     void recover() throws Exception {
-        Xid[] prepared_trans = rawDataSource.getXAConnection().getXAResource().recover(XAResource.TMNOFLAGS);
-    
-        for(Xid x : prepared_trans) {
+        XAConnection xc = rawDataSource.getXAConnection();
+        Xid[] prepared_trans = xc.getXAResource().recover(XAResource.TMNOFLAGS);
+        xc.close();
+        for (Xid x : prepared_trans) {
             phase2Commit((TXid) x);
         }
+
+        
     }
-    
-     /*
+
+    void forgetTransaction(TXid txid) throws Exception {
+        XAConnection xa_con = rawDataSource.getXAConnection();
+        XAResource xa_res = xa_con.getXAResource();
+
+        xa_res.rollback(txid);
+        xa_con.close();
+    }
+
+    /*
      public void parar() throws Exception {
      //System.out.println("parado...");
      //System.in.read();

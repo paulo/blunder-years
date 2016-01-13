@@ -16,6 +16,9 @@ public class TransactionServer {
         t_manager = new TransactionManager(server_log);
     }
 
+    /**
+     * Bind transaction manager object to RMI registry
+     */
     public void bindRMI() {
         try {
             Registry registry = LocateRegistry.getRegistry(3333);
@@ -32,6 +35,8 @@ public class TransactionServer {
         TransactionServer ts = new TransactionServer();
 
         ts.bindRMI();
+        //recover uncommited transactions
+        ts.t_manager.recoverTransactions();
         
         while (true);
     }

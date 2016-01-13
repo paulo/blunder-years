@@ -8,6 +8,10 @@ import java.util.logging.Logger;
 
 public class RegistryServer {
     
+    /**
+     * Independent RMI registry application, runs on port 3333
+     * @param args 
+     */
     public static void main(String[] args){
         try {
             Registry registry = LocateRegistry.createRegistry(3333);

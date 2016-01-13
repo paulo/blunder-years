@@ -51,8 +51,8 @@ public class TServerLog {
         s.executeUpdate("create table LOGTABLE (TXID VARCHAR(10) PRIMARY KEY, "
                 //+ "CLIENT BLOB NOT NULL, "
                 + "RESOURCEN1 VARCHAR(10), "
-                + "RESOURCEN2 VARCHAR(10))"
-                + "STATUS VARCHAR(10");
+                + "RESOURCEN2 VARCHAR(10),"
+                + "STATUS VARCHAR(10))");
         s.close();
     }
 
@@ -143,9 +143,12 @@ public class TServerLog {
      */
     public void removeLog(String Txid) throws SQLException {
 
-        Statement stmt = rawDataSource.getConnection().createStatement();
-        stmt.execute("delete from APP.LOGTABLE where TXID = " + Txid);
-        stmt.close();
+        try (PreparedStatement stmt = rawDataSource.getConnection().prepareStatement(
+                "delete from APP.LOGTABLE where TXID = ?")) {
+            stmt.setString(1, Txid);
+            stmt.execute();
+            stmt.close();
+        }
 
     }
 

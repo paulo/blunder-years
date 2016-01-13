@@ -25,26 +25,51 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
         this.bank_id = bank_id;
     }
 
+    /**
+     * Make withdraw in the resource, using XAResource
+     *
+     * @param Txid Transaction context id
+     * @param amount Amount of the withdraw
+     * @param account_nmr Account number upon witch to do the operation
+     * @return true if operation successful
+     * @throws RemoteException
+     */
     @Override
     public boolean deposit(String Txid, int amount, String account_nmr) throws RemoteException {
         System.out.println("New deposit");
         TXid xid = null;
-        
+
         try {
             xid = bdo.beginDeposit(Txid, amount, account_nmr);
         } catch (SQLException | XAException ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if (xid != null) {
-            t_ids.put(Txid, xid);
-            return registerBank(Txid, 2);
-        } else {
-            return false;
-        }
+        return false;
+        /*
+         if (xid != null) {
+         t_ids.put(Txid, xid);
+            
+         try {
+         registerBank(Txid, 2);
+         return true;
+         } catch (NotBoundException ex) {
+         return false;
+         }
+         } else {
+         return false;
+         }*/
     }
 
-    //vai fazer start da operação
+    /**
+     * Make withdraw in the resource, using XAResource
+     *
+     * @param Txid Transaction context id
+     * @param amount Amount of the withdraw
+     * @param account_nmr Account number upon witch to do the operation
+     * @return true if operation successful
+     * @throws RemoteException
+     */
     @Override
     public boolean withdraw(String Txid, int amount, String account_nmr) throws RemoteException {
         System.out.println("New withdraw");
@@ -55,10 +80,21 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
         } catch (SQLException | XAException ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         if (xid != null) {
             t_ids.put(Txid, xid);
-            //mudar isto para usar exceções
-            return registerBank(Txid, 1);
+            try {
+                registerBank(Txid, 1);
+            } catch (NotBoundException ex) {
+                return false;
+            }
+            return true;
         } else {
             return false;
         }
@@ -86,21 +122,17 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
     @Override
     public void rollback(String Txid) throws RemoteException {
         try {
-            bdo.rollbackTransaction(t_ids.get(Txid));
+            bdo.rollbackTransaction(new TXid(Txid));
         } catch (Exception ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+    private void registerBank(String Txid, int i) throws RemoteException, NotBoundException {
+        Registry registry = LocateRegistry.getRegistry(3333);
 
-    private boolean registerBank(String Txid, int i) {
-        try {
-            Registry registry = LocateRegistry.getRegistry(3333);
-            
-            ResourceRecordIf rr = (ResourceRecordIf) registry.lookup("transactionManager");
-            rr.registerResource(Txid, i, bank_id);
-            return true;
-        } catch (RemoteException | NotBoundException ex) {
-            return false;
-        }
+        ResourceRecordIf rr = (ResourceRecordIf) registry.lookup("transactionManager");
+        rr.registerResource(Txid, i, bank_id);
     }
 }
