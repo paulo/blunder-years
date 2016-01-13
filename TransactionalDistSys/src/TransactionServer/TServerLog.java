@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import static java.sql.Types.VARCHAR;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 
 public class TServerLog {
@@ -17,7 +15,8 @@ public class TServerLog {
 
     /**
      * Initialize database (always creates in test mode)
-     * @throws SQLException 
+     *
+     * @throws SQLException
      */
     public void initDBConnection() throws SQLException {
 
@@ -30,13 +29,15 @@ public class TServerLog {
     }
 
     /**
-     * Create database tables for storing transaction information (Transaction id, Source Bank Id, Target Bank Id)
-     * @throws SQLException 
+     * Create database tables for storing transaction information (Transaction
+     * id, Source Bank Id, Target Bank Id)
+     *
+     * @throws SQLException
      */
     public void createTables() throws SQLException {
         Statement s = null;
         Connection c = rawDataSource.getConnection();
-        
+
         try {
             s = c.createStatement();
             s.executeUpdate("DROP TABLE LOGTABLE");
@@ -50,54 +51,52 @@ public class TServerLog {
         s.executeUpdate("create table LOGTABLE (TXID VARCHAR(10) PRIMARY KEY, "
                 //+ "CLIENT BLOB NOT NULL, "
                 + "RESOURCEN1 VARCHAR(10), "
-                + "RESOURCEN2 VARCHAR(10))");
+                + "RESOURCEN2 VARCHAR(10))"
+                + "STATUS VARCHAR(10");
         s.close();
     }
 
     /**
      * Register resource (bank) for transaction
+     *
      * @param Txid Transaction Context Id
-     * @param resourceNmr Value 1 if the withdraw is to be made in this resource, 2 otherwise
+     * @param resourceNmr Value 1 if the withdraw is to be made in this
+     * resource, 2 otherwise
      * @param value Id of the resource
+     * @throws java.sql.SQLException
      */
-    public void logResource(String Txid, int resourceNmr, String value) {
-        PreparedStatement stmt = null;
-
-        try {
-            stmt = rawDataSource.getConnection().prepareStatement("update APP.LOGTABLE set RESOURCEN" + resourceNmr + " = ? where TXID = ?");
+    public void logResource(String Txid, int resourceNmr, String value) throws SQLException {
+        try (PreparedStatement stmt = rawDataSource.getConnection().prepareStatement("update APP.LOGTABLE set RESOURCEN" + resourceNmr + " = ? where TXID = ?")) {
             stmt.setString(1, value);
             stmt.setString(2, Txid);
             stmt.execute();
-            stmt.close();
-        } catch (SQLException sqlExcept) {
-            sqlExcept.printStackTrace();
         }
     }
 
     /**
      * Create new entry on log table
+     *
      * @param Txid New Transaction Context Id
-     * @throws IOException 
+     * @throws IOException
      */
-    public void insertNewLog(String Txid) throws IOException {
+    public void insertNewLog(String Txid) throws IOException, SQLException {
         PreparedStatement stmt = null;
 
-        try {
-            stmt = rawDataSource.getConnection().prepareStatement(
-                    "insert into APP.LOGTABLE values (?,?,?)");
-            stmt.setString(1, Txid);
-            stmt.setNull(2, VARCHAR);
-            stmt.setNull(3, VARCHAR);
-            stmt.execute();
-            stmt.close();
-        } catch (SQLException sqlExcept) {
-            sqlExcept.printStackTrace();
-        }
+        stmt = rawDataSource.getConnection().prepareStatement(
+                "insert into APP.LOGTABLE values (?,?,?,?)");
+        stmt.setString(1, Txid);
+        stmt.setNull(2, VARCHAR);
+        stmt.setNull(3, VARCHAR);
+        stmt.setNull(4, VARCHAR);
+        stmt.execute();
+        stmt.close();
+
     }
 
     /**
      * Print log table contents (for test purposes only)
-     * @throws SQLException 
+     *
+     * @throws SQLException
      */
     public void printTransactionLogs() throws SQLException {
         try (
@@ -108,17 +107,20 @@ public class TServerLog {
             while (res.next()) {
                 System.out.println("TxId: " + res.getString("TXID")
                         + "\nResourceN1: " + res.getString("RESOURCEN1")
-                        + "\nResourceN2: " + res.getString("RESOURCEN2"));
+                        + "\nResourceN2: " + res.getString("RESOURCEN2")
+                        + "\nStatus: " + res.getString("STATUS"));
             }
         }
     }
 
     /**
      * Retrieve resource (bank) Id from the log table (if present)
+     *
      * @param Txid Transaction Context Id
-     * @param type Value 1 if the withdraw was made in this resource, 2 otherwise
+     * @param type Value 1 if the withdraw was made in this resource, 2
+     * otherwise
      * @return Resource Id if present, null otherwise
-     * @throws SQLException 
+     * @throws SQLException
      */
     public String getResource(String Txid, int type) throws SQLException {
         String resource_name = null;
@@ -135,25 +137,21 @@ public class TServerLog {
 
     /**
      * Remove log after transaction finishes
+     *
      * @param Txid Transaction Context Id
+     * @throws java.sql.SQLException
      */
-    public void removeLog(String Txid) {
-        Statement stmt = null;
+    public void removeLog(String Txid) throws SQLException {
 
-        try {
-            stmt = rawDataSource.getConnection().createStatement();
-            stmt.execute("delete from APP.LOGTABLE where TXID = " + Txid);
-            stmt.close();
-        } catch (SQLException sqlExcept) {
-            sqlExcept.printStackTrace();
-        }
+        Statement stmt = rawDataSource.getConnection().createStatement();
+        stmt.execute("delete from APP.LOGTABLE where TXID = " + Txid);
+        stmt.close();
+
     }
 
-    //Arranjar isto, talvez meter mais um campo na tabela da base de dados a dizer o estado da transação
-    //Ver se existe forma de obter o número de entradas ja feitas na tabela
-    //
     /**
      * Retrieve last transaction number
+     *
      * @return Transaction Context Id of the last transaction made
      */
     int getCurrentTransactionNumber() {
@@ -169,9 +167,21 @@ public class TServerLog {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(TServerLog.class.getName()).log(Level.SEVERE, null, ex);
+            return nmr;
         }
-
         return nmr;
+    }
+
+    public void updateStatus(String Txid, String status) throws SQLException {
+        try (PreparedStatement stmt = rawDataSource.getConnection().prepareStatement("update APP.LOGTABLE set STATUS = ? where TXID = ?")) {
+            stmt.setString(1, status);
+            stmt.setString(2, Txid);
+            stmt.execute();
+        }
+    }
+
+    public ResultSet getActiveTransactions() throws SQLException {
+        Statement s = rawDataSource.getConnection().createStatement();
+        return s.executeQuery("SELECT * FROM APP.LOGTABLE");    
     }
 }

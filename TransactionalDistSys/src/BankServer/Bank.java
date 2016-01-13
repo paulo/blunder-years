@@ -38,8 +38,7 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
 
         if (xid != null) {
             t_ids.put(Txid, xid);
-            registerBank(Txid, 2);
-            return true;
+            return registerBank(Txid, 2);
         } else {
             return false;
         }
@@ -58,9 +57,8 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
         }
         if (xid != null) {
             t_ids.put(Txid, xid);
-            //meter para dar false se não for possível inserir no banco
-            registerBank(Txid, 1);
-            return true;
+            //mudar isto para usar exceções
+            return registerBank(Txid, 1);
         } else {
             return false;
         }
@@ -94,15 +92,15 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
         }
     }
 
-    private void registerBank(String Txid, int i) {
+    private boolean registerBank(String Txid, int i) {
         try {
             Registry registry = LocateRegistry.getRegistry(3333);
             
             ResourceRecordIf rr = (ResourceRecordIf) registry.lookup("transactionManager");
             rr.registerResource(Txid, i, bank_id);
-            
+            return true;
         } catch (RemoteException | NotBoundException ex) {
-            Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }
 }

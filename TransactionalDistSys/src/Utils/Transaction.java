@@ -1,4 +1,4 @@
-package TransactionServer;
+package Utils;
 
 public class Transaction {
 

@@ -1,7 +1,7 @@
 package Client;
 
 import BankServer.BankIf;
-import TransactionServer.Transaction;
+import Utils.Transaction;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
