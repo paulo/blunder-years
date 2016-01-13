@@ -34,7 +34,7 @@ public class BankDataOperator {
         bankDBName = "Bank" + bankID;
         rawDataSource.setDatabaseName("../" + bankDBName);
         rawDataSource.setCreateDatabase("create");
-        rawDataSource.setConnectionAttributes("derby.locks.deadlockTrace=true");
+        //rawDataSource.setConnectionAttributes("derby.locks.deadlockTrace=true");
 
         try (Connection con = rawDataSource.getXAConnection().getConnection()) {
             createTables(con);
@@ -185,19 +185,18 @@ public class BankDataOperator {
     //se nao der, o cliente tem de mandar uma mensagem ao tServer a dizer para cancelar a transação
     TXid beginWithraw(String TXid, int amount, String account_nmr) throws SQLException, XAException {
         TXid new_txid = null;
+
         XAConnection xa_con = rawDataSource.getXAConnection();
         Connection con = xa_con.getConnection();
         XAResource xa_res = xa_con.getXAResource();
-
         if (clientExists(account_nmr, con)) {
             int current_balance = getFunds(account_nmr, con);
             if (current_balance > amount) {
                 new_txid = new TXid(TXid);
 
                 xa_res.start(new_txid, 0);
-
                 changeBalance(current_balance - amount, account_nmr, con);
-                //printAccounts();
+
                 xa_res.end(new_txid, XAResource.TMSUCCESS);
 
             } else {
@@ -214,6 +213,7 @@ public class BankDataOperator {
 
     public TXid beginDeposit(String TXid, int amount, String account_nmr) throws SQLException, XAException {
         TXid new_txid = null;
+
         XAConnection xa_con = rawDataSource.getXAConnection();
         Connection con = xa_con.getConnection();
         XAResource xa_res = xa_con.getXAResource();
@@ -221,8 +221,8 @@ public class BankDataOperator {
         if (clientExists(account_nmr, con)) {
             int current_balance = getFunds(account_nmr, con);
             new_txid = new TXid(TXid);
-            xa_res.start(new_txid, 0);
 
+            xa_res.start(new_txid, 0);
             changeBalance(current_balance + amount, account_nmr, con);
 
             xa_res.end(new_txid, XAResource.TMSUCCESS);
@@ -237,6 +237,12 @@ public class BankDataOperator {
         return new_txid;
     }
 
+    /**
+     * Prepare transaction for commit under TPC
+     * @param txid Transaction context id
+     * @return True if prepared successfully, false otherwise
+     * @throws Exception 
+     */
     boolean phase1prepare(TXid txid) throws Exception {
         boolean r = true;
         XAConnection xa_con = rawDataSource.getXAConnection();
@@ -244,10 +250,15 @@ public class BankDataOperator {
 
         r = r && (xa_res.prepare(txid) == XAResource.XA_OK);
         xa_con.close();
-        
-        return r;     
+
+        return r;
     }
 
+    /**
+     * Commit transaction under TPC
+     * @param txid Transaction context id
+     * @throws Exception 
+     */
     void phase2Commit(TXid txid) throws Exception {
         XAConnection xa_con = rawDataSource.getXAConnection();
         XAResource xa_res = xa_con.getXAResource();
@@ -257,6 +268,11 @@ public class BankDataOperator {
         xa_con.close();
     }
 
+    /**
+     * Rollback transaction
+     * @param txid Transaction context id
+     * @throws Exception 
+     */
     void rollbackTransaction(TXid txid) throws Exception {
         XAConnection xa_con = rawDataSource.getXAConnection();
         XAResource xa_res = xa_con.getXAResource();
@@ -265,6 +281,10 @@ public class BankDataOperator {
         xa_con.close();
     }
 
+    /**
+     * Recover prepared but uncommitted transactions and start phase2 of TPC for each one
+     * @throws Exception 
+     */
     void recover() throws Exception {
         XAConnection xc = rawDataSource.getXAConnection();
         Xid[] prepared_trans = xc.getXAResource().recover(XAResource.TMNOFLAGS);
@@ -273,17 +293,7 @@ public class BankDataOperator {
             phase2Commit((TXid) x);
         }
 
-        
     }
-
-    void forgetTransaction(TXid txid) throws Exception {
-        XAConnection xa_con = rawDataSource.getXAConnection();
-        XAResource xa_res = xa_con.getXAResource();
-
-        xa_res.rollback(txid);
-        xa_con.close();
-    }
-
     /*
      public void parar() throws Exception {
      //System.out.println("parado...");

@@ -1,4 +1,4 @@
-package TransactionServer;
+ package TransactionServer;
 
 import BankServer.TwoPCIf;
 import java.io.IOException;
@@ -76,18 +76,23 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
                 source_bank.commit(TxId);
                 target_bank.commit(TxId);
                 server_log.removeLog(TxId);
-                System.out.println("6. Commit sucessful");
+                System.out.println("Commit sucessful");
             } else {
                 abortTransaction(TxId, 2);
                 System.out.println("RollBack");
             }
         } catch (RemoteException ex) {
-            System.out.println("Phase 2 failed, trying again");
+            System.out.println("Phase 2 failed, trying again.");
             sleep(5000);
-            phase2(source_bank, target_bank, TxId, true);
+            phase2(source_bank, target_bank, TxId, phase1_r);
         }
     }
 
+    /**
+     * Initiate transaction. Creates new context (synchronized).
+     * @return New transaction context id.
+     * @throws RemoteException 
+     */
     @Override
     public synchronized String beginTransaction() throws RemoteException {
         int new_t_number = this.transaction_number;
@@ -100,19 +105,31 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
         }
         return new_txn_id;
     }
-
+    
+    /**
+     * Register resource at Transactional Server.
+     * @param Txid Transaction context id
+     * @param type Value 1 if resource/bank is the one where the withdraw occurs, 2 otherwise
+     * @param resource_id Resource id
+     * @throws RemoteException 
+     */
     @Override
     public void registerResource(String Txid, int type, String resource_id) throws RemoteException {
         try {
             server_log.logResource(Txid, type, resource_id);
-            System.out.println("4. Source " + resource_id + " registered");
+            System.out.println(resource_id + " registered");
         } catch (SQLException ex) {
             Logger.getLogger(TransactionManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
-    //meter a fazer o rollback de cada resource aqui?
+    /**
+     * Abort transaction, rollback on given resources and remove transaction context from log
+     * @param Txid Transaction context id
+     * @param resource_type Value 1 if rollback only needed at source resource, 2 if needed on both, 0
+     * if needed on neither
+     * @throws RemoteException 
+     */
     @Override
     public void abortTransaction(String Txid, int resource_type) throws RemoteException {
         Registry registry = null;
@@ -144,11 +161,16 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
         }
     }
 
+    /**
+     * Recover unfinished transactions at transactional server start. 
+     * - "aborted" status: continue phase 2 of TPC with rollback marker
+     * - "commit" status: continue phase 2 of TPC with commit marker
+     * - "prepare" status: abort work done and rollback on both resources
+     */
     public void recoverTransactions() {
         ResultSet res;
         try {
             res = server_log.getActiveTransactions();
-            //System.out.println("List of log entrys: ");
             while (res.next()) {
                 /*System.out.println("TxId: " + res.getString("TXID")
                  + "\nResourceN1: " + res.getString("RESOURCEN1")
@@ -156,11 +178,11 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
                  + "\nStatus: " + res.getString("STATUS"));*/
                 String status = res.getString("STATUS");
                 switch (status) {
-                    case "aborted":
+                    case "abort":
                         recoverPhase2(res.getString("RESOURCEN1"), res.getString("RESOURCEN2"), res.getString("TXID"), false);
                         break;
                     case "prepare":
-                        abortPhase1(res.getString("RESOURCEN1"), res.getString("RESOURCEN2"), res.getString("TXID"));
+                        abortTransaction(res.getString("TXID"), 2);
                         break;
                     case "commit":
                         recoverPhase2(res.getString("RESOURCEN1"), res.getString("RESOURCEN2"), res.getString("TXID"), true);
@@ -171,9 +193,17 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
         } catch (SQLException | RemoteException | NotBoundException ex) {
             Logger.getLogger(TransactionManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
+    /**
+     * Recover unfinished transactions with abort or commit marker.
+     * @param source Resource id where the operation withdraw was to be made
+     * @param target Resource id where the operation deposit was to be made
+     * @param TxId Transaction context id
+     * @param phase1_r true if commit marker, false otherwise
+     * @throws RemoteException
+     * @throws NotBoundException 
+     */
     private void recoverPhase2(String source, String target, String TxId, boolean phase1_r) throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(3333);
         try {
@@ -186,7 +216,8 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
         }
     }
 
-    private void abortPhase1(String source, String target, String TxId) throws RemoteException, NotBoundException {
+
+    /*private void abortPhase1(String source, String target, String TxId) throws RemoteException, NotBoundException, SQLException {
         Registry registry = LocateRegistry.getRegistry(3333);
 
         TwoPCIf source_bank = (TwoPCIf) registry.lookup(source);
@@ -194,5 +225,7 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
 
         source_bank.rollback(TxId);
         target_bank.rollback(TxId);
-    }
+        
+        server_log.removeLog(TxId);
+    }*/
 }

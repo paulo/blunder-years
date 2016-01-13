@@ -2,7 +2,6 @@ package Client;
 
 import BankServer.BankIf;
 import TransactionServer.TransactionControlIf;
-import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -14,11 +13,13 @@ class ClientTransaction {
     private final int ammount;
 
     /**
-     * Create client transaction instance. The bank server id is represented by the first three
-     * digits from the account number. The account within that bank is represented by the remaining digits.
+     * Create client transaction instance. The bank server id is represented by
+     * the first three digits from the account number. The account within that
+     * bank is represented by the remaining digits.
+     *
      * @param sourceAccount
      * @param targetAccount
-     * @param ammount 
+     * @param ammount
      */
     ClientTransaction(String sourceAccount, String targetAccount, int ammount) {
         this.target_account_nmr = targetAccount.substring(3);
@@ -36,43 +37,44 @@ class ClientTransaction {
         this.ammount = 0;
     }
 
-    
-    public void transactionTest() throws IOException, RemoteException, NotBoundException {
+    public void transactionTest() {
 
-        System.out.println("Transaction test has begun");
-        String txid = sendBeginMessage();
-        if (txid == null) {
-            System.out.println("Error registering transaction at Transaction Server");
-        } else {
-            System.out.println("TXID Recebido: " + txid);
-            if (withdrawMoney(txid, "bank10", "0000005", 10)) {
-                System.out.println("Primeira chamada RMI com sucesso");
-                if (depositMoney(txid, "bank20", "0000005", 10)) {
-                    System.out.println("Segunda chamada RMI com sucesso");
-                    sendCommitMessage(txid);
-                } else {
-                    abortTransaction(txid, 1);
-                    //rollbackTransaction(txid, "bank20");
-                    //abortTransaction(txid);
-                    System.out.println("RollBack efetuado");
-                }
+        try {
+            System.out.println("Transaction test has begun");
+            String txid = sendBeginMessage();
+            if (txid == null) {
+                System.out.println("Error registering transaction at Transaction Server");
             } else {
-                System.out.println("Chamadas RMI com insucesso");
-                abortTransaction(txid, 0);
+                System.out.println("TXID Recebido: " + txid);
+                if (withdrawMoney(txid, "bank10", "0000005", 10)) {
+                    System.out.println("Primeira chamada RMI com sucesso");
+                    if (depositMoney(txid, "bank20", "0000005", 10)) {
+                        System.out.println("Segunda chamada RMI com sucesso");
+                        sendCommitMessage(txid);
+                    } else {
+                        abortTransaction(txid, 2);
+                    //rollbackTransaction(txid, "bank20");
+                        //abortTransaction(txid);
+                        System.out.println("RollBack efetuado");
+                    }
+                } else {
+                    System.out.println("Chamadas RMI com insucesso");
+                    abortTransaction(txid, 0);
+                }
             }
-        }
-
+        } catch (RemoteException | NotBoundException ex) { System.out.println("Exception caught at client.");}
     }
 
     /**
      * Issues call to operation deposit on a bank server
+     *
      * @param txid Transaction context
      * @param target_bank Bank server id
      * @param target_account Account id to where deposit the money
      * @param amount Amount of money to deposit
      * @return True if operation was successful (client exists), false otherwise
      * @throws RemoteException
-     * @throws NotBoundException 
+     * @throws NotBoundException
      */
     private boolean depositMoney(String txid, String target_bank, String target_account, int amount) throws RemoteException, NotBoundException {
         BankIf bi = getBankObject(target_bank);
@@ -82,13 +84,15 @@ class ClientTransaction {
 
     /**
      * Issues call to operation withdrawn on a bank server
+     *
      * @param txid Transaction context
      * @param source_bank Bank server id
      * @param source_account Account id from where to withdraw the money
      * @param amount Amount of money to be withdrawn
-     * @return True if operation was successful (client exists and has enough money), false otherwise
+     * @return True if operation was successful (client exists and has enough
+     * money), false otherwise
      * @throws RemoteException
-     * @throws NotBoundException 
+     * @throws NotBoundException
      */
     private boolean withdrawMoney(String txid, String source_bank, String source_account, int amount) throws RemoteException, NotBoundException {
         BankIf bi = getBankObject(source_bank);
@@ -98,9 +102,10 @@ class ClientTransaction {
 
     /**
      * Send begin transaction message to the transactional using RMI
+     *
      * @return The transaction context id
      * @throws RemoteException
-     * @throws NotBoundException 
+     * @throws NotBoundException
      */
     private String sendBeginMessage() throws RemoteException, NotBoundException {
         TransactionControlIf tc = getTransactionObject();
@@ -110,9 +115,10 @@ class ClientTransaction {
 
     /**
      * Send commit message to the transactional server using RMI
+     *
      * @param txid Transaction context
      * @throws RemoteException
-     * @throws NotBoundException 
+     * @throws NotBoundException
      */
     private void sendCommitMessage(String txid) throws RemoteException, NotBoundException {
         TransactionControlIf tc = getTransactionObject();
@@ -122,9 +128,11 @@ class ClientTransaction {
 
     /**
      * Retrieve RMI interface from the transactional server
-     * @return Transactional server interface for transaction control (commit, abort, rollback)
+     *
+     * @return Transactional server interface for transaction control (commit,
+     * abort, rollback)
      * @throws RemoteException
-     * @throws NotBoundException 
+     * @throws NotBoundException
      */
     private TransactionControlIf getTransactionObject() throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(3333);
@@ -133,24 +141,26 @@ class ClientTransaction {
 
     /**
      * Retrieve RMI interface from the bank server
+     *
      * @param bank
      * @return Bank server interface for operation control (withdraw, deposit)
      * @throws RemoteException
-     * @throws NotBoundException 
+     * @throws NotBoundException
      */
     private BankIf getBankObject(String bank) throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(3333);
         return (BankIf) registry.lookup(bank);
     }
 
-
     /**
      * Calls for transaction abort on the transactional server.
+     *
      * @param txid
-     * @param resource_type Value 1 if the it is to rollback on the withdrawn bank, 2 for rollback on 
-     * both servers (only needed at TransactionManager) and 0 to only remove transaction context from transactional server
+     * @param resource_type Value 1 if the it is to rollback on the withdrawn
+     * bank, 2 for rollback on both servers (only needed at TransactionManager)
+     * and 0 to only remove transaction context from transactional server
      * @throws RemoteException
-     * @throws NotBoundException 
+     * @throws NotBoundException
      */
     private void abortTransaction(String txid, int resource_type) throws RemoteException, NotBoundException {
         TransactionControlIf tc = getTransactionObject();
@@ -159,10 +169,12 @@ class ClientTransaction {
     }
 
     /**
-     * Controls transaction logic by issuing calls to the bank operations and transaction control operations
+     * Controls transaction logic by issuing calls to the bank operations and
+     * transaction control operations
+     *
      * @param txid Transaction context id
      * @throws RemoteException
-     * @throws NotBoundException 
+     * @throws NotBoundException
      */
     void makeOperations(String txid) throws RemoteException, NotBoundException {
 
@@ -171,6 +183,7 @@ class ClientTransaction {
             if (depositMoney(txid, target_bank_id, target_account_nmr, ammount)) {
                 System.out.println("Deposit call successful.");
                 sendCommitMessage(txid);
+                System.out.println("Transaction successful.");
             } else {
                 abortTransaction(txid, 1);
                 System.out.println("Transaction rollback.");
@@ -182,10 +195,11 @@ class ClientTransaction {
     }
 
     /**
-     * Begins transaction logic by issuing a begin message to the transaction server and invoking
-     * the make operations method
+     * Begins transaction logic by issuing a begin message to the transaction
+     * server and invoking the make operations method
+     *
      * @throws RemoteException
-     * @throws NotBoundException 
+     * @throws NotBoundException
      */
     void beginTransaction() throws RemoteException, NotBoundException {
         String txid = sendBeginMessage();

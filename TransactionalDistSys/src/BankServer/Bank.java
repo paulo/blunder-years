@@ -35,7 +35,7 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
      * @throws RemoteException
      */
     @Override
-    public boolean deposit(String Txid, int amount, String account_nmr) throws RemoteException {
+    public synchronized boolean deposit(String Txid, int amount, String account_nmr) throws RemoteException {
         System.out.println("New deposit");
         TXid xid = null;
 
@@ -45,20 +45,19 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return false;
-        /*
-         if (xid != null) {
-         t_ids.put(Txid, xid);
-            
-         try {
-         registerBank(Txid, 2);
-         return true;
-         } catch (NotBoundException ex) {
-         return false;
-         }
-         } else {
-         return false;
-         }*/
+        if (xid != null) {
+            t_ids.put(Txid, xid);
+
+            try {
+                registerBank(Txid, 2);
+                return false;
+                //return true;
+            } catch (NotBoundException ex) {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -71,7 +70,7 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
      * @throws RemoteException
      */
     @Override
-    public boolean withdraw(String Txid, int amount, String account_nmr) throws RemoteException {
+    public synchronized boolean withdraw(String Txid, int amount, String account_nmr) throws RemoteException {
         System.out.println("New withdraw");
         TXid xid = null;
 
@@ -100,6 +99,12 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
         }
     }
 
+    /**
+     * Call prepare method at BankDataOperator and return result
+     * @param Txid Transaction context id
+     * @return True if prepare successful, false otherwise
+     * @throws RemoteException 
+     */
     @Override
     public boolean prepare(String Txid) throws RemoteException {
         try {
@@ -110,6 +115,11 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
         return false;
     }
 
+    /**
+     * Call commit method at BankDataOperator
+     * @param Txid
+     * @throws RemoteException 
+     */
     @Override
     public void commit(String Txid) throws RemoteException {
         try {
@@ -119,6 +129,11 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
         }
     }
 
+    /**
+     * Call rollback method at BankDataOperator
+     * @param Txid Transaction context id
+     * @throws RemoteException 
+     */
     @Override
     public void rollback(String Txid) throws RemoteException {
         try {
@@ -127,8 +142,14 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
+    /**
+     * Register resource (bank) at TransactionManager through RMI
+     * @param Txid Transaction context
+     * @param i Value 1 if withdraw is to be made at this bank, 2 otherwise
+     * @throws RemoteException
+     * @throws NotBoundException 
+     */
     private void registerBank(String Txid, int i) throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(3333);
 
