@@ -50,8 +50,8 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
 
             try {
                 registerBank(Txid, 2);
-                return false;
-                //return true;
+                //return false;
+                return true;
             } catch (NotBoundException ex) {
                 return false;
             }

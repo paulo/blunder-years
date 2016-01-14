@@ -2,6 +2,7 @@ package Client;
 
 import BankServer.BankIf;
 import TransactionServer.TransactionControlIf;
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -37,32 +38,41 @@ class ClientTransaction {
         this.ammount = 0;
     }
 
-    public void transactionTest() {
+    //Meter a lógica de verificação de condiçoes no transaction server
+    public void transactionTest() throws IOException {
 
         try {
             System.out.println("Transaction test has begun");
             String txid = sendBeginMessage();
+         //   System.in.read();
             if (txid == null) {
                 System.out.println("Error registering transaction at Transaction Server");
             } else {
                 System.out.println("TXID Recebido: " + txid);
                 if (withdrawMoney(txid, "bank10", "0000005", 10)) {
                     System.out.println("Primeira chamada RMI com sucesso");
+                    //System.in.read();
                     if (depositMoney(txid, "bank20", "0000005", 10)) {
                         System.out.println("Segunda chamada RMI com sucesso");
+                      //  System.in.read();
                         sendCommitMessage(txid);
+                        //System.in.read();
                     } else {
                         abortTransaction(txid, 2);
-                    //rollbackTransaction(txid, "bank20");
+                       // System.in.read();
+                        //rollbackTransaction(txid, "bank20");
                         //abortTransaction(txid);
                         System.out.println("RollBack efetuado");
                     }
                 } else {
                     System.out.println("Chamadas RMI com insucesso");
                     abortTransaction(txid, 0);
+                 //   System.in.read();
                 }
             }
-        } catch (RemoteException | NotBoundException ex) { System.out.println("Exception caught at client.");}
+        } catch (RemoteException | NotBoundException ex) {
+            System.out.println("Exception caught at client.");
+        }
     }
 
     /**

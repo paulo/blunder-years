@@ -34,7 +34,8 @@ public class BankDataOperator {
         bankDBName = "Bank" + bankID;
         rawDataSource.setDatabaseName("../" + bankDBName);
         rawDataSource.setCreateDatabase("create");
-        //rawDataSource.setConnectionAttributes("derby.locks.deadlockTrace=true");
+        rawDataSource.setConnectionAttributes("derby.locks.monitor=true");
+        rawDataSource.setConnectionAttributes("derby.locks.deadlockTrace=true");
 
         try (Connection con = rawDataSource.getXAConnection().getConnection()) {
             createTables(con);
@@ -58,6 +59,7 @@ public class BankDataOperator {
         try {
             s = con.createStatement();
             s.executeUpdate("DROP TABLE ACCOUNTS");
+            s.close();
         } catch (SQLException e) {
             if (!e.getSQLState().equals("42Y55")) {
                 s.close();
@@ -82,7 +84,7 @@ public class BankDataOperator {
                 stmt = con.prepareStatement(
                         "insert into APP.ACCOUNTS values (?, ?)");
                 stmt.setString(1, "000000" + i);
-                stmt.setObject(2, 100);
+                stmt.setObject(2, 1000);
                 stmt.execute();
                 stmt.close();
             }
@@ -130,6 +132,7 @@ public class BankDataOperator {
                 if (!res.next()) {
                     exists = false;
                 }
+                res.close();
             }
             stmt.close();
         }
@@ -147,10 +150,9 @@ public class BankDataOperator {
      * @throws SQLException
      */
     private int getFunds(String account_nmr, Connection con) throws SQLException {
-        PreparedStatement stmt = null;
         int funds = 0;
 
-        stmt = con.prepareStatement(
+        PreparedStatement stmt = con.prepareStatement(
                 "SELECT BALANCE FROM APP.ACCOUNTS WHERE CLIENTID = ?");
         stmt.setString(1, account_nmr);
         stmt.execute();
@@ -179,6 +181,7 @@ public class BankDataOperator {
             stmt.setInt(1, new_balance);
             stmt.setString(2, account_nmr);
             stmt.execute();
+            stmt.close();
         }
     }
 
@@ -193,12 +196,13 @@ public class BankDataOperator {
             int current_balance = getFunds(account_nmr, con);
             if (current_balance > amount) {
                 new_txid = new TXid(TXid);
-
-                xa_res.start(new_txid, 0);
-                changeBalance(current_balance - amount, account_nmr, con);
-
-                xa_res.end(new_txid, XAResource.TMSUCCESS);
-
+                try {
+                    xa_res.setTransactionTimeout(3);
+                    xa_res.start(new_txid, 0);
+                    changeBalance(current_balance - amount, account_nmr, con);
+                } finally {
+                    xa_res.end(new_txid, XAResource.TMSUCCESS);
+                }
             } else {
                 System.out.println("Client doesn't have enough funds");
             }
@@ -222,10 +226,13 @@ public class BankDataOperator {
             int current_balance = getFunds(account_nmr, con);
             new_txid = new TXid(TXid);
 
-            xa_res.start(new_txid, 0);
-            changeBalance(current_balance + amount, account_nmr, con);
-
-            xa_res.end(new_txid, XAResource.TMSUCCESS);
+            try {
+                xa_res.setTransactionTimeout(3);
+                xa_res.start(new_txid, 0);
+                changeBalance(current_balance + amount, account_nmr, con);
+            } finally {
+                xa_res.end(new_txid, XAResource.TMSUCCESS);
+            }
 
         } else {
             System.out.println("Client doesn't exist");
@@ -239,9 +246,10 @@ public class BankDataOperator {
 
     /**
      * Prepare transaction for commit under TPC
+     *
      * @param txid Transaction context id
      * @return True if prepared successfully, false otherwise
-     * @throws Exception 
+     * @throws Exception
      */
     boolean phase1prepare(TXid txid) throws Exception {
         boolean r = true;
@@ -256,8 +264,9 @@ public class BankDataOperator {
 
     /**
      * Commit transaction under TPC
+     *
      * @param txid Transaction context id
-     * @throws Exception 
+     * @throws Exception
      */
     void phase2Commit(TXid txid) throws Exception {
         XAConnection xa_con = rawDataSource.getXAConnection();
@@ -270,8 +279,9 @@ public class BankDataOperator {
 
     /**
      * Rollback transaction
+     *
      * @param txid Transaction context id
-     * @throws Exception 
+     * @throws Exception
      */
     void rollbackTransaction(TXid txid) throws Exception {
         XAConnection xa_con = rawDataSource.getXAConnection();
@@ -282,8 +292,10 @@ public class BankDataOperator {
     }
 
     /**
-     * Recover prepared but uncommitted transactions and start phase2 of TPC for each one
-     * @throws Exception 
+     * Recover prepared but uncommitted transactions and start phase2 of TPC for
+     * each one
+     *
+     * @throws Exception
      */
     void recover() throws Exception {
         XAConnection xc = rawDataSource.getXAConnection();
