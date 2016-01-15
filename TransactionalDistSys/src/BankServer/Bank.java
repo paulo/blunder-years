@@ -31,7 +31,7 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
      * @throws RemoteException
      */
     @Override
-    public synchronized boolean deposit(TXid Txid, int amount, String account_nmr) throws RemoteException {
+    public boolean deposit(TXid Txid, int amount, String account_nmr) throws RemoteException {
         System.out.println("New deposit");
         boolean operation = false;
 
@@ -61,19 +61,13 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
      * @throws RemoteException
      */
     @Override
-    public synchronized boolean withdraw(TXid Txid, int amount, String account_nmr) throws RemoteException {
+    public boolean withdraw(TXid Txid, int amount, String account_nmr) throws RemoteException {
         System.out.println("New withdraw");
         boolean operation = false;
 
         try {
-            operation = bdo.beginWithraw(Txid, amount, account_nmr);
+            operation = bdo.beginWithdraw(Txid, amount, account_nmr);
         } catch (SQLException | XAException ex) {
-            Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -144,5 +138,4 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
         ResourceRecordIf rr = (ResourceRecordIf) registry.lookup("transactionManager");
         rr.registerResource(Txid, i, bank_id);
     }
-
 }

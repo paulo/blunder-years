@@ -1,5 +1,6 @@
 package BankServer;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,17 +33,20 @@ public class BankDataOperator {
         rawDataSource = new EmbeddedXADataSource();
         bankDBName = "Bank" + bankID;
         rawDataSource.setDatabaseName("../" + bankDBName);
-        rawDataSource.setCreateDatabase("create");
-        //rawDataSource.setConnectionAttributes("derby.locks.monitor=true");
-        //rawDataSource.setConnectionAttributes("derby.locks.deadlockTrace=true");
+
+        File f = new File("../" + bankDBName);
+        if (!f.exists()) {
+            rawDataSource.setCreateDatabase("create");
+        } else {
+            if (!f.isDirectory()) {
+                rawDataSource.setCreateDatabase("create");
+            }
+        }
 
         try (Connection con = rawDataSource.getXAConnection().getConnection()) {
             createTables(con);
             populateDB(con);
             con.close();
-
-            //printAccounts();
-            //endConnection();
         }
     }
 
@@ -83,7 +87,7 @@ public class BankDataOperator {
                 stmt = con.prepareStatement(
                         "insert into APP.ACCOUNTS values (?, ?)");
                 stmt.setString(1, "000000" + i);
-                stmt.setObject(2, 100);
+                stmt.setObject(2, 1000);
                 stmt.execute();
                 stmt.close();
             }
@@ -165,7 +169,6 @@ public class BankDataOperator {
         return funds;
     }
 
-    //isto tem de estar sincronizado, ele nao pode fazer o deposito enquanto estao a acontecer outras coisas
     /**
      * Update a given account balance
      *
@@ -184,8 +187,16 @@ public class BankDataOperator {
         }
     }
 
-    //se nao der, o cliente tem de mandar uma mensagem ao tServer a dizer para cancelar a transação
-    boolean beginWithraw(TXid TXid, int amount, String account_nmr) throws SQLException, XAException {
+    /**
+     * Begin work on transaction context.
+     * @param TXid Transaction context id.
+     * @param amount Value to be withdrawn from the account.
+     * @param account_nmr Account from where to withdrawn.
+     * @return True if operation is possible, false otherwise.
+     * @throws SQLException
+     * @throws XAException 
+     */
+    boolean beginWithdraw(TXid TXid, int amount, String account_nmr) throws SQLException, XAException {
         XAConnection xa_con = rawDataSource.getXAConnection();
         Connection con = xa_con.getConnection();
         XAResource xa_res = xa_con.getXAResource();
@@ -213,6 +224,15 @@ public class BankDataOperator {
         return true;
     }
 
+    /**
+     * Begin work on transaction context.
+     * @param TXid Transaction context id.
+     * @param amount Value to be deposited to the account.
+     * @param account_nmr Account where to deposit.
+     * @return True if operation is possible, false otherwise.
+     * @throws SQLException
+     * @throws XAException 
+     */
     public boolean beginDeposit(TXid TXid, int amount, String account_nmr) throws SQLException, XAException {
         XAConnection xa_con = rawDataSource.getXAConnection();
         Connection con = xa_con.getConnection();

@@ -50,7 +50,7 @@ public class BankServer {
         bdo.initDB();
         
         Bank bank_object = new Bank(bdo, bank_id);
-        //bank_object.recover();
+        bdo.recover();
         bs.exportBankObject(bank_object);
 
         System.out.println("Created New Bank: "+bank_id);

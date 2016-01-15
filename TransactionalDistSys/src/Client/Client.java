@@ -40,11 +40,8 @@ public class Client {
 
         Client c = new Client("transactionManager");
 
-        //new ClientTransaction().transactionTest();
-        
         while (true) {
-         //   c.makeTransaction();
-            new ClientTransaction().transactionTest();
+            c.makeTransaction();
         }
     }
 

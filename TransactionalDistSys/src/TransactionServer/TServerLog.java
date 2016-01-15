@@ -1,6 +1,7 @@
 package TransactionServer;
 
 import BankServer.TXid;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +16,7 @@ public class TServerLog {
     EmbeddedDataSource rawDataSource;
 
     /**
-     * Initialize database (always creates in test mode)
+     * Initialize database
      *
      * @throws SQLException
      */
@@ -24,8 +25,17 @@ public class TServerLog {
         rawDataSource = new EmbeddedDataSource();
 
         rawDataSource.setDatabaseName("../ServerLog");
-        rawDataSource.setCreateDatabase("create");
 
+        File f = new File("../ServerLog");
+
+        if (!f.exists()) {
+            rawDataSource.setCreateDatabase("create");
+        } else {
+            if (!f.isDirectory()) {
+                rawDataSource.setCreateDatabase("create");
+            }
+        }
+        
         createTables();
     }
 
@@ -60,7 +70,8 @@ public class TServerLog {
      * Register resource (bank) for transaction
      *
      * @param Txid Transaction Context Id
-     * @param resourceNmr Value 1 if the withdraw is to be made in this resource, 2 otherwise
+     * @param resourceNmr Value 1 if the withdraw is to be made in this
+     * resource, 2 otherwise
      * @param value Id of the resource
      * @throws java.sql.SQLException
      */
@@ -117,7 +128,8 @@ public class TServerLog {
      * Retrieve resource (bank) Id from the log table (if present)
      *
      * @param Txid Transaction Context Id
-     * @param type Value 1 if the withdraw was made in this resource, 2 otherwise
+     * @param type Value 1 if the withdraw was made in this resource, 2
+     * otherwise
      * @return Resource Id if present, null otherwise
      * @throws SQLException
      */
@@ -165,9 +177,8 @@ public class TServerLog {
                         "SELECT TXID FROM APP.LOGTABLE")) {
 
             if (res.last()) {
-                nmr = Integer.parseInt(res.getString("TXID").substring(3))+1;
+                nmr = Integer.parseInt(res.getString("TXID").substring(3)) + 1;
             }
-
         } catch (SQLException ex) {
             return nmr;
         }
@@ -176,9 +187,10 @@ public class TServerLog {
 
     /**
      * Update status on a given entry
+     *
      * @param Txid Transaction context id from the entry to update
      * @param status New status to update
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void updateStatus(TXid Txid, String status) throws SQLException {
         try (PreparedStatement stmt = rawDataSource.getConnection().prepareStatement("update APP.LOGTABLE set STATUS = ? where TXID = ?")) {
@@ -190,11 +202,12 @@ public class TServerLog {
 
     /**
      * Retrieve result set with every ongoing transaction
+     *
      * @return Result set with every ongoing transaction on the log table
-     * @throws SQLException 
+     * @throws SQLException
      */
     public ResultSet getActiveTransactions() throws SQLException {
         Statement s = rawDataSource.getConnection().createStatement();
-        return s.executeQuery("SELECT * FROM APP.LOGTABLE");    
+        return s.executeQuery("SELECT * FROM APP.LOGTABLE");
     }
 }

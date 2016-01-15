@@ -24,8 +24,13 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
         transaction_number = server_log.getCurrentTransactionNumber();
     }
 
+    /**
+     * Commit transaction. If the transaction is to be done on the same resource, only on commit is sent.
+     * @param TxId Transaction context id
+     * @throws RemoteException 
+     */
     @Override
-    public synchronized void commitTransaction(TXid TxId) throws RemoteException {
+    public void commitTransaction(TXid TxId) throws RemoteException {
         TwoPCIf source_bank = null;
         TwoPCIf target_bank = null;
         boolean same_bank;
@@ -61,8 +66,15 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
         }
     }
 
-    //se o prepare falha ele assume que nao esta prepared e aborta
-    //mudar para fazer prepare a um de cada vez
+    /**
+     * Start of phase 1 of TPC. Insert prepare marker in transaction log.
+     * @param source_bank Remote interface from the bank where the withdraw will be made
+     * @param target_bank Remote interface from the bank where the deposit will be made
+     * @param TxId Transaction context id
+     * @param same_bank True if transaction is to be made on accounts pertaining to the same resource, false otherwise
+     * @return True if both resources prepared successfully, false otherwise
+     * @throws SQLException 
+     */
     boolean phase1(TwoPCIf source_bank, TwoPCIf target_bank, TXid TxId, boolean same_bank) throws SQLException {
         boolean r = true;
 
@@ -77,8 +89,16 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
         return r;
     }
 
-    //ciclo de 5 em 5 segundos para sempre no commit
-    //mudar para fazer apenas rollback do que nao falhou se tiver a dar problemas
+    /**
+     * Start of phase 2 of TPC. 
+     * @param source_bank Remote interface from the bank where the withdraw will be made
+     * @param target_bank Remote interface from the bank where the deposit will be made
+     * @param TxId Transaction context id
+     * @param phase1_r True if to commit transaction, false to abort
+     * @param same_bank True if transaction is to be made on accounts pertaining to the same resource, false otherwise
+     * @throws InterruptedException
+     * @throws SQLException 
+     */
     private void phase2(TwoPCIf source_bank, TwoPCIf target_bank, TXid TxId, boolean phase1_r, boolean same_bank) throws InterruptedException, SQLException {
 
         try {
@@ -122,8 +142,7 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
      * Register resource at Transactional Server.
      *
      * @param Txid Transaction context id
-     * @param type Value 1 if resource/bank is the one where the withdraw
-     * occurs, 2 otherwise
+     * @param type Value 1 if resource/bank is the one where the withdraw occurs, 2 otherwise
      * @param resource_id Resource id
      * @throws RemoteException
      */
@@ -138,9 +157,7 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
     }
 
     /**
-     * Abort transaction, rollback on given resources and remove transaction
-     * context from log
-     *
+     * Abort transaction, rollback on resources and remove transaction context from log
      * @param Txid Transaction context id
      * @throws RemoteException
      */
@@ -182,10 +199,6 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
         try {
             res = server_log.getActiveTransactions();
             while (res.next()) {
-                /*System.out.println("TxId: " + res.getString("TXID")
-                 + "\nResourceN1: " + res.getString("RESOURCEN1")
-                 + "\nResourceN2: " + res.getString("RESOURCEN2")
-                 + "\nStatus: " + res.getString("STATUS"));*/
                 String status = res.getString("STATUS");
                 switch (status) {
                     case "abort":
@@ -231,17 +244,4 @@ public class TransactionManager extends UnicastRemoteObject implements ResourceR
             Logger.getLogger(TransactionManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-
-    /*private void abortPhase1(String source, String target, String TxId) throws RemoteException, NotBoundException, SQLException {
-     Registry registry = LocateRegistry.getRegistry(3333);
-
-     TwoPCIf source_bank = (TwoPCIf) registry.lookup(source);
-     TwoPCIf target_bank = (TwoPCIf) registry.lookup(target);
-
-     source_bank.rollback(TxId);
-     target_bank.rollback(TxId);
-        
-     server_log.removeLog(TxId);
-     }*/
 }

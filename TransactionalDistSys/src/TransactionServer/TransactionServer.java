@@ -35,7 +35,6 @@ public class TransactionServer {
         TransactionServer ts = new TransactionServer();
 
         ts.bindRMI();
-        //recover uncommited transactions
         ts.t_manager.recoverTransactions();
         
         System.out.println("Transaction server operational");
