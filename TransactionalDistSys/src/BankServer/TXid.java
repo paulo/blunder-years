@@ -1,8 +1,9 @@
 package BankServer;
 
+import java.io.Serializable;
 import javax.transaction.xa.Xid;
 
-public class TXid implements Xid {
+public class TXid implements Xid, Serializable {
 
     private final String id;
 
@@ -23,5 +24,9 @@ public class TXid implements Xid {
     @Override
     public byte[] getGlobalTransactionId() {
         return id.getBytes();
+    }
+    
+    public String getId(){
+        return this.id;
     }
 }

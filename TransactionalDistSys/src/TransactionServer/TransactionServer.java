@@ -38,6 +38,7 @@ public class TransactionServer {
         //recover uncommited transactions
         ts.t_manager.recoverTransactions();
         
+        System.out.println("Transaction server operational");
         while (true);
     }
 }

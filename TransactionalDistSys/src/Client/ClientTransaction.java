@@ -1,6 +1,7 @@
 package Client;
 
 import BankServer.BankIf;
+import BankServer.TXid;
 import TransactionServer.TransactionControlIf;
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -40,38 +41,35 @@ class ClientTransaction {
 
     //Meter a lógica de verificação de condiçoes no transaction server
     public void transactionTest() throws IOException {
+        boolean withdraw = false, deposit = false;
 
         try {
             System.out.println("Transaction test has begun");
-            String txid = sendBeginMessage();
-         //   System.in.read();
+            TXid txid = sendBeginMessage();
             if (txid == null) {
                 System.out.println("Error registering transaction at Transaction Server");
             } else {
-                System.out.println("TXID Recebido: " + txid);
-                if (withdrawMoney(txid, "bank10", "0000005", 10)) {
+                System.out.println("TXID Recebido: " + txid.getId());
+                withdraw = withdrawMoney(txid, "bank10", "0000005", 10);
+                deposit = depositMoney(txid, "bank20", "0000005", 10);
+                if (withdraw) {
                     System.out.println("Primeira chamada RMI com sucesso");
-                    //System.in.read();
-                    if (depositMoney(txid, "bank20", "0000005", 10)) {
+                    if (deposit) {
                         System.out.println("Segunda chamada RMI com sucesso");
-                      //  System.in.read();
                         sendCommitMessage(txid);
-                        //System.in.read();
+                        System.out.println("Commit efetuado");
+
                     } else {
-                        abortTransaction(txid, 2);
-                       // System.in.read();
-                        //rollbackTransaction(txid, "bank20");
-                        //abortTransaction(txid);
+                        abortTransaction(txid);
                         System.out.println("RollBack efetuado");
                     }
                 } else {
-                    System.out.println("Chamadas RMI com insucesso");
-                    abortTransaction(txid, 0);
-                 //   System.in.read();
+                    abortTransaction(txid);
+                    System.out.println("RollBack efetuado");
                 }
             }
         } catch (RemoteException | NotBoundException ex) {
-            System.out.println("Exception caught at client.");
+            System.out.println("Remote exception, try again. ");
         }
     }
 
@@ -86,7 +84,7 @@ class ClientTransaction {
      * @throws RemoteException
      * @throws NotBoundException
      */
-    private boolean depositMoney(String txid, String target_bank, String target_account, int amount) throws RemoteException, NotBoundException {
+    private boolean depositMoney(TXid txid, String target_bank, String target_account, int amount) throws RemoteException, NotBoundException {
         BankIf bi = getBankObject(target_bank);
 
         return bi.deposit(txid, amount, target_account);
@@ -104,7 +102,7 @@ class ClientTransaction {
      * @throws RemoteException
      * @throws NotBoundException
      */
-    private boolean withdrawMoney(String txid, String source_bank, String source_account, int amount) throws RemoteException, NotBoundException {
+    private boolean withdrawMoney(TXid txid, String source_bank, String source_account, int amount) throws RemoteException, NotBoundException {
         BankIf bi = getBankObject(source_bank);
 
         return bi.withdraw(txid, amount, source_account);
@@ -117,7 +115,7 @@ class ClientTransaction {
      * @throws RemoteException
      * @throws NotBoundException
      */
-    private String sendBeginMessage() throws RemoteException, NotBoundException {
+    private TXid sendBeginMessage() throws RemoteException, NotBoundException {
         TransactionControlIf tc = getTransactionObject();
 
         return tc.beginTransaction();
@@ -130,7 +128,7 @@ class ClientTransaction {
      * @throws RemoteException
      * @throws NotBoundException
      */
-    private void sendCommitMessage(String txid) throws RemoteException, NotBoundException {
+    private void sendCommitMessage(TXid txid) throws RemoteException, NotBoundException {
         TransactionControlIf tc = getTransactionObject();
 
         tc.commitTransaction(txid);
@@ -172,10 +170,10 @@ class ClientTransaction {
      * @throws RemoteException
      * @throws NotBoundException
      */
-    private void abortTransaction(String txid, int resource_type) throws RemoteException, NotBoundException {
+    private void abortTransaction(TXid txid) throws RemoteException, NotBoundException {
         TransactionControlIf tc = getTransactionObject();
 
-        tc.abortTransaction(txid, resource_type);
+        tc.abortTransaction(txid);
     }
 
     /**
@@ -186,7 +184,7 @@ class ClientTransaction {
      * @throws RemoteException
      * @throws NotBoundException
      */
-    void makeOperations(String txid) throws RemoteException, NotBoundException {
+    void makeOperations(TXid txid) throws RemoteException, NotBoundException {
 
         if (withdrawMoney(txid, source_bank_id, source_account_nmr, ammount)) {
             System.out.println("Withdraw call successful.");
@@ -195,12 +193,12 @@ class ClientTransaction {
                 sendCommitMessage(txid);
                 System.out.println("Transaction successful.");
             } else {
-                abortTransaction(txid, 1);
+                abortTransaction(txid);
                 System.out.println("Transaction rollback.");
             }
         } else {
             System.out.println("Transaction unsuccessful.");
-            abortTransaction(txid, 0);
+            abortTransaction(txid);
         }
     }
 
@@ -212,11 +210,11 @@ class ClientTransaction {
      * @throws NotBoundException
      */
     void beginTransaction() throws RemoteException, NotBoundException {
-        String txid = sendBeginMessage();
+        TXid txid = sendBeginMessage();
         if (txid == null) {
             System.out.println("Error registering transaction at Transaction Server");
         } else {
-            System.out.println("TXID: " + txid);
+            System.out.println("TXID: " + txid.getId());
             makeOperations(txid);
         }
     }

@@ -7,8 +7,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.transaction.xa.XAException;
@@ -16,12 +14,10 @@ import javax.transaction.xa.XAException;
 public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
 
     BankDataOperator bdo;
-    Map<String, TXid> t_ids;
     String bank_id;
 
     Bank(BankDataOperator bank_operator, String bank_id) throws RemoteException {
         this.bdo = bank_operator;
-        this.t_ids = new HashMap<>();
         this.bank_id = bank_id;
     }
 
@@ -35,29 +31,24 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
      * @throws RemoteException
      */
     @Override
-    public synchronized boolean deposit(String Txid, int amount, String account_nmr) throws RemoteException {
+    public synchronized boolean deposit(TXid Txid, int amount, String account_nmr) throws RemoteException {
         System.out.println("New deposit");
-        TXid xid = null;
+        boolean operation = false;
 
         try {
-            xid = bdo.beginDeposit(Txid, amount, account_nmr);
+            operation = bdo.beginDeposit(Txid, amount, account_nmr);
         } catch (SQLException | XAException ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if (xid != null) {
-            t_ids.put(Txid, xid);
-
+        if (operation) {
             try {
                 registerBank(Txid, 2);
-                //return false;
-                return true;
             } catch (NotBoundException ex) {
                 return false;
             }
-        } else {
-            return false;
         }
+        return operation;
     }
 
     /**
@@ -70,33 +61,30 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
      * @throws RemoteException
      */
     @Override
-    public synchronized boolean withdraw(String Txid, int amount, String account_nmr) throws RemoteException {
+    public synchronized boolean withdraw(TXid Txid, int amount, String account_nmr) throws RemoteException {
         System.out.println("New withdraw");
-        TXid xid = null;
+        boolean operation = false;
 
         try {
-            xid = bdo.beginWithraw(Txid, amount, account_nmr);
+            operation = bdo.beginWithraw(Txid, amount, account_nmr);
         } catch (SQLException | XAException ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(1500);
         } catch (InterruptedException ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if (xid != null) {
-            t_ids.put(Txid, xid);
+        if (operation) {
             try {
                 registerBank(Txid, 1);
             } catch (NotBoundException ex) {
                 return false;
             }
-            return true;
-        } else {
-            return false;
-        }
+        } 
+        return operation;
     }
 
     /**
@@ -106,9 +94,9 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
      * @throws RemoteException 
      */
     @Override
-    public boolean prepare(String Txid) throws RemoteException {
+    public boolean prepare(TXid Txid) throws RemoteException {
         try {
-            return bdo.phase1prepare(t_ids.get(Txid));
+            return bdo.phase1prepare(Txid);
         } catch (Exception ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -121,9 +109,9 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
      * @throws RemoteException 
      */
     @Override
-    public void commit(String Txid) throws RemoteException {
+    public void commit(TXid Txid) throws RemoteException {
         try {
-            bdo.phase2Commit(t_ids.get(Txid));
+            bdo.phase2Commit(Txid);
         } catch (Exception ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -135,9 +123,9 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
      * @throws RemoteException 
      */
     @Override
-    public void rollback(String Txid) throws RemoteException {
+    public void rollback(TXid Txid) throws RemoteException {
         try {
-            bdo.rollbackTransaction(new TXid(Txid));
+            bdo.rollbackTransaction(Txid);
         } catch (Exception ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -150,10 +138,11 @@ public class Bank extends UnicastRemoteObject implements BankIf, TwoPCIf {
      * @throws RemoteException
      * @throws NotBoundException 
      */
-    private void registerBank(String Txid, int i) throws RemoteException, NotBoundException {
+    private void registerBank(TXid Txid, int i) throws RemoteException, NotBoundException {
         Registry registry = LocateRegistry.getRegistry(3333);
 
         ResourceRecordIf rr = (ResourceRecordIf) registry.lookup("transactionManager");
         rr.registerResource(Txid, i, bank_id);
     }
+
 }

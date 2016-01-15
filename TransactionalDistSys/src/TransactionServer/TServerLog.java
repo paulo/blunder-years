@@ -1,5 +1,6 @@
 package TransactionServer;
 
+import BankServer.TXid;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -49,7 +50,6 @@ public class TServerLog {
 
         s = c.createStatement();
         s.executeUpdate("create table LOGTABLE (TXID VARCHAR(10) PRIMARY KEY, "
-                //+ "CLIENT BLOB NOT NULL, "
                 + "RESOURCEN1 VARCHAR(10), "
                 + "RESOURCEN2 VARCHAR(10),"
                 + "STATUS VARCHAR(10))");
@@ -64,10 +64,10 @@ public class TServerLog {
      * @param value Id of the resource
      * @throws java.sql.SQLException
      */
-    public void logResource(String Txid, int resourceNmr, String value) throws SQLException {
+    public void logResource(TXid Txid, int resourceNmr, String value) throws SQLException {
         try (PreparedStatement stmt = rawDataSource.getConnection().prepareStatement("update APP.LOGTABLE set RESOURCEN" + resourceNmr + " = ? where TXID = ?")) {
             stmt.setString(1, value);
-            stmt.setString(2, Txid);
+            stmt.setString(2, Txid.getId());
             stmt.execute();
         }
     }
@@ -79,12 +79,12 @@ public class TServerLog {
      * @throws IOException
      * @throws java.sql.SQLException
      */
-    public void insertNewLog(String Txid) throws IOException, SQLException {
+    public void insertNewLog(TXid Txid) throws IOException, SQLException {
         PreparedStatement stmt = null;
 
         stmt = rawDataSource.getConnection().prepareStatement(
                 "insert into APP.LOGTABLE values (?,?,?,?)");
-        stmt.setString(1, Txid);
+        stmt.setString(1, Txid.getId());
         stmt.setNull(2, VARCHAR);
         stmt.setNull(3, VARCHAR);
         stmt.setNull(4, VARCHAR);
@@ -121,11 +121,11 @@ public class TServerLog {
      * @return Resource Id if present, null otherwise
      * @throws SQLException
      */
-    public String getResource(String Txid, int type) throws SQLException {
+    public String getResource(TXid Txid, int type) throws SQLException {
         String resource_name = null;
 
         try (PreparedStatement s = rawDataSource.getConnection().prepareStatement("SELECT RESOURCEN" + type + " FROM APP.LOGTABLE WHERE TXID = ?")) {
-            s.setString(1, Txid);
+            s.setString(1, Txid.getId());
             ResultSet res = s.executeQuery();
             if (res.next()) {
                 resource_name = res.getString("RESOURCEN" + type);
@@ -140,11 +140,11 @@ public class TServerLog {
      * @param Txid Transaction Context Id
      * @throws java.sql.SQLException
      */
-    public void removeLog(String Txid) throws SQLException {
+    public void removeLog(TXid Txid) throws SQLException {
 
         try (PreparedStatement stmt = rawDataSource.getConnection().prepareStatement(
                 "delete from APP.LOGTABLE where TXID = ?")) {
-            stmt.setString(1, Txid);
+            stmt.setString(1, Txid.getId());
             stmt.execute();
             stmt.close();
         }
@@ -180,10 +180,10 @@ public class TServerLog {
      * @param status New status to update
      * @throws SQLException 
      */
-    public void updateStatus(String Txid, String status) throws SQLException {
+    public void updateStatus(TXid Txid, String status) throws SQLException {
         try (PreparedStatement stmt = rawDataSource.getConnection().prepareStatement("update APP.LOGTABLE set STATUS = ? where TXID = ?")) {
             stmt.setString(1, status);
-            stmt.setString(2, Txid);
+            stmt.setString(2, Txid.getId());
             stmt.execute();
         }
     }
