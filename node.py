@@ -36,6 +36,7 @@ class Node():
     #puts given message in the neighbor nodes inbox
     def broadcast_message(self, msg):
         for x in self.neighbors:
+            print('({0},{1}) SENDS to ({2},{3})'.format(self.node_id[0], self.node_id[1],x[0],x[1]))
             self.node_list[x[0]][x[1]].deliver_msg(msg)
 
     #processes messages in the node inbox
@@ -45,10 +46,12 @@ class Node():
             return False
         #if self.inbox:
         for msg in self.inbox:
+            #print('msg from: ({0},{1})'.format(msg.node_id[0], msg.node_id[1]))
             #immediately broadcasts message to neighbors
             self.broadcast_message(msg)
             #if message has causality...
             if self.is_causal(msg):
+                print('({0},{1}) RECEIVES from ({2},{3}): CAUSAL'.format(self.node_id[0], self.node_id[1],msg.node_id[0], msg.node_id[1]))
                 #update own vector clock with the message vector clock
                 self.update_vector_clock(msg)
                 still_causal = True
@@ -62,6 +65,7 @@ class Node():
                             self.saved_msg.remove(s_msg)
                             still_causal = True
             else:
+                print('({0},{1}) RECEIVES from ({2},{3}): NOT CAUSAL'.format(self.node_id[0], self.node_id[1],msg.node_id[0], msg.node_id[1]))
                 #if the message is not causal, save it for later processing
                 if msg not in self.saved_msg:
                     self.saved_msg.append(msg)

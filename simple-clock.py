@@ -42,10 +42,12 @@ def work():
     nodes_have_msgs = True
     while nodes_have_msgs:
         nodes_have_msgs = False
+        input("::::::::::::::::::::::::::::::::: Press enter for next iteration.")
         for x in node_list:
             for y in x:
+                
                 nodes_have_msgs = nodes_have_msgs or y.node_work()
-                #input("Press enter for next iteration.")
+                #print('({0},{1}) sending '.format(y.node_id[0], y.node_id[1]))
     for x in node_list:
         for y in x:
             y.print_vector_clock_matrix()
