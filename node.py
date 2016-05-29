@@ -1,5 +1,6 @@
 import networkx as nx
 from message import Message
+import copy
 
 class Node():
 
@@ -18,7 +19,7 @@ class Node():
     #or if it's not already there, ignores it otherwise
     def deliver_msg(self, msg):
         if msg.is_newer(self.vector_clock):
-            if msg not in self.inbox:
+            if msg not in self.inbox and msg not in self.saved_msg:
                 self.inbox.append(msg)
 
     #initializes vector clock with 0 value for every process
@@ -29,7 +30,7 @@ class Node():
     #creates local node event and broadcasts it
     def broadcast_own_event(self):
         self.vector_clock[self.node_id[0]][self.node_id[1]] += 1
-        new_msg = Message(self.node_id, "msg", self.vector_clock)
+        new_msg = Message(self.node_id, "msg", copy.deepcopy(self.vector_clock))
         self.broadcast_message(new_msg)
 
     #puts given message in the neighbor nodes inbox
@@ -42,7 +43,7 @@ class Node():
         #if there's not messages to process, return false
         if not self.inbox:
             return False
-        #if there is messages to process, for each message...
+        #if self.inbox:
         for msg in self.inbox:
             #immediately broadcasts message to neighbors
             self.broadcast_message(msg)
@@ -62,7 +63,8 @@ class Node():
                             still_causal = True
             else:
                 #if the message is not causal, save it for later processing
-                self.saved_msg.append(msg)
+                if msg not in self.saved_msg:
+                    self.saved_msg.append(msg)
             #removes message after being processed (not necessary to repeat
             #broadcasting because it's a simulation)
             self.inbox.remove(msg)
@@ -70,6 +72,9 @@ class Node():
 
     #checks if message is causal
     def is_causal(self, msg):
+        if self.vector_clock[msg.node_id[0]][msg.node_id[1]] + 1 != \
+        msg.vector_clock[msg.node_id[0]][msg.node_id[1]]:
+            return False
         for x in range(self.side_size):
             for y in range(self.side_size):
                 if x != msg.node_id[0] and y != msg.node_id[1]:
