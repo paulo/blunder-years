@@ -1,4 +1,3 @@
 # Simple Vectors Clocks
 
-Python implementation of Vector Clocks for a Distributed Systems MSc class @ University of Minho.
-Version without threading.
+Python implementation of Reliable Causal Broadcast simulation using Vector Clocks for a Distributed Systems MSc class @ University of Minho.
