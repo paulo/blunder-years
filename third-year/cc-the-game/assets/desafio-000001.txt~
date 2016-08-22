@@ -1,0 +1,13 @@
+music_DIR=musica
+images_DIR=imagens
+questions_#=10
+0000001.mp3,000001.jpg,"Quem canta esta canção?","Robert Smith","Bono Vox","Ninguém, é uma música instrumental",3
+0000002.mp3,000002.jpg,"Relacione esta canção com uma das seguintes palavras:","Microsoft","Adobe","Linux",2
+0000003.mp3,000003.jpg,"Qual destas palavras não aparece no poema deste fado?","Lamento","Tormento","Momento",3
+0000004.mp3,000004.jpg,"Qual destes países não tem relação com o cantor desta canção?","Portugal","Irão","Inglaterra",3
+0000005.mp3,000005.jpg,"Que outra arte é referida no poema desta canção?","Pintura","Escultura","Literatura",1
+0000006.mp3,000006.jpg,"Em que década do século passado foi publicada esta canção?","Década de 60","Década de 70","Década de 80",2
+0000007.mp3,000007.jpg,"Quem escreveu a letra desta canção?","Carlos Fausto Dias","Guzzetti Bordalo","Correia de Oliveira",1
+0000008.mp3,000008.jpg,"De que ópera é esta canção?","Otelo","La bohéme","The fairy queen",3
+0000009.mp3,000009.jpg,"Como se chama este trecho musical?","Glass","Metamorphosis","Mad Rush",3
+0000010.mp3,000010.jpg,"Este concerto foi gravado em que cidade?","Colónia","Viena","Paris",1

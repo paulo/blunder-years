@@ -1,0 +1,252 @@
+
+%%%%%%%%%%%%%%%%%%%%%%% file typeinst.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This is the LaTeX source for the instructions to authors using
+% the LaTeX document class 'llncs.cls' for contributions to
+% the Lecture Notes in Computer Sciences series.
+% http://www.springer.com/lncs       Springer Heidelberg 2006/05/04
+%
+% It may be used as a template for your own input - copy it
+% to a new file with a new name and use it as the basis
+% for your article.
+%
+% NB: the document class 'llncs' has its own and detailed documentation, see
+% ftp://ftp.springer.de/data/pubftp/pub/tex/latex/llncs/latex2e/llncsdoc.pdf
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+
+\usepackage{url}
+\urldef{\mailsa}\path|{alfred.hofmann, ursula.barth, ingrid.haas, frank.holzwarth,|
+\urldef{\mailsb}\path|anna.kramer, leonie.kunz, christine.reiss, nicole.sator,|
+\urldef{\mailsc}\path|erika.siebert-cole, peter.strasser, lncs}@springer.com|    
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+\begin{document}
+
+\mainmatter  % start of an individual contribution
+
+% first the title is needed
+\title{Desenho e implementação de um jogo distribuído na Internet}
+
+% a short form should be given in case it is too long for the running head
+\titlerunning{Desenho e implementação de um jogo distribuído na Internet}
+
+% the name(s) of the author(s) follow(s) next
+%
+% NB: Chinese authors should write their first names(s) in front of
+% their surnames. This ensures that the names appear correctly in
+% the running heads and the author index.
+%
+\author{Oliveira Rui, Araújo Paulo, Costa Orlando}
+%
+\authorrunning{Oliveira Rui, Araújo Paulo, Costa Orlando}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{Universidade do Minho, Gualtar, Portugal\\
+\url{http://www.uminho.pt}}
+
+%
+% NB: a more complex sample for affiliations and the mapping to the
+% corresponding authors can be found in the file "llncs.dem"
+% (search for the string "\mainmatter" where a contribution starts).
+% "llncs.dem" accompanies the document class "llncs.cls".
+%
+
+\toctitle{Lecture Notes in Computer Science}
+\tocauthor{Authors' Instructions}
+\maketitle
+
+
+\begin{abstract}
+O propósito deste trabalho consiste na implementação de um jogo em tempo real que se baseia num serviço de distribuição de conteúdos com posterior interação por parte dos utilizadores e que otimize a utilização da largura de banda. A aplicação encontra-se implementada utilizando a linguagem de programação Java, e aborda paradigmas de distribuição de dados tais como \emph{broadcast} e \emph{unicast}. O jogo consiste num quiz (do estilo quem quer ser milionário), e permite aos utilizadores registarem-se e participar em desafios, assim como criar desafios outros para competir com demais utilizadores. A arquitetura encontra-se dividida em aplicações cliente e servidor, sendo que estas comunicam não apenas entre si (cliente-servidor), mas consigo próprias (servidor-servidor), permitindo trocar informação sobre a massa global de utilizadores que participam no jogo. A troca de informação é efetuada através de protocolos TCP e UDP, estando definido um PDU personalizado com o objetivo de diminuir a utilização de largura de banda. Este documento apresenta o trabalho desenvolvido.
+\keywords{PDU, TCP, UDP, Servidores, Clientes, Comunicação por Computadores}
+\end{abstract}
+
+
+\section{Introdução}
+
+Os servidores possuem a capacidade de processar diversos clientes simultaneamente (através de \emph{threads}), e possuem toda a lógica do jogo, nomeadamente as questões a serem realizadas e o controlo e anúncio dos resultados. Estes possuem também a capacidade de comunicar não apenas com os clientes mas entre si, de forma a homogeneizar o estado da aplicação. Na aplicação cliente reside a interface gráfica que interage com o utilizador, e onde são apresentadas as questões e imagens relacionadas com o jogo, assim como a música. O sistema distribuído implementa comunicações TCP entre servidores e comunicações UDP entre clientes e servidores, e essas comunicações são realizadas através de PDU's criados com o intuito de poupar largura de banda e transferir dados entre unidades computacionais. As diferenças entre os PDU's implementados e os descritos no enunciado encontram-se descritas neste documento, assim como toda a estrutura dos diferentes componentes que constituem a aplicação geral.
+
+\section{Diferenças da especificação}
+
+O protocolo implementado segue o proposto no enunciado com duas diferenças.
+Na lista de argumentos de uma PDU tinha o tamanho do parâmetro. Estava previsto que este tamanho apenas tivesse 1 bytes, mas isto não era suficiente por exemplo no caso do bloco de musica. Portanto modificou-se para 2 bytes.
+Adicionou-se também um tipo de PDU de controlo para os servidores fecharem os sockets em segurança. 
+
+\section{Implementação}
+
+\subsection{Protocolo}
+
+
+\begin{figure}
+\centering
+\includegraphics[height=6.2cm]{UDP.png}
+\caption{Diagrama UMP da interpretação de PDU}
+\label{fig:diagram-pdu}
+\end{figure}
+
+Para a abstração dos Bits, foi criada a classe PDU, que é capaz de criar as PDU’s e depois transforma-as em Bytes e também inicializar-se através de array de Bytes.
+Internamente existem os parâmetros do cabeçalho da PDU [\#(1)] (versão, segurança, label, tipo da PDU, número de campos e tamanho tamanho total dos campos em Bytes), toda esta informação pode ser consultada com os seus respetivos métodos.
+Para guardar os campos da PDU, utiliza-se um Map [\#(2)] onde a chave é o tipo do campo e o valor é uma lista de valores. Trata-se de uma lista devido a que a mesma PDU pode ter vários campos com o mesmo tipo como p.e. uma questão que tem varias respostas.
+
+A Enumeração PDUType [\#(3)] é uma enumeração hierárquica: existem os valores de origem que representam o tipo da PDU como por exemplo: Register, Login, Reply. Existem também os valores que representam os campos, como por exemplo: Register\_Name ou Register\_Nick.
+A diferença entre estes dois está no construtor utilizado [\#(4)]. No caso do construtor de um campo podemos reparar que recebe um tipo de dados (PDUDataType).
+
+A enumeração PDUDataType [\#(6)] tem todos os tipos de dados que o PDU suporta, e aqui ficam implementadas as funções de leitura e conversão para arrays de bytes.
+Desta forma é fácil a adição de novos tipos de dados.
+
+O diagrama \ref{fig:diagram-pdu} UML explica o funcionamento da interpretação do campos do PDU (função initParamsFromBytes).
+
+\begin{figure}
+\centering
+\includegraphics[height=6.2cm]{PDU_interpretation.jpg}
+\caption{Diagrama UML da interpretação de PDU}
+\label{fig:diagram-pdu}
+\end{figure}
+
+\subsection{Cliente}
+
+A aplicação cliente encontra-se implementada com o auxílio da classe UDPClient. Este classe contém todos os métodos que formam os pacotes de dados a serem transmitidos através de protocolos UDP, sendo que a lógica desta comunicação encontra-se definida na classe UDPCommunication. A interface gráfica possui assim uma instância de UDPClient, com a qual efetua todos os desafios e troca de informação com os servidores. Esta classe constrói-se através dos parâmetros referente ao IP e porta local, assim como o IP e porta do servidor com o qual comunica nesse momento. Esta instância é criada assim que o utilizador inicia a bash através da qual introduz os comandos de comunicação com o servidor. Quando o servidor se encontra conectado ao cliente e este efetua login, o servidor é capaz de manter o estado do cliente dado o seu IP. 
+
+\subsubsection{Interface gráfica}
+
+A interface com a qual a aplicação interage com o utilizador encontra-se desenvolvida em Java Swing, e apresenta de forma simples o conteúdo recebido na aplicação cliente referente às questões de um dado desafio. Assim, quando o utilizador aceita entrar num desafio, é iniciada a interface gráfica, bloqueando o utilizador de participar em mais desafios simultaneamente. Quando é alcançada a hora marcada para efetuar o desafio, a 1ª questão é apresentada, sendo possível escutar a música e observar a imagem associadas a esta. O utilizador responde à pergunta apresentada clicando nos botões disponíveis para responder, sendo que esta ação pára a música atualmente a tocar, e bloqueia os restantes botões de forma a não permitir comportamentos indesejados na aplicação. Após a resposta à pergunta, o datagrama de resposta é enviado através da aplicação cliente, e o resultado é apresentado ao utilizador. Este processo repete-se até ao fim do desafio, altura na qual é apresentado ao utilizador a sua pontuação final. 
+\ref{fig:interface}
+
+\begin{figure}
+\centering
+\includegraphics[height=6.2cm]{interaface.png}
+\caption{Imagem da interface gráfica do cliente}
+\label{fig:interface}
+\end{figure}
+
+\subsection{Servidor}
+
+O servidor é responsável por guardar a informação sobre o sistema tal como os desafios e utilizadores existentes. Por outro lado o servidor também é responsável por partilhar o seu conhecimento com os outros servidores.
+No arranque o servidor cria 2 threads, uma deles para atender clientes, e outra para atender outros servidores.
+
+A arquitetura geral de um servidor pode ser vista no diagrama \ref{fig:diagram-arq-geral}.
+Também em anexado a este relatório existe um diagrama com a arquitetura de 3 servidores ligados entre si.
+
+\begin{figure}
+\centering
+\includegraphics[height=6.2cm]{arq-geral.png}
+\caption{Diagrama UML da arquitetura do servidor}
+\label{fig:diagram-arq-geral}
+\end{figure}
+
+
+\subsubsection{Dados Guardados}
+
+Toda a informação relativa ao atual estado de um servidor são guardados na classe ServerState:
+\begin{itemize}
+  \item Utilizadores, identificados pelo seu nick.
+  \item Sessões, guardam os utilizadores identificados pelo seu ip actual.
+  \item Utilizadores globais, para guardar o ranking global do sistema.
+  \item Desafios, identificados pelo seu nome.
+  \item Questões para criar novos desafios, identificados pelo seu ip.
+  \item Servidores vizinhos, com os quais comunicar.
+\end{itemize}
+
+Cada desafio tem o ranking atual dos utilizadores inscritos nesse desafio, os utilizadores e servidores subscritos e as questões selecionadas.
+
+\subsubsection{Atender Clientes}
+
+Um pedido vindo de um cliente é reencaminhado para a class UDPClientHandler. Mediante o tipo de desafio, são realizadas as regras de negócio correspondentes e é enviada uma resposta para o cliente.
+
+Existem alguns pedidos do cliente que podem obrigar o servidor a informar os restantes servidores, como p.e., makeChallenge, que inicia um desafio e irá ser explicado de seguida.
+
+\subsubsection{Iniciar desafio}
+
+Quando um makeChallenge e gerado, o sistema cria uma nova thread que terá um temporizador para correr às horas pretendidas. Quando esta thread inicia o seu processo confirma que existem pessoas suficientes no desafio, caso não existam cancela o desafio. Caso esteja tudo bem continua e envia a primeira pergunta.
+
+As perguntas ao longo do desafio são enviadas para todos os clientes subscritos e para todos os servidores subscritos, depois cada um destes servidores reencaminhará para os clientes finais.
+
+\subsubsection{Atender Servidores}
+
+O processo de atender servidores é semelhante ao de atender clientes. Os pedidos são interpretados na class ServerHandler, que mediante os parâmetros existentes irá executar a lógica necessária.
+A lógica está implementado em 3 classes distintas: TCPLocal, TCPHub e TCPClient. Cada uma destas implementa a interface ServerToServerFacade que especifica todos os métodos existentes no negócio da aplicação (diagrama \ref{fig:diagram-facades}).
+
+Cada uma das implementações implementa o negocio de forma diferente:
+\begin{itemize}
+\item TCPLocal aplica as regras de negocio na propria maquina.
+\item TCPClient envia um pedido a um servidor para aplicar aquele método.
+\item TCPHub aplica as regras de negocio a todos os servidores chamando o TCPClient de cada servidor.
+\end{itemize}
+
+O socket que permite a comunicação entre servidores é terminado com um timeout parameterizavel.
+
+\begin{figure}
+\centering
+\includegraphics[height=6.2cm]{facades.png}
+\caption{Diagrama UML da arquitetura do servidor}
+\label{fig:diagram-facades}
+\end{figure}
+
+
+\subsubsection{Informar Servidores Vizinhos}
+
+Para comunicar com outros servidores utiliza-se TCPHub ou TCPClient mediante as necessidades.
+Existe um TCPClient para cada servidor vizinho, e quando invocamos um método desta classe começa por abrir um socket caso seja necessário, e envia uma PDU do tipo INFO com a informação pretendida.
+
+\section{Testes Realizados}
+
+De forma a validar o trabalho realizado, foram efetuados testes sobre a plataforma. Os testes foram realizados com a utilização de um router, sendo que foi necessária a sua configuração de modo a que, a partir do MAC Address dos pc’s conectados, fossem atribuídos IP’s escolhidos por nós. Através da criação de várias instâncias de clientes e servidores nos computadores conectados, é possível criar uma simulação de um ambiente de comunicação real no qual existem servidores dedicados que recebem os pedidos de ligação dos respetivos clientes.
+
+\subsection{Registo de um Utilizador}
+
+\begin{itemize}
+
+\item IP Servidor: 127.0.0.2
+\item IP Cliente: 127.0.0.75
+
+\end{itemize}
+Cliente: REGISTER joao rodrigues 123
+
+I'm[/127.0.0.75] sending to [/127.0.0.2] PDU: PDU,parameters:\{REGISTER\_PASS=[[B@1d56ce6a], REGISTER\_NAME=[joao], REGISTER\_NICK=[rodrigues]\}
+
+I'm[/127.0.0.2] sending to [/127.0.0.75] PDU: PDU,parameters:\{REPLY\_OK=[0]\}
+
+Servidor: OK
+
+\subsection{Participação em Desafio}
+
+\begin{itemize}
+
+\item IP Servidor: 127.0.0.1
+\item IP Cliente1: 127.0.0.66
+\item IP Cliente2: 127.0.0.69
+
+\end{itemize}
+
+Cliente1: MAKE\_CHALLENGE Circo 2015-05-02 15:00
+
+I'm[/127.0.0.66] sending to [/127.0.0.1] PDU: PDU,parameters:\{MAKE\_CHALLENGE\_CHALLENGE=[Circo], MAKE\_CHALLENGE\_HOUR=[15:00], MAKE\_CHALLENGE\_DATE=[2015-05-02]\}
+
+I'm[/127.0.0.1] sending to [/127.0.0.66] PDU: PDU,parameters:\{REPLY\_CHALLE=[Circo], REPLY\_DATE=[2015-05-02], REPLY\_HOUR=[15:00]\}
+
+Servidor:  Desafio: Circo Data: 2015-05-02 Hora: 15:00
+
+Cliente2: ACCEPT\_CHALLENGE Circo
+
+I'm[/127.0.0.69] sending to [/127.0.0.1] PDU: PDU,parameters:\{ACCEPT\_CHALLENGE\_CHALLENGE=[Circo]\}
+
+I'm[/127.0.0.1] sending to [/127.0.0.69] PDU: PDU,parameters:\{REPLY\_OK=[0]\}
+
+Servidor: OK
+
+
+\end{document}
