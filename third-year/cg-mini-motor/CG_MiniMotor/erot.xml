@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+    <cena>        
+        <!--<luzes>
+            <luz tipo="POINT" posX="-3.0" posY="4.0" posZ="-2.0"/>
+        </luzes>-->
+        
+        <!-- <grupo>
+            <escala X='1' Z='1' Y='1'/>
+            <modelo ficheiro='a.3d' specR='1' specG='1' specB='1' ambR='0.2' ambG='0.2' ambB='0.2' textura='test.jpg'/>
+        </grupo> -->
+        <grupo>
+            <!--<modelo ficheiro='esf.3d' specR='1' specG='1' specB='1' ambR='0.2' ambG='0.2' ambB='0.2' textura='earth.jpg'/>-->
+            <modelo ficheiro='cubo.3d' specR='1' specG='1' specB='1' ambR='0.2' ambG='0.2' ambB='0.2' textura='earth2.jpg'/><!-- MARTE -->
+
+        </grupo>
+    </cena>
+</xml>

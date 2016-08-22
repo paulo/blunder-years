@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+    <cena>
+    	<grupo>
+    		<grupo>
+                <escala X='10,66' Y='10,66' Z='10,66'/>
+    			<modelo ficheiro='anel.3d' textura="terra.jpg"/><!-- SOL -->
+    		</grupo>
+    		<grupo>
+    			<translacao X= '12,764'/>
+    			<escala X='4,10' Y='4,10' Z='4,10'/>
+                <modelo ficheiro='anel.3d' diffR='0.8' diffG='0.8' diffB='0.15'/><!-- MERCURIO -->
+    		</grupo>
+    	</grupo>
+    </cena>
+</xml>

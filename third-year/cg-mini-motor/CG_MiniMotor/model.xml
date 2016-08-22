@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+<cena>
+	<luzes>
+		<luz tipo="DIRECTIONAL" posX="1" posY="1" posZ="1" />
+	</luzes>
+ 	<grupo>
+        <modelo ficheiro="a.3d" diffR="0.8" diffG="0.8" diffB="0.15" />
+    </grupo>
+</cena>
+</xml>

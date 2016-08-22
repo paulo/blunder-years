@@ -1,0 +1,57 @@
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+    <cena>
+        <grupo>
+            <grupo>
+                <escala X='13.92' Y='13.92' Z='13.92'/>
+                <modelo ficheiro='planeta.3d'/><!-- SOL -->
+            </grupo>
+            <grupo>
+                <translacao X= '20'/>
+                <escala X='0.48' Y='0.48' Z='0.48'/>
+                <modelo ficheiro='planeta.3d'/><!-- MERCURIO -->
+            </grupo>
+            <grupo>
+                <translacao X= '30'/>
+                <escala X='1.21' Y='1.21' Z='1.21'/>
+                <modelo ficheiro='planeta.3d'/><!-- VENUS -->
+            </grupo>
+            <grupo>
+		<rotacao tempo='5' eixoY='1'/>
+                <translacao X= '40'/>
+                <escala X='1.27' Y='1.27' Z='1.27'/>
+                <modelo ficheiro='planeta.3d'/><!-- TERRA -->
+            </grupo>
+            <grupo>
+                <translacao X= '50'/>
+                <escala X='0.67' Y='0.67' Z='0.67'/>
+                <modelo ficheiro='planeta.3d'/><!-- MARTE -->
+            </grupo>
+            <grupo>
+                <translacao X= '80'/>
+                <escala X='14.29' Y='14.29' Z='14.29'/>
+                <modelo ficheiro='planeta.3d'/><!-- JUPITER -->
+            </grupo>
+            <grupo>
+                <translacao X= '170'/>
+                <escala X='11.64' Y='11.64' Z='11.64'/>
+                <modelo ficheiro='planeta.3d'/><!-- SATURNO -->
+                <grupo>
+                    <escala X='0.7' Y='0.1' Z='0.7' />
+                    <modelo ficheiro='anel.3d'/><!-- ANEL DE SATURNO -->
+                </grupo>  
+            </grupo>
+            <grupo>
+                <translacao X= '240'/>
+                <escala X='4.69' Y='4.69' Z='4.69'/>
+                <modelo ficheiro='planeta.3d'/><!-- URANO -->
+            </grupo>
+            <grupo>
+                <translacao X= '280'/>
+                <escala X='4.54' Y='4.54' Z='4.54'/>
+                <modelo ficheiro='planeta.3d'/><!-- NEPTUNO -->
+            </grupo>
+        </grupo>
+    </cena>
+</xml>

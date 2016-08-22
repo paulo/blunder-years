@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+	<cena>
+		<grupo>
+			<translacao Y='10'/>
+			<escala Y='0.5'/>
+			<modelo ficheiro='exemplos/cone.3d' />
+		</grupo>
+
+		<grupo>
+			<translacao X='-1'/>
+			<rotacao angulo='90' eixoX='1' eixoY='0' eixoZ='1' />
+			<modelo ficheiro='exemplos/cubo.3d' />
+		</grupo>
+	</cena>
+</xml>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+    <cena>
+    	<camera X='-10' Y='-10' Z='-10'/>
+        <modelo ficheiro='exemplos/a.3d'/>
+    </cena>
+</xml>
