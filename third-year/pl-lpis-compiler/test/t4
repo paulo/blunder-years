@@ -1,0 +1,11 @@
+// asd
+int i;
+int j;
+
+# int fun(int a, int b) {
+    return a + b;
+}
+
+i = 3;
+j = 4;
+i = fun(i + 2,j);

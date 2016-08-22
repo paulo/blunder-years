@@ -1,0 +1,7 @@
+play
+y.tab.h
+y.tab.c
+lex.yy.c
+*.o
+/dist/
+/build/

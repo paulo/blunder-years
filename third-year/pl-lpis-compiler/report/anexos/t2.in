@@ -1,0 +1,7 @@
+int i;
+int read;
+
+for(i=0; i<10; i++){
+	scani(read);
+	printi(read);
+}

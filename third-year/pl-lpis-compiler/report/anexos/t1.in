@@ -1,0 +1,7 @@
+int i;
+
+i=0;
+do {
+	i++;
+	printi(i);
+} while(i<100);

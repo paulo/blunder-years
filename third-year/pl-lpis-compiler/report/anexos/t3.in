@@ -1,0 +1,16 @@
+int i;
+int array[100];
+
+i=0;
+while(i<100) {
+	array[i]=i;
+}
+
+for(i=0; i<100; i++){
+	if(array[i]<50){
+		printi(i);
+	}
+	else {
+		array[i]=0;
+	}
+}

@@ -1,0 +1,16 @@
+// asd
+int i;
+int j[10];
+
+# int fun(int a) {
+    int ret;
+    if (a > 0) {
+        ret = fun(a-1);
+    }
+    return j[ret];
+}
+
+i = 3;
+if (i == 3){
+    i = fun(i + 2);    
+}

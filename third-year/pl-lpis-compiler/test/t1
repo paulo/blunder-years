@@ -1,0 +1,6 @@
+// imprime os numeros pares ate 'limite' e imprime calcula o sumatorio em sum
+int i;
+
+for (i = 0; i < 5; i++) {
+	printi(i);
+}
