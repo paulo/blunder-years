@@ -1,0 +1,122 @@
+\documentclass[a4paper,10pt]{report}
+
+\usepackage{graphicx}
+\usepackage{color}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage[portuguese]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{geometry}
+\geometry{a4paper}
+\usepackage[parfill]{parskip}
+
+\usepackage{changepage}
+
+\usepackage{amsmath}
+
+\usepackage{fancyhdr}
+
+\usepackage{nopageno}
+
+\graphicspath{{./imagens/}}
+
+\usepackage{url}
+
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\usepackage{listings}
+\usepackage{float}
+
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+
+
+\lstset{
+    extendedchars=\true,
+    inputencoding=utf8
+}
+
+\renewcommand{\lstlistingname}{Código}
+\usepackage{color}
+\definecolor{grey}{rgb}{0.9,0.9,0.9}
+\definecolor{greyD}{rgb}{0.5,0.5,0.5}
+
+\lstnewenvironment{code}[1][]%
+{
+   \noindent
+   \lstset{
+  float=htpb,
+  backgroundcolor=\color{grey},
+  basicstyle=\scriptsize,
+  numbers=left,
+  numbersep=5pt,
+  numberstyle=\tiny\color{greyD},
+  breaklines=true,
+  frame=single,
+  #1}
+}
+{}
+
+\begin{document}
+
+\include{capa}
+
+\begin{abstract}
+Este relatório descreve a resolução de um conjunto de exercícios propostos, que consistem no desenvolvimento de programas na linguagem C com o auxílio de geradores de filtros de texto, como o Flex. Para cada problema é realizada uma breve análise sobre o trabalho efetuado, as decisões que lideraram o seu desenvolvimento e as estruturas implementadas, assim como uma explicação do seu funcionamento. 
+
+Os problemas resolvidos consistem no desenvolvimento de filtros de texto que:
+\begin{itemize}
+\item processa um ficheiro XML com descrições de fotografias e gera um álbum HTML.
+\item processa de um ficheiro XML anotado com tags Enamex e gera páginas HTML apresentando as "pessoas", "países", "cidades" e organizações nele identificadas. 
+\item processa vários ficheiros de texto, compostos por letras de canções, e gera documentos em LATEX para cada uma delas.
+\end{itemize}
+Para cada problema é apresentado o código em linguagem C e as expressões regulares desenvolvidas, sendo estes suportados por exemplos e devidos resultados.
+\end{abstract}
+%----------------------------------------------------------------------
+%\newpage
+%\phantom{placeholder} % doesn't appear on page
+%\thispagestyle{empty} % if want no header/footer
+%----------------------------------------------------------------------
+\tableofcontents
+%\phantom{placeholder} % doesn't appear on page
+\thispagestyle{empty} % if want no header/footer
+%----------------------------------------------------------------------
+%\newpage
+%\phantom{placeholder} % doesn't appear on page
+%\thispagestyle{empty} % if want no header/footer
+%----------------------------------------------------------------------
+%\pagestyle{fancy}
+%\setlength{\headheight}{15.2pt}
+%\fancyhf{} % apagar as configurações actuais
+%\fancyfoot[LE,RO]{\thepage}
+%\fancyhead[LE,RO]{PL - Trabalho Pratico 1 --- Araujo P., Belo O., Oliveira R.}
+%\page{setcounter}{0}
+%----------------------------------------------------------------------
+
+\chapter{Introdução}
+\label{cap:intro}
+O presente projeto enquandra-se na unidade curricular de Processamento de Linguagnes do curso de  Licenciatura em Engenharia Informática da Universidade do Minho.
+O projeto pretende aumentar as capacidades com as expressões regulares, desenvolvendo processadores de linguagens regulares utilizando o gerador de filtros de texto Flex.
+Para isso foram selecionados 3 exercícios dentro de um grupo de 8 exercícios, são eles: \emph{2.1 Museu da Pessoa — tratamento de fotografias},
+\emph{2.2 Processamento de Entidades Nomeadas (Enamex)} e \emph{2.5 Processamento de ficheiros com Canções}.
+
+\include{reportpt1-1}
+\include{reportpt1-2}
+\include{reportpt1-5}
+
+\chapter{Conclusão}
+\label{cap:intro}
+Terminado o desenvolvimento do trabalho, é importante referir que o mesmo nos permitiu aprofundar o conhecimento acerca do Gerador Léxico Flex assim como da análise léxica no geral, obrigando-nos também a utilizar ferramentas tais como HTML e Latex.\\
+Relativamente ao problema do "Museu da Pessoa", a dificuldade recaiu na definição da estrutura de suporte de dados, dado que devido à falta de claridade do enunciado foi necessário re-implementar a estrutura de forma a que esta admitisse a funcionalidade de ter um índice geral em HTML.\\
+No problema de "Processamento de Entidades Nomeadas" foi necessário chegar a um consenso acerca das tags que deveriam ser validadas e o relacionamento possível que estas teriam entre si. Após essa decisão, o desenvolvimento da estrutura que suporta esta informação tornou-se relativamente simples.\\
+O problema "Processamento de Ficheiros com Canções" foi resolvida através da implementação de uma estrutura capaz de evitar que a ordem dos dados no ficheiro não seja significativa (e então armazena em memória a informação). A presença de certos elementos em datasets mais diversos (tais como header's não esperados e anotações em músicas) deram origem a problemas, sendo que a solução consistiu em ignorar essa informação. \\
+Cada elemento do grupo realizou um exercício do enunciado proposto, apoiando-se mutuamente na existência de dificuldades. Apesar das dificuldades iniciais, encontramos-nos satisfeitos com o resultado final e estamos confiantes para o próximo trabalho.
+
+\include{anexos}
+\end{document}
+
+
+% respectivo enunciado, da descricao do problema, das decisoes que lideraram o desenho da solucao e sua implementacao (incluir a especificacao Flex , deverao conter exemplos de utilizacao (textos fontes diversos e respectivo resultado produzido)

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE fotos SYSTEM "/Users/sony/mp/fotos.dtd">
+<fotos> 
+  <foto ficheiro="069-D-01.jpg"> 
+	 <quando data="1969-05-12"> no quartel militar do Porto</quando> 
+	 <quem> Fausto Ferreira Gomes </quem> 
+	 <facto> Uma certid&#227;o militar, foi o documento que foi exigido ao
+		senhor Fausto Ferreira Gomes para poder tirar a carta de
+		condu&#231;&#227;o</facto> 
+  </foto> 
+  <foto ficheiro="069-F-01.jpg"> 
+	 <onde>Taberna do Fausto, na Afurada</onde> 
+	 <quando data="2000-09-12"></quando> 
+	 <quem>Fausto Ferreira Gomes</quem> 
+  </foto> 
+  <foto ficheiro="069-F-02.jpg"> 
+	 <onde>Taberna do Fausto, na Afurada</onde> 
+	 <quando data="2000-09-12"></quando> 
+	 <quem>Fausto Ferreira Gomes e um cliente</quem> 
+	 <facto>O interior da Taberna do Fausto situada na rua Alves Correia
+		n&#186;145, Afurada.</facto> 
+  </foto> 
+  <foto ficheiro="069-F-03.jpg"> 
+	 <onde>Monte de Santa Luzia, Viana do Castelo</onde> 
+	 <quando>1956</quando> 
+	 <quem>Fausto Ferreira Gomes e a esposa, Inf&#226;ncia Silva
+		Magalh&#227;es</quem> 
+	 <facto>Passeio do casal ao Monte de Santa Luzia em Viana do
+		Castelo.</facto> 
+  </foto> 
+  <foto ficheiro="069-F-04.jpg"> 
+	 <onde>Taberna do Fausto, Afurada</onde> 
+	 <facto>Tabuleta, "Os alegres amigos do Fausto", foi oferecida ao senhor
+		Fausto pelos seus amigos e clientes.</facto> 
+  </foto><foto ficheiro="069-F-05.jpg">
+  <onde>Taberna do Fausto, Afurada</onde>
+  <quem> Fausto Ferreira Gomes</quem>
+  <quando data="2000.09.22"></quando>
+  <legenda> Fausto Ferreira Gomes a preparar um "pirolito", uma mistura de vinho branco com 7up.</legenda>
+  </foto>
+  <foto ficheiro="069-F-06.jpg">
+  <quem>Fausto Ferreira Gomes</quem>
+  <quando data="2000.09.22"></quando>
+  <onde> Taberna Fausto, Afurada</onde>
+  </foto>
+</fotos>
