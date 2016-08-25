@@ -1,0 +1,234 @@
+evolucaoPos fabricante 'Alfa Romeo' '147'
+evolucaoPos fabricante 'Alfa Romeo' 'Centauri'
+evolucaoPos fabricante 'Audi' 'A5'
+evolucaoPos fabricante 'BMW' '525i'
+evolucaoPos fabricante 'BMW' 'Série 5'
+evolucaoPos fabricante 'Citroen' 'C5'
+evolucaoPos fabricante 'Fiat' 'Punto'
+evolucaoPos fabricante 'Fiat' 'Ducato'
+evolucaoPos fabricante 'Ford' 'Fiesta'
+evolucaoPos fabricante 'Lexus' 'IS 220d'
+evolucaoPos fabricante 'Mercedes' 'Vito'
+evolucaoPos fabricante 'Mitsubishi' 'Lancer'
+evolucaoPos fabricante 'Nissan' 'Patrol'
+evolucaoPos fabricante 'Nissan' 'Evolution'
+evolucaoPos fabricante 'Peugeot' '406'
+evolucaoPos fabricante 'Renault' 'Megane'
+
+evolucaoPos marca  '77-JL-14' 'Alfa Romeo'
+evolucaoPos modelo  '77-JL-14' '147'
+evolucaoPos proprietario  '77-JL-14' 'Nuno Assis'
+
+evolucaoPos marca  '43-JL-27' 'Alfa Romeo'
+evolucaoPos modelo  '43-JL-27' 'Centauri'
+evolucaoPos proprietario  '43-JL-27' 'Pedro Emanuel'
+
+evolucaoPos marca  '40-NT-69' 'Audi'
+evolucaoPos modelo  '40-NT-69' 'A5'
+evolucaoPos proprietario  '40-NT-69' 'Ricardo Carvalho'
+
+evolucaoPos marca  '28-41-ZH' 'BMW'
+evolucaoPos modelo  '28-41-ZH' '525i'
+evolucaoPos proprietario  '28-41-ZH' 'Vitor Baía'
+
+evolucaoPos marca  '37-93-EF' 'BMW'
+evolucaoPos modelo  '37-93-EF' 'Série 5'
+evolucaoPos proprietario  '37-93-EF' 'Ricardo Rocha'
+
+evolucaoPos marca  '43-OF-31' 'Citroen'
+evolucaoPos modelo  '43-OF-31' 'C5'
+evolucaoPos proprietario  '43-OF-31' 'Fernando Gomes'
+
+evolucaoPos marca  '31-GV-17' 'Fiat'
+evolucaoPos modelo  '31-GV-17' 'Punto'
+evolucaoPos proprietario  '31-GV-17' 'Nuno Valente'
+
+evolucaoPos marca  '01-05-IC' 'Fiat'
+evolucaoPos modelo  '01-05-IC' 'Ducato'
+evolucaoPos proprietario  '01-05-IC' 'Paulo Ferreira'
+
+evolucaoPos marca  '67-HA-34' 'Ford'
+evolucaoPos modelo  '67-HA-34' 'Fiesta'
+evolucaoPos proprietario  '67-HA-34' 'João Pinto'
+
+evolucaoPos marca  '34-JV-17' 'Lexus'
+evolucaoPos modelo  '34-JV-17' 'IS 220d'
+evolucaoPos proprietario  '34-JV-17' 'Ricardo Quaresma'
+
+evolucaoPos marca  '21-45-XO' 'Mercedes'
+evolucaoPos modelo  '21-45-XO' 'Vito'
+evolucaoPos proprietario  '21-45-XO' 'Nuno Gomes'
+
+evolucaoPos marca  '92-AZ-94' 'Mitsubishi'
+evolucaoPos modelo  '92-AZ-94' 'Lancer'
+evolucaoPos proprietario  '92-AZ-94' 'Luís Figo'
+
+evolucaoPos marca  '79-18-JR' 'Nissan'
+evolucaoPos modelo  '79-18-JR' 'Patrol'
+evolucaoPos proprietario  '79-18-JR' 'Cristiano Ronaldo'
+
+evolucaoPos marca  '68-29-OQ' 'Peugeot'
+evolucaoPos modelo  '68-29-OQ' '406'
+evolucaoPos proprietario  '68-29-OQ' 'Cedric Soares'
+
+evolucaoPos marca  '31-57-JL' 'Renault'
+evolucaoPos modelo  '31-57-JL' 'Megane'
+evolucaoPos proprietario  '31-57-JL' 'João Moutinho'
+
+evolucaoInterdito marca  '10-PR-14' interdito
+evolucaoInterdito modelo  '10-PR-14' interdito
+evolucaoPos proprietario  '10-PR-14' 'Beyonce'
+
+evolucaoInterdito marca  '35-JJ-15' interdito
+evolucaoInterdito modelo  '35-JJ-15' interdito
+evolucaoPos proprietario  '35-JJ-15' 'Jorge Jesus'
+
+evolucaoPos marca  '00-LP-15' 'Fiat'
+evolucaoInterdito modelo  '00-LP-15' interdito
+evolucaoPos proprietario  '00-LP-15' 'Loquetepegui'
+
+evolucaoPos marca  '88-PA-23' 'BMW'
+evolucaoInterdito modelo  '88-PA-23' interdito
+evolucaoPos proprietario  '88-PA-23' 'Paulo Araujo'
+
+evolucaoPos marca  '22-RO-06' 'Alfa Romeo'
+evolucaoPos modelo  '22-RO-06' '147'
+evolucaoInterdito proprietario  '22-RO-06' interdito
+
+evolucaoPos marca  '99-LO-74' 'Mitsubishi'
+evolucaoPos modelo  '99-LO-74' 'Lancer'
+evolucaoInterdito proprietario  '99-LO-74' interdito
+
+evolucaoPos marca  '34-PP-23' 'BMW'
+evolucaoImpreciso  modelo  '34-PP-23' 'Série 5'
+evolucaoPos proprietario  '34-PP-23' 'Ricardo Cunha'
+
+evolucaoPos marca  '22-JL-71' 'Mitsubishi'
+evolucaoPos modelo  '22-JL-71' 'Lancer'
+evolucaoImpreciso  proprietario  '22-JL-71' 'Paulo Cunha'
+
+evolucaoImpreciso  marca '49-VP-94' 'Nissan'
+evolucaoImpreciso  modelo  '49-VP-94' 'Patrol'
+evolucaoImpreciso modelo  '49-VP-94' 'Evolution'
+evolucaoPos proprietario  '49-VP-94' 'Vladimir Putin'
+
+evolucaoPos marca  '02-HH-11' 'Peugeot'
+evolucaoImpreciso modelo  '02-HH-11' '406'
+evolucaoPos proprietario  '02-HH-11' 'The Terminator'
+
+evolucaoIncerto marca  '32-JP-22' incerto
+evolucaoIncerto modelo  '32-JP-22' incerto
+evolucaoPos proprietario  '32-JP-22' 'Jesse Pinkman'
+
+evolucaoPos marca  '10-WW-99' 'Fiat'
+evolucaoIncerto modelo  '10-WW-99' incerto
+evolucaoPos proprietario  '10-WW-99' 'Walter White'
+
+evolucaoPos marca  '80-JM-13' 'BMW'
+evolucaoIncerto modelo  '80-JM-13' incerto
+evolucaoPos proprietario  '80-JM-13' 'James Mcgill'
+
+evolucaoPos marca  '11-TT-06' 'Alfa Romeo'
+evolucaoPos modelo  '11-TT-06' '147'
+evolucaoIncerto proprietario  '11-TT-06' incerto
+
+evolucaoPos marca  '90-MG-60' 'Mitsubishi'
+evolucaoPos modelo  '90-MG-60' 'Lancer'
+evolucaoIncerto proprietario  '90-MG-60' incerto
+
+evolucaoNeg modelo '91-FF-32' 'Ducato'
+evolucaoNeg marca '91-FF-32' 'BMW'
+evolucaoNeg proprietario  '91-FF-32' 'Orlando Cunha'
+
+evolucaoNeg marca  '10-PP-23' 'BMW'
+evolucaoNeg modelo  '10-PP-23' 'Série 5'
+evolucaoNeg proprietario  '10-PP-23' 'Orlando Oliveira'
+
+evolucaoNeg marca  '02-JL-71' 'Mitsubishi'
+evolucaoNeg modelo  '02-JL-71' 'Lancer'
+evolucaoNeg proprietario  '02-JL-71' 'Paulo Neves'
+
+evolucaoNeg marca '49-VM-94' 'Nissan'
+evolucaoNeg modelo  '49-VM-94' 'Patrol'
+evolucaoNeg proprietario  '49-VM-94' 'Jose Barros'
+
+evolucaoNeg marca  '62-HH-11' 'Peugeot'
+evolucaoNeg modelo  '62-HH-11' '406'
+evolucaoNeg proprietario  '62-HH-11' 'Ana Costa'
+
+
+
+$$ Resultado: V ou V -> V
+demo (modelo('43-OF-31','C5') ou marca('22-RO-06','Alfa Romeo'))  
+$$ Resultado: V ou F -> V
+demo (modelo('43-OF-31','C5') ou marca('91-FF-32','BMW'))
+$$ Resultado: F ou V -> V
+demo (marca('91-FF-32','BMW') ou modelo('43-OF-31','C5'))
+$$ Resultado: F ou F -> F
+demo (marca('91-FF-32','BMW') ou modelo('91-FF-32','Ducato'))
+
+$$ Resultado: F ou D -> D
+demo (modelo('91-FF-32','Ducato') ou modelo('10-WW-99', 'Ferrari'))
+$$ Resultado: D ou F -> D
+demo (modelo('49-VP-94','Patrol') ou modelo('91-FF-32','Ducato'))
+$$ Resultado: V ou D -> V
+demo (marca('22-RO-06','Alfa Romeo') ou marca('91-JH-34','BMW'))
+$$ Resultado: D ou V -> V
+demo (modelo('91-GF-02','Ducato') ou marca('22-RO-06','Alfa Romeo'))
+
+
+$$ Resultado: V e V -> V
+demo (marca('22-RO-06','Alfa Romeo') e proprietario('43-OF-31','Fernando Gomes'))
+$$ Resultado: F e F -> F
+demo (marca('91-FF-32','BMW') e modelo('91-FF-32','Ducato'))
+$$ Resultado: V e F -> F
+demo (marca('22-RO-06','Alfa Romeo') e marca('91-FF-32','BMW'))
+$$ Resultado: F e V -> F
+demo (marca('91-FF-32','BMW') e marca('22-RO-06','Alfa Romeo'))
+
+$$ Resultado: V e D -> D
+demo (marca('40-NT-69','Audi') e modelo('34-PP-23','Série 5'))
+$$ Resultado: D e V -> D
+demo (modelo('34-PP-23','Série 5') e marca('40-NT-69','Audi'))
+$$ Resultado: F e D -> F
+demo (modelo('91-FF-32','Ducato') e marca('91-JH-34','BMW'))
+$$ Resultado: D e F -> F
+demo (marca('91-JH-34','BMW') e modelo('91-FF-32','Ducato'))
+
+evolucaoPos fabricante 'VW' 'Golf'
+evolucaoPos marca  '69-69-OC' 'VW'
+evolucaoPos modelo  '69-69-OC' 'Golf'
+retrocessoPos fabricante 'VW' 'Golf'
+$$ Não deve deixar
+retrocessoPos modelo '69-69-OC' 'Golf'
+retrocessoPos fabricante 'VW' 'Golf'
+
+$$ ########################## Teste De remocao: ##########################
+$$ 
+$$ 
+demo modelo('10-WW-99', punto)
+demo modelo('10-WW-99', fista)
+## whyevo(modelo('10-WW-99','Megane'),S0).
+evolucaoPos modelo '10-WW-99' 'punto'
+## solucoes(temp1(A),temp1(A),S1).
+demo modelo('10-WW-99', punto)
+demo modelo('10-WW-99', fista)
+$$ 
+$$ 
+demo proprietario('90-MG-60', 'Paulo')
+demo proprietario('90-MG-60', 'Orlando')
+evolucaoPos proprietario '90-MG-60' 'Orlando'
+demo proprietario('90-MG-60', 'Paulo')
+demo proprietario('90-MG-60', 'Orlando')
+$$  
+$$  
+demo modelo('49-VP-94', 'Patrol')
+demo modelo('49-VP-94', 'Evolution')
+demo modelo('49-VP-94', 'Random')
+## ff(modelo('49-VP-94','Evolution'),R1).
+evolucaoPos modelo '49-VP-94' 'Evolution'
+demo modelo('49-VP-94', 'Patrol')
+demo modelo('49-VP-94', 'Evolution')
+demo modelo('49-VP-94', 'Random')
+$$  
+$$  
