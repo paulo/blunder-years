@@ -1,0 +1,222 @@
+<Identificação de níveis de fadiga>
+	
+	Um dos objetivos principais a alcançar consiste no treino e teste de uma rede neuronal artificial, tornando-a capaz de estimar o nível de fadiga partindo de input que consiste nas diversas variáveis biométricas fornecidas. Assim, é possível em R, através da plataforma "R Studio" e da biblioteca "neuralnet", criar uma rede neuronal, fornecer-lhe input e testar diferentes configurações de forma a comparar os resultados de cada uma. Neste sentido, é feita a análise do impacto que os diferentes componentes e variantes que constituem o treino de uma rede neuronal possuem sobre o resultado final.
+
+	<Treino da rede>
+
+		<Algoritmos>
+
+			Existem diversos algoritmos que definem a forma de aprendizagem de uma rede neuronal, isto é, a forma como os seus diferentes nodos interagem e como variam os pesos destes. Estes algoritmos possuem um impacto no resultado final e consistem nas seguintes variantes:
+
+
+			- rprop+ e rprop- -> Algoritmos de 'backpropagation' (pesos dos nós alterados com base no resultado produzido) resiliente, com e sem retrocesso dos pesos, respetivamente. Consistem numa heuristica para aprendizagem supervisada em redes neuronais artificiais feedforward. 
+		
+
+			- sag e slr -> Algoritmos que induzem o algoritmo globalmente convergente (grprop). Estes são baseados nos algoritmos de 'backpropagation' resiliente, com a variante que modificam a componente da taxa de aprendizagem (associada com o gradiente absoluto mais baixo ou com a taxa de aprendizagem mais baixa, respetivamente).  
+
+
+		<Nodos Intermédios>
+
+			Diferentes estruturas de redes neuronais alcançam diferentes resultados, tanto em erro, como em tempo de execução. Assim, uma rede neuronal com mais neurónios do que outra pode chegar ao resultado esperado em menos tempo, mas esse resultado pode não estar de acordo com o esperado. Com o objetivo de testar as diferentes constituições de redes neuronais e o seu impacto sobre o output, são testadas diversas configurações dos nodos que as constituem:
+
+				(3) -> 3 nodos intermédios numa só camada.
+
+				(10) -> 10 nodos intermédios numa só camada.
+
+				(20, 10) -> 30 nodos intermédios divididos por duas camadas.
+
+				(40, 20) -> 60 nodos intermédios divididos por duas camadas.
+
+----------------------Uma representação gráfica de cada topologia pode ser encontrada em anexo (anexo A). 
+
+
+			O resultado que se espera obter com a rede neuronal de (40,20) nodos intermédios pensa-se ser aceitável em termos do erro produzido durante a sua aprendizagem (tendo em conta as diferentes variáveis de input), pelo que aumentar ainda mais a complexidade da rede neuronal não seria vantajoso. Da mesma forma, a rede neuronal de apenas 3 nodos intermédios crê-se ser insuficiente para alcançar um erro significativo durante a aprendizagem da rede neuronal artificial, no entanto pode produzir resultados apropriados para o contexto. Certos estudos sugerem que a utilização de mais de 3 nodos intermédios não é vantajosa, facto este analisado e testado neste relatório. As restantes configurações servem como modelo comparativo das configurações referidas anteriormente.
+
+
+
+
+		<Diferentes tamanhos e ordenações de input de treino>
+
+			O tamanho do dataset utilizado para treinar a rede influência os resultados que esta alcançará no momento de a testar. Teóricamente, quanto maior e mais diversificado for o dataset, mais consistente será a rede neuronal, e melhor responderá aos testes efetuados. Assim, dado que o dataset fornecido possui apenas cerca de 800 registos, este é dividido entre datasets de treino e teste de rede, com diferentes tamanhos. A ordem pela qual estes testes participam no treino da rede neuronal afeta também o resultado final e os cálculos efetuados por esta, pelo que são testadas diferentes ordenações de datasets de treino (datasets original e invertido). 
+
+
+		Procede-se então à análise dos resultados obtidos com as diversas configurações que é possível obter com a variação dos componentes descritos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<atualizar no word o que esta acima>
+
+
+		<Testes realizados>
+			O treino das redes neuronais e testes é efetuado recorrendo à linguagem R, suportada pela plataforma 'R Studio' e pela biblioteca 'neuralnet'. Como métricas para análise de resultados, são análisados o erro produzido no treino das redes, assim como o "Root Mean Square Error (rmse)" e "Percent BIAS (PBIAS)", sendo estes últimos suportados pela biblioteca "hydroGOF", e que permitem analisar de forma analítica a diferença média entre os resultados obtidos nos testes efetuados e os resultados esperados, e a tendência média que os resultados possuem comparativamente ao esperado (valores mais elevados ou mais baixos).   
+
+			<Análise de resultados>
+				Através de uma análise breve à tabela de resultados presente em anexo (Anexo B), é possível concluir diversos factos e assumir algumas teorias:
+ 
+				- Existem diversas ocasiões nas quais o treino da rede não produziu qualquer resultado quantificavel (não convergiu). Isto pode ocorrer devido a diversos factores, tais como o peso inicial atribuído aos nodos, o número máximo de iterações não ser suficiente ou o algoritmo requer mais capacidade de processamento do que os outros. Como se pode observar, a não convergência é mais comum nos algoritmos sag e slr (globalmente convergentes), provavelmente devido a estes requererem maior carga computacional. De notar também que a configuração de (20,10) nodos intermédios em caso nenhum converge, pelo que não será uma considerada como uma configuração válida.
+				
+				- Em média as RNAs cujas configurações consistem em 3 nodos intermédios demoram muito menos tempo do que as configurações com duas camadas (40,20) de nodos intermédios, sendo necessários menos passos para convergir. Estas configurações mais simples possuem também em média um RMSE ligeiramente menor sendo que os valores médios de PBIAS não são conclusivos. No entanto, as configurações mais complexas obtêm um erro de aprendizagem em média muito menor ás configurações mais simples. 
+				
+				- Os resultados em PBIAS são mais elevados no dataset invertido do que no original, assim como o erro de aprendizagem das redes e o tempo até convergirem. Isto talvez possa ser explicado devido à distribuição pouco uniforme dos diferentes tipos de Tasks no ficheiro de input, dado que o ficheiro original possui uma maior concentração de Tasks do tipo 1 na 1ª metade da lista de registos. Assim, a rede será 1ºprimeiro treinada com estes registos possuindo uma tendência para estimar registos do tipo 1, quando na realidade o ficheiro de teste possui uma maior diversidade de registos do tipo 2 e 3. O caso inverso ocorre no ficheiro invertido, causando diferentes valores no cálculo dos pesos nas sucessivas iterações.
+
+				- Os resultados obtidos pelo algoritmo rprop- são ligeiramente melhores que os produzidos pelo algoritmo rprop+, no entanto esta diferença não é significativa.
+
+				- As RNAs que utilizam os algoritmos baseados em grprop raramente convergem quando possuem mais do que 3 nodos intermédios. Estes, nas ocasiões em que convergem, não produzem resultados significativemente diferentes do que os obtidos com os algoritmos baseados em backpropagation.
+
+
+					<meter tabela das médias>
+
+
+				Desta forma são selecionadas as melhores configurações de treino de RNA produzidas por cada algoritmo, que servirão de base para comparações e otimizações futuras:
+
+						Tamanho Input 			Algoritmo 			Nodos Intermédios
+
+				1 - 400(invertido) 				rprop+ 				40,20
+
+				2 - 500							rprop-				40,20
+				
+				3 - 600 						sag 				3
+
+				4 - 400 						slr 				3 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<Análise de variáveis relevantes>
+		
+		<Lógica>
+			Apesar de que os registos fornecidos apresentam 9 variáveis que caracterizam o nível de fadiga, é possível que nem todas as váriaveis possuam o mesmo peso na decisão do output final, e então, podem ser prescíndiveis, não apenas simplificando os cálculos da rede em causa, mas melhorando o treino e o output gerado pelos testes. A medição de biométricas comportamentais possui diversas variantes cuja relevância deve ser estudada. Neste sentido, é então estudado o peso que as variáveis possuem, e são comparados os resultados obtidos anteriormente com os registos originais relativamente aos resultados obtidos com os registos mais relevantes.
+
+		<Ferramenta WEKA>
+			Inicialmente foi realizada uma abordagem que consistia na utilização de bibliotecas R, que permitem a análise do peso que as diferentes variáveis possuem sobre a estimativa do valor da variável de output numa rede neuronal artificial. No entanto, esta abordagem é limitada e produz resultados inconsistentes. Neste sentido, é dado uso a uma nova ferramenta de estudo de dados denominada 'Weka', que possui um conjunto de algoritmos de 'machine learning' que permitem a execução de tarefas de 'data mining'. Mais específicamente, são exploradas as suas capacidades de processamento de dados, que nos permitem idenfiticar o conjunto de variáveis de maior peso na determinação de um dado output, evitando assim a maçadora tarefa de 'tentativa e erro' (testar as diversas combinações de variáveis que produzem o melhor resultado). 
+
+			
+			<Resultados obtidos>
+				Com o íntuito de avaliar então o mérito que cada variável possui na determinação da fadiga, seleciona-se o atributo 'FatigueLevel' como variável de output a analisar, e obtêm-se os seguintes resultados:
+
+				Search Method:
+	Best first.
+	Start set: no attributes
+	Search direction: forward
+	Stale search after 5 node expansions
+	Total number of subsets evaluated: 45
+	Merit of best subset found:    0.233
+
+Attribute Subset Evaluator (supervised, Class (numeric): 9 FatigueLevel):
+	CFS Subset Evaluator
+	Including locally predictive attributes
+
+Selected attributes: 1,2,5,10 : 4
+                     Performance.KDTMean
+                     Performance.MAMean
+                     Performance.DDCMean
+                     Performance.Task
+
+               	Assim, os resultados indicam que o subconjunto de váriaveis que possui maior peso na determinação da variável FatigueLevel consiste nos atributos Performance.KDTMean, Performance.MAMean, Performance.DDCMean, Performance.Task. 
+
+
+			<Comparação de resultados>
+				De forma a avaliar o impacto que o novo conjunto de variáveis possui relativamente ao conjunto original, são testadas as redes cuja configuração obteve melhor resultado nos testes realizados anteriormente, sendo a sua função de aprendizagem consituida agora pelas variáveis do novo conjunto, e comparam-se os valores obtidos. O mesmo teste é efetuado com as variáveis restantes, tirando-se seguintes conclusões:
+
+
+					- Apenas o treino correspondente à RNA com o algoritmo slr convergiu. Isto pode ser devido a diversos factores, tal como a possibilidade de que a existência de menos variáveis de input obrigue a RNA a efetuar um maior número de passos de forma a convergir e produzir um resultado aceitável. 
+					- Os resultados obtidos na configuração que obteve sucesso com as variáveis relevantes são ligeiramente piores que os resultados originais, no entanto a diferença não é significativa, pelo que o único que se pode concluir é que com apenas 4 das 9 variáveis originais é possível obter os mesmos resultados, confirmando o peso que estas variáveis possuem.
+					- Como esperado, as RNAs relativas às variáveis consideradas menos relevantes produzem resultados bastante inferiores aos obtidos com todas as variáveis, nos casos em que convergem.
+
+
+				Os valores obtidos podem ser consultados na tabela em anexo.
+
+				<Conclusões>
+
+					Como é possível observar, os resultados produzidos por cada RNA dependem totalmente das suas diversas configurações. Não existe uma configuração ideal para cada dataset/situação, pelo que estas devem ser sujeitas a testes de forma a encontrar a que melhor resultados obtêm. 

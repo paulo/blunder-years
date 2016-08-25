@@ -1,0 +1,71 @@
+Notas:
+
+- ver tipos de clustering e de regressão disponiveis em R
+
+- fazer testes singulares para existência ou ausência de fadiga
+
+- dá para escolher o algoritmo de aprendizagem:
+algorithm :
+The following types are possible: 
+’backprop’ -> backpropagation
+’rprop+’, -> ’rprop+’ and ’rprop-’ refer to the resilient backpropagation with and without weight backtracking
+’sag’, or ’slr’. -> ’sag’ and ’slr’ induce the usage of the modified globally convergent algorithm (grprop). 
+
+
+
+
+
+Requisitos e Componentes:
+__________________________________________________________________________________________________________
+Capacidades de resposta:
+
+- Identificar os 7 níveis de fadiga, tal como descrito pelos dados presentes no conjunto de dados global.
+
+
+- Identificar, simplesmente, a existência ou ausência de fadiga.
+
+
+- Encontrar a melhor escala de identificação de fadiga.
+__________________________________________________________________________________________________________
+
+Biométricas comportamentais:
+
+- “Performance.KDTMean” – tempo médio entre o momento em que a tecla é pressionada para baixo e o momento em que é largada.
+
+- “Performance.MAMean” – aceleração do manuseamento rato em determinado momento. O valor da aceleração é calculado através da velocidade do rato (pixel/milissegundos) sobre o tempo de movimento (milissegundos).
+
+- “Performance.MVMean” – velocidade do manuseamento do rato em determinado momento. A distância percorrida pelo rato (em píxeis) entre uma coordenada C1 (x1; y1) e uma C2 (x2; y2) correspondentes a time1 e time2, sobre o tempo (em milissegundos).
+
+- “Performance.TBCMean” – tempo entre dois clicks consecutivos, entre eventos consecutivos MOUSE_UP e MOUSE_DOWN;
+
+- “Performance.DDCMean” – período de tempo entre dois eventos MOUSE_UP consecutivos;
+
+- “Performance.DMSMean” – distância média em excesso entre o caminho de dois clicks consecutivos;
+
+- “Performance.ADMSLMean” – distância média das diferentes posições do ponteiro entre dois pontos durante um movimento, e o caminho em linha reta entre esses mesmos dois pontos;
+
+- “Performance.AEDMean” – esta métrica é semelhante à anterior, no sentido em calculará a soma da distância entre dois eventos MOUSE_UP e MOUSE_DOWN consecutivos;
+
+- “FatigueLevel” – nível subjetivo de fadiga mental;
+
+- “Performance.Task” – identificação da tarefa que estava ser executada no momento da recolha dos dados.
+
+
+__________________________________________________________________________________________________________
+
+Escala:
+
+1 - Totalmente bem.
+2 - Responsivo, mas não no pico.
+3 - Ok, normal.
+4 - Em baixo de forma/do normal, a sentir-se em baixo.
+5 - Sentido moleza, perdendo o foco.
+6 - Muito difícil concentrar, meio tonto.
+7 - Incapaz de funcionar, pronto a desligar.
+
+
+
+
+#hidden -> número de neurónios por camada (é um array)
+#threshold -> limite de erro
+#Threshold is a numeric value specifying the threshold for the partial derivatives of the error function as stopping criteria.

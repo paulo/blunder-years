@@ -1,0 +1,31 @@
+<Identificação de existência ou ausência de fadiga>
+	<Lógica e trabalho realizado>
+		Com o intuíto de identificar a existência ou ausência de fadiga dado um determinado input, são feitas algumas considerações acerca dos níveis de fadiga mental apresentados. Através da análise da descrição de cada nível, é possivel extrair 2 grupos de estados mentais. O 1ºgrupo refere-se a estados onde um dado índividuo tem ainda a capacidade de funcionar e raciocinar dentro da normalidade, e é constituido pelos estados de 1 a 3 (inclusive). Quando um dado output estiver entre estes valores, considera-se a ausência de fadiga. De forma análoga, o 2ºgrupo refere-se a estados nos quais o índividuo perdeu certa capacidade de concentração e apresenta sinais de cansaço, e é constituido pelos estados de 4 a 7. Quando um dado output estiver entre estes valores, considera-se a existência de fadiga. Para facilitar a compreensão, os valores dos datasets foram normalizados para apresentar respostas lógicas, e então, testes cujo resultado pertença ao 1ºgrupo apresentarão um output de 0, e testes cujo resultado pertença ao 2ºgrupo apresentarão um output de 1. Os testes consistem num conjunto de registos obtidos do ficheiro fornecido e de registos criados também especificamente para este propósito, e são aplicados nas 3 redes cujas configurações obtiveram os melhores resultados anteriormente (com o conjunto original de variáveis e com o novo conjunto de variáveis relevantes). Os testes são realizados recorrendo às redes neuronais artificiais disponíveis através da utilização da biblioteca 'neuralnet' na plataforma 'R Studio'.
+
+	
+		<Testes>
+
+			Os input correspondente aos testes realizados encontra-se em anexo, e consiste em:
+
+			- 3 testes com valores retirados do dataset original, cujos níveis de fatiga correspondem a 1, 3 e 6, e então devem ter como output 0, 0 e 1, respetivamente.
+
+			- 1 teste extremo superior, com os valores das variáveis todos a 1, e então o seu valor de output deverá ser 1.
+
+			- 1 teste extremo inferior, com os valores das variáveis todos a -1, e então o seu valor de output deverá ser 0.
+
+			Obviamente que no caso dos testes extremos, os valores de output podem não ser os esperados, especialmente tendo em conta a inexistência deste tipo de registos no dataset de treino.
+
+		<Resultados>
+
+			Após efetuados os testes, podem derivar as seguintes conclusões:
+
+			- Os testes nos quais é pretendido estimar a ausência de fadiga possuem uma taxa de acerto bastante elevada comparativamente aos testes onde se espera presença de fadiga. Isto pode ser devido ao facto de que existem muitos mais registos que denotam a ausência de fadiga do que a sua presença, pelo que a rede será tendenciosa a avaliar os casos como "ausência de fadiga" (particularmente tendo em conta o facto de que as redes estão treinadas com apenas 400 registos).
+			- Os testes extremos de fadiga possuem resultados completamente errados, como estava previsto. A ausência de registos no dataset de treino que espelhem estes testes torna o seu resultado "aleatório", pelo que de forma a melhorar esta situação seria necessário treinar a RNA com registos semelhantes.
+
+			Os resultados númericos podem ser encontrados em anexo.
+
+
+
+
+
+	
